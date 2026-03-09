@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>ROAFIT - Herramientas Gratuitas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #1A1A1A;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: #2a2a2a;
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            border: 1px solid #3a3a3a;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .logo {
+            font-size: 3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .logo-roa {
+            color: #E6E6E6;
+        }
+        
+        .logo-fit {
+            color: #F2CB05;
+        }
+        
+        .tagline {
+            color: #E6E6E6;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        
+        .description {
+            color: #b8b8b8;
+            font-size: 1em;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+        
+        .tool-card {
+            background: #1A1A1A;
+            border: 2px solid #3a3a3a;
+            border-radius: 15px;
+            padding: 30px;
+            transition: all 0.3s;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(242, 203, 5, 0.2);
+            border-color: #F2CB05;
+        }
+        
+        .tool-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+        
+        .tool-title {
+            color: #E6E6E6;
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .tool-description {
+            color: #b8b8b8;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .tool-features {
+            list-style: none;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px dashed #3a3a3a;
+        }
+        
+        .tool-features li {
+            color: #999999;
+            padding: 5px 0;
+            font-size: 0.9em;
+        }
+        
+        .tool-features li:before {
+            content: "✓ ";
+            color: #F2CB05;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: #F2CB05;
+            color: #1A1A1A;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-weight: bold;
+            text-decoration: none;
+            margin-top: 15px;
+            transition: all 0.2s;
+        }
+        
+        .cta-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(242, 203, 5, 0.4);
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #3a3a3a;
+            color: #999999;
+        }
+        
+        .footer p {
+            margin: 10px 0;
+        }
+        
+        .footer a {
+            color: #F2CB05;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .coming-soon {
+            opacity: 0.5;
+            position: relative;
+        }
+        
+        .coming-soon:hover {
+            transform: none;
+            box-shadow: none;
+            border-color: #3a3a3a;
+            cursor: default;
+        }
+        
+        .coming-soon::after {
+            content: "PRÓXIMAMENTE";
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #F2CB05;
+            color: #1A1A1A;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.7em;
+            font-weight: bold;
+        }
+        
+        .highlight {
+            color: #F2CB05;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+            }
+            
+            .logo {
+                font-size: 2em;
+            }
+            
+            .tagline {
+                font-size: 1em;
+            }
+            
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                💪 <span class="logo-roa">ROA</span><span class="logo-fit">FIT</span>
+            </div>
+            <p class="tagline">Herramientas Gratuitas para tu Fitness</p>
+            <p class="description">
+                Todo lo que necesitas para iniciar y mantener tu hábito de entrenamiento. 
+                Herramientas <span class="highlight">100% gratuitas</span>, sin registro, con guardado automático en tu dispositivo.
+            </p>
+        </div>
+        
+        <div class="tools-grid">
+            <a href="tracker-habitos.html" class="tool-card">
+                <div class="tool-icon">🎯</div>
+                <div class="tool-title">Tracker de Hábitos</div>
+                <div class="tool-description">
+                    Crea tu hábito de ir al gym con estrategias probadas. Marca tus días, mantén la consistencia y transforma el deseo en acción.
+                </div>
+                <ul class="tool-features">
+                    <li>3 estrategias de creación de hábitos</li>
+                    <li>Seguimiento de 4 semanas</li>
+                    <li>Guardado automático</li>
+                    <li>Notas y reflexiones</li>
+                </ul>
+                <span class="cta-button">Ir al Tracker →</span>
+            </a>
+            
+            <a href="entrenamiento.html" class="tool-card">
+                <div class="tool-icon">💪</div>
+                <div class="tool-title">Tracker de Entrenamiento</div>
+                <div class="tool-description">
+                    Registra tus entrenamientos completos: series, repeticiones, peso, y progreso semanal. Ideal para principiantes.
+                </div>
+                <ul class="tool-features">
+                    <li>Registro detallado por ejercicio</li>
+                    <li>Series, reps y peso</li>
+                    <li>Comentarios por ejercicio</li>
+                    <li>Seguimiento de cardio</li>
+                    <li>Exportar tus datos</li>
+                </ul>
+                <span class="cta-button">Ir al Tracker →</span>
+            </a>
+            
+            <div class="tool-card coming-soon">
+                <div class="tool-icon">📊</div>
+                <div class="tool-title">Calculadora de Macros</div>
+                <div class="tool-description">
+                    Calcula tus necesidades calóricas y distribución de macronutrientes según tus objetivos.
+                </div>
+                <ul class="tool-features">
+                    <li>Cálculo personalizado</li>
+                    <li>Ajuste por objetivo</li>
+                    <li>Recomendaciones prácticas</li>
+                </ul>
+            </div>
+            
+            <div class="tool-card coming-soon">
+                <div class="tool-icon">📅</div>
+                <div class="tool-title">Planificador de Rutinas</div>
+                <div class="tool-description">
+                    Crea y organiza tu rutina semanal de entrenamiento con ejercicios personalizados.
+                </div>
+                <ul class="tool-features">
+                    <li>Rutinas personalizables</li>
+                    <li>Biblioteca de ejercicios</li>
+                    <li>Programación semanal</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><strong class="highlight">Del Deseo a la Acción</strong></p>
+            <p>Todas las herramientas son 100% gratuitas y funcionan directamente en tu navegador</p>
+            <p>Tus datos se guardan solo en tu dispositivo - privacidad total</p>
+            <p style="margin-top: 20px;">
+                <a href="https://youtube.com/@soyroafit" target="_blank">YouTube</a> | 
+                <a href="https://instagram.com/soyroafit" target="_blank">Instagram</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>
