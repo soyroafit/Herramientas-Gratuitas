@@ -15,7 +15,7 @@
         
         body {
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #1A1A1A;
             padding: 20px;
             min-height: 100vh;
         }
@@ -23,27 +23,35 @@
         .container {
             max-width: 1000px;
             margin: 0 auto;
-            background: white;
+            background: #2a2a2a;
             border-radius: 20px;
             padding: 40px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            border: 1px solid #3a3a3a;
         }
         
         .header {
             text-align: center;
             margin-bottom: 30px;
-            border-bottom: 3px solid #667eea;
+            border-bottom: 3px solid #F2CB05;
             padding-bottom: 20px;
         }
         
+        .logo-image {
+            width: 300px;
+            max-width: 90%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        
         .header h1 {
-            color: #2d3748;
+            color: #E6E6E6;
             font-size: 2em;
             margin-bottom: 10px;
         }
         
         .header p {
-            color: #718096;
+            color: #b8b8b8;
             font-size: 1.1em;
         }
         
@@ -66,22 +74,26 @@
             opacity: 1;
         }
         
+        .highlight {
+            color: #F2CB05;
+        }
+        
         .instructions {
-            background: #f7fafc;
-            border-left: 4px solid #667eea;
+            background: #1A1A1A;
+            border-left: 4px solid #F2CB05;
             padding: 20px;
             margin-bottom: 30px;
             border-radius: 8px;
         }
         
         .instructions h3 {
-            color: #2d3748;
+            color: #F2CB05;
             margin-bottom: 10px;
         }
         
         .instructions ul {
             margin-left: 20px;
-            color: #4a5568;
+            color: #b8b8b8;
         }
         
         .instructions li {
@@ -99,9 +111,9 @@
         
         .week-btn {
             padding: 12px 24px;
-            border: 2px solid #667eea;
-            background: white;
-            color: #667eea;
+            border: 2px solid #3a3a3a;
+            background: #1A1A1A;
+            color: #b8b8b8;
             border-radius: 10px;
             font-weight: bold;
             cursor: pointer;
@@ -109,26 +121,26 @@
         }
         
         .week-btn.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: #F2CB05;
+            color: #1A1A1A;
+            border-color: #F2CB05;
         }
         
         .week-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            border-color: #F2CB05;
         }
         
         .day-section {
             margin-bottom: 40px;
-            border: 2px solid #e2e8f0;
+            border: 2px solid #3a3a3a;
             border-radius: 15px;
             padding: 25px;
-            background: #fafafa;
+            background: #1A1A1A;
         }
         
         .day-title {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: linear-gradient(135deg, #F2CB05 0%, #d4ad04 100%);
+            color: #1A1A1A;
             padding: 15px 20px;
             border-radius: 10px;
             font-size: 1.3em;
@@ -136,9 +148,30 @@
             margin-bottom: 20px;
         }
         
+        .tips-box {
+            background: #2a2a2a;
+            border: 2px solid #F2CB05;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .tips-box-title {
+            color: #F2CB05;
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+        
+        .tips-box-content {
+            color: #b8b8b8;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+        
         .exercise-card {
-            background: white;
-            border: 2px solid #cbd5e0;
+            background: #2a2a2a;
+            border: 2px solid #3a3a3a;
             border-radius: 12px;
             padding: 20px;
             margin-bottom: 20px;
@@ -152,8 +185,8 @@
         }
         
         .exercise-number {
-            background: #667eea;
-            color: white;
+            background: #F2CB05;
+            color: #1A1A1A;
             width: 35px;
             height: 35px;
             border-radius: 50%;
@@ -166,22 +199,24 @@
         
         .exercise-label {
             font-weight: bold;
-            color: #4a5568;
+            color: #b8b8b8;
             margin-right: 5px;
         }
         
         .exercise-name-input {
             flex: 1;
             padding: 12px;
-            border: 2px solid #cbd5e0;
+            border: 2px solid #3a3a3a;
             border-radius: 8px;
             font-size: 1em;
             font-weight: bold;
+            background: #1A1A1A;
+            color: #E6E6E6;
         }
         
         .exercise-name-input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #F2CB05;
         }
         
         .series-container {
@@ -198,21 +233,23 @@
         
         .series-label {
             font-weight: bold;
-            color: #4a5568;
+            color: #b8b8b8;
             font-size: 0.95em;
         }
         
         .series-input {
             padding: 10px;
-            border: 2px solid #cbd5e0;
+            border: 2px solid #3a3a3a;
             border-radius: 8px;
             font-size: 0.95em;
             text-align: center;
+            background: #1A1A1A;
+            color: #E6E6E6;
         }
         
         .series-input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #F2CB05;
         }
         
         .series-header {
@@ -221,18 +258,18 @@
             gap: 10px;
             margin-bottom: 10px;
             font-weight: bold;
-            color: #2d3748;
+            color: #F2CB05;
             font-size: 0.9em;
         }
         
         .exercise-comments {
             margin-top: 15px;
             padding-top: 15px;
-            border-top: 2px dashed #e2e8f0;
+            border-top: 2px dashed #3a3a3a;
         }
         
         .exercise-comments h4 {
-            color: #4a5568;
+            color: #b8b8b8;
             margin-bottom: 10px;
             font-size: 0.95em;
         }
@@ -241,28 +278,55 @@
             width: 100%;
             min-height: 70px;
             padding: 12px;
-            border: 2px solid #cbd5e0;
+            border: 2px solid #3a3a3a;
             border-radius: 8px;
             font-family: 'Arial', sans-serif;
             font-size: 0.9em;
             resize: vertical;
+            background: #1A1A1A;
+            color: #E6E6E6;
         }
         
         .exercise-comments-input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #F2CB05;
+        }
+        
+        .info-box {
+            background: #2a2a2a;
+            border: 2px solid #F2CB05;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .info-box h3 {
+            color: #F2CB05;
+            margin-bottom: 15px;
+        }
+        
+        .info-box p {
+            color: #b8b8b8;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        
+        .info-box ul {
+            margin-left: 20px;
+            color: #b8b8b8;
+            line-height: 1.8;
         }
         
         .cardio-section {
             margin-top: 30px;
             padding: 20px;
-            background: #fff5f5;
+            background: #2a2a2a;
             border-radius: 10px;
-            border: 2px solid #fc8181;
+            border: 2px solid #F2CB05;
         }
         
         .cardio-section h3 {
-            color: #c53030;
+            color: #F2CB05;
             margin-bottom: 15px;
         }
         
@@ -270,27 +334,30 @@
             width: 100%;
             min-height: 80px;
             padding: 15px;
-            border: 2px solid #fc8181;
+            border: 2px solid #3a3a3a;
             border-radius: 8px;
             font-family: 'Arial', sans-serif;
             font-size: 1em;
             resize: vertical;
+            background: #1A1A1A;
+            color: #E6E6E6;
         }
         
         .cardio-input:focus {
             outline: none;
-            border-color: #c53030;
+            border-color: #F2CB05;
         }
         
         .notes-section {
             margin-top: 20px;
             padding: 20px;
-            background: #f7fafc;
+            background: #1A1A1A;
             border-radius: 10px;
+            border: 2px solid #3a3a3a;
         }
         
         .notes-section h3 {
-            color: #2d3748;
+            color: #F2CB05;
             margin-bottom: 15px;
         }
         
@@ -298,16 +365,18 @@
             width: 100%;
             min-height: 100px;
             padding: 15px;
-            border: 2px solid #cbd5e0;
+            border: 2px solid #3a3a3a;
             border-radius: 8px;
             font-family: 'Arial', sans-serif;
             font-size: 1em;
             resize: vertical;
+            background: #1A1A1A;
+            color: #E6E6E6;
         }
         
         .notes-input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #F2CB05;
         }
         
         .action-buttons {
@@ -319,7 +388,7 @@
         }
         
         .btn {
-            color: white;
+            color: #1A1A1A;
             border: none;
             padding: 15px 30px;
             border-radius: 10px;
@@ -334,23 +403,25 @@
         }
         
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #F2CB05;
         }
         
         .btn-secondary {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            background: #3a3a3a;
+            color: #E6E6E6;
         }
         
         .btn-danger {
-            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            background: #e63946;
+            color: white;
         }
         
         .footer {
             text-align: center;
             margin-top: 30px;
             padding-top: 20px;
-            border-top: 2px solid #e2e8f0;
-            color: #718096;
+            border-top: 2px solid #3a3a3a;
+            color: #999999;
         }
         
         @media print {
@@ -401,8 +472,9 @@
     
     <div class="container">
         <div class="header">
+            <img src="logo-roafit.png" alt="ROAFIT" class="logo-image">
             <h1>💪 TRACKER DE ENTRENAMIENTO</h1>
-            <p>Tu Registro Completo de Gimnasio</p>
+            <p>Tu Registro Completo de tu Rutina</p>
         </div>
         
         <div class="instructions">
@@ -415,6 +487,7 @@
                 <li><strong>Comenta cada ejercicio</strong> - anota molestias, técnica, dificultad</li>
                 <li><strong>Registra tu cardio</strong> - pasos, caminata, natación, etc.</li>
                 <li><strong>Estructura recomendada:</strong> Día 1 (Tren Superior), Día 2 (Tren Inferior)</li>
+                <li><strong class="highlight">⚠️ Recomendación:</strong> Domina primero los 2 días base durante 4 semanas antes de añadir el día 3</li>
             </ul>
         </div>
         
@@ -427,6 +500,28 @@
         </div>
         
         <div id="workoutContent"></div>
+        
+        <div class="info-box">
+            <h3>📅 ¿Listo para añadir un tercer día de fuerza?</h3>
+            <p>Si ya completaste 4 semanas con 2 días y te sientes cómodo, puedes añadir un <strong>Día 3 de entrenamiento de fuerza</strong>:</p>
+            <ul>
+                <li><strong>Opción A:</strong> Repetir Día 1 (Tren Superior) - Si quieres más volumen de fuerza en pecho/espalda/brazos</li>
+                <li><strong>Opción B:</strong> Repetir Día 2 (Tren Inferior) - Si quieres más desarrollo de fuerza en piernas</li>
+                <li><strong>Opción C:</strong> Alternar cada semana según necesites</li>
+            </ul>
+            <p style="margin-top: 15px;"><strong class="highlight">Recuerda:</strong> La recuperación es clave. Si añades el día 3, asegúrate de descansar al menos 1 día entre sesiones de fuerza.</p>
+        </div>
+        
+        <div class="info-box">
+            <h3>💡 Consejos Clave para Progresar</h3>
+            <ul>
+                <li><strong>La técnica primero:</strong> No subas peso hasta dominar el movimiento</li>
+                <li><strong>Descansa lo necesario:</strong> 1-2 minutos entre series (primera serie más corto, siguientes más largo)</li>
+                <li><strong>Progresión gradual:</strong> Aumenta peso solo cuando puedas completar todas las series con buena técnica</li>
+                <li><strong>Escucha tu cuerpo:</strong> Si sientes dolor (no molestia muscular), para y ajusta</li>
+                <li><strong>Sé consistente:</strong> Es mejor entrenar 2 días todas las semanas que 4 días solo algunas semanas</li>
+            </ul>
+        </div>
         
         <div class="cardio-section">
             <h3>🏃 Actividad Cardiovascular de la Semana</h3>
@@ -445,8 +540,8 @@
         </div>
         
         <div class="footer">
-            <p><strong>Recuerda:</strong> La técnica primero, el peso después. Progresa con paciencia.</p>
-            <p style="margin-top: 10px;">🎯 Del Deseo a la Acción</p>
+            <p><strong class="highlight">Del Deseo a la Acción</strong></p>
+            <p style="margin-top: 10px;">La técnica primero, el peso después. Progresa con paciencia.</p>
         </div>
     </div>
     
@@ -457,6 +552,7 @@
         var workoutStructure = {
             day1: {
                 title: '🏋️ DÍA 1: TREN SUPERIOR',
+                tips: '💡 Empieza con poco peso para dominar la técnica. Primera serie: 1 min descanso. Series siguientes: 1:30-2 min.',
                 exercises: [
                     'Press de Banca (Máquina/Barra/Mancuernas)',
                     'Chest Flys o Aperturas',
@@ -466,6 +562,7 @@
             },
             day2: {
                 title: '🦵 DÍA 2: TREN INFERIOR',
+                tips: '💡 Controla la respiración en cada repetición. Sé consciente del control de todos los movimientos, tanto en la fase concéntrica (subida) como excéntrica (bajada).',
                 exercises: [
                     'Press de Pierna',
                     'Curl de Cuádriceps',
@@ -475,6 +572,7 @@
             },
             day3: {
                 title: '💫 OPCIONAL: CORE/ABDOMEN',
+                tips: '💡 El trabajo del CORE o zona abdominal siempre estará presente en todos los ejercicios si mantienes buena técnica. Estos ejercicios son complementarios, sin embargo son excelentes herramientas si los puedes incluir.',
                 exercises: [
                     'Bird Dog',
                     'Dead Bug',
@@ -526,6 +624,11 @@
                 html += '<div class="day-section">';
                 html += '<div class="day-title">' + dayData.title + '</div>';
                 
+                html += '<div class="tips-box">';
+                html += '<div class="tips-box-title">💡 Consejos para este día:</div>';
+                html += '<div class="tips-box-content">' + dayData.tips + '</div>';
+                html += '</div>';
+                
                 for (var i = 0; i < dayData.exercises.length; i++) {
                     var exerciseData = workoutData[currentWeek][dayKey].exercises[i];
                     
@@ -559,9 +662,9 @@
                         html += 'onchange="updateSeries(\'' + dayKey + '\', ' + i + ', ' + s + ', \'weight\', this.value)">';
                         
                         if (s === 0) {
-                            html += '<div class="series-input" style="border: none; background: #f7fafc;">1 min</div>';
+                            html += '<div class="series-input" style="border: none; background: #1A1A1A; color: #b8b8b8;">1 min</div>';
                         } else {
-                            html += '<div class="series-input" style="border: none; background: #f7fafc;">1:30-2 min</div>';
+                            html += '<div class="series-input" style="border: none; background: #1A1A1A; color: #b8b8b8;">1:30-2 min</div>';
                         }
                         html += '</div>';
                     }
