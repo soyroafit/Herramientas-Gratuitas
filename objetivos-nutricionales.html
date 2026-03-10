@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>ROAFIT - Tracker de Objetivos Nutricionales</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #1A1A1A;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #2a2a2a;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            border: 1px solid #3a3a3a;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #10b981;
+            padding-bottom: 20px;
+        }
+        
+        .logo-image {
+            width: 300px;
+            max-width: 90%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        
+        .header h1 {
+            color: #E6E6E6;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #b8b8b8;
+            font-size: 1.1em;
+        }
+        
+        .save-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #10b981;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        .save-indicator.show {
+            opacity: 1;
+        }
+        
+        .highlight-yellow {
+            color: #F2CB05;
+        }
+        
+        .highlight-green {
+            color: #10b981;
+        }
+        
+        .disclaimer {
+            background: #3a2020;
+            border-left: 4px solid #e63946;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+        }
+        
+        .disclaimer h3 {
+            color: #e63946;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        .disclaimer p {
+            color: #d4d4d4;
+            line-height: 1.6;
+        }
+        
+        .info-box {
+            background: #1A1A1A;
+            border-left: 4px solid #10b981;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+        }
+        
+        .info-box h3 {
+            color: #10b981;
+            margin-bottom: 15px;
+        }
+        
+        .info-box p {
+            color: #b8b8b8;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        
+        .info-box ul {
+            margin-left: 20px;
+            color: #b8b8b8;
+            line-height: 1.8;
+        }
+        
+        .week-selector {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .week-btn {
+            padding: 12px 24px;
+            border: 2px solid #3a3a3a;
+            background: #1A1A1A;
+            color: #b8b8b8;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .week-btn.active {
+            background: #10b981;
+            border-color: #10b981;
+            color: #1A1A1A;
+        }
+        
+        .week-btn:hover {
+            border-color: #10b981;
+        }
+        
+        .objectives-section {
+            background: #1A1A1A;
+            border: 2px solid #3a3a3a;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .objectives-title {
+            color: #10b981;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #3a3a3a;
+        }
+        
+        .objective-card {
+            background: #2a2a2a;
+            border: 2px solid #3a3a3a;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+        
+        .objective-card:hover {
+            border-color: #10b981;
+        }
+        
+        .objective-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .objective-number {
+            background: #10b981;
+            color: #1A1A1A;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2em;
+            flex-shrink: 0;
+        }
+        
+        .objective-input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #3a3a3a;
+            border-radius: 8px;
+            background: #1A1A1A;
+            color: #E6E6E6;
+            font-size: 1em;
+        }
+        
+        .objective-input:focus {
+            outline: none;
+            border-color: #10b981;
+        }
+        
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .day-box {
+            border: 2px solid #3a3a3a;
+            border-radius: 8px;
+            padding: 15px 5px;
+            text-align: center;
+            background: #1A1A1A;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .day-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+        
+        .day-box.checked {
+            background: #10b981;
+            border-color: #10b981;
+            color: #1A1A1A;
+        }
+        
+        .day-name {
+            font-size: 0.9em;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #b8b8b8;
+        }
+        
+        .day-box.checked .day-name {
+            color: #1A1A1A;
+        }
+        
+        .checkbox {
+            width: 30px;
+            height: 30px;
+            border: 2px solid #3a3a3a;
+            border-radius: 50%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+        }
+        
+        .day-box.checked .checkbox {
+            border-color: #1A1A1A;
+            color: #1A1A1A;
+        }
+        
+        .progress-section {
+            background: #2a2a2a;
+            border: 2px solid #10b981;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+        
+        .progress-title {
+            color: #10b981;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .progress-bar-container {
+            background: #1A1A1A;
+            border-radius: 10px;
+            height: 30px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
+            height: 100%;
+            transition: width 0.5s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1A1A1A;
+            font-weight: bold;
+        }
+        
+        .progress-text {
+            color: #b8b8b8;
+            font-size: 0.9em;
+            text-align: center;
+        }
+        
+        .recommendations-section {
+            background: #1A1A1A;
+            border: 2px solid #F2CB05;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .recommendations-title {
+            color: #F2CB05;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .recommendation-item {
+            background: #2a2a2a;
+            border-left: 4px solid #10b981;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+        
+        .recommendation-item h4 {
+            color: #10b981;
+            margin-bottom: 10px;
+        }
+        
+        .recommendation-item p {
+            color: #b8b8b8;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+        
+        .recommendation-item ul {
+            margin-left: 20px;
+            color: #b8b8b8;
+            line-height: 1.6;
+        }
+        
+        .plate-example {
+            margin: 15px 0;
+            text-align: center;
+        }
+        
+        .plate-example img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            border: 2px solid #10b981;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+        
+        .plate-caption {
+            color: #10b981;
+            font-size: 0.9em;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        
+        .notes-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #1A1A1A;
+            border-radius: 10px;
+            border: 2px solid #3a3a3a;
+        }
+        
+        .notes-section h3 {
+            color: #10b981;
+            margin-bottom: 15px;
+        }
+        
+        .notes-input {
+            width: 100%;
+            min-height: 100px;
+            padding: 15px;
+            border: 2px solid #3a3a3a;
+            border-radius: 8px;
+            font-family: 'Arial', sans-serif;
+            font-size: 1em;
+            resize: vertical;
+            background: #1A1A1A;
+            color: #E6E6E6;
+        }
+        
+        .notes-input:focus {
+            outline: none;
+            border-color: #10b981;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #10b981;
+            color: #1A1A1A;
+        }
+        
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #3a3a3a;
+            color: #E6E6E6;
+        }
+        
+        .btn-secondary:hover {
+            background: #4a4a4a;
+        }
+        
+        .btn-danger {
+            background: #e63946;
+            color: white;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #3a3a3a;
+            color: #999999;
+        }
+        
+        .footer a {
+            color: #10b981;
+            text-decoration: none;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.5em;
+            }
+            
+            .days-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="save-indicator" id="saveIndicator">✓ Guardado automáticamente</div>
+    
+    <div class="container">
+        <div class="header">
+            <img src="logo-roafit.png" alt="ROAFIT" class="logo-image">
+            <h1>🥗 TRACKER DE OBJETIVOS NUTRICIONALES</h1>
+            <p>Crea <span class="highlight-green">hábitos saludables</span> paso a paso</p>
+        </div>
+        
+        <div class="disclaimer">
+            <h3>⚠️ Importante - Lee antes de usar</h3>
+            <p><strong>Esta herramienta es solo una guía básica para crear hábitos alimentarios saludables.</strong> No reemplaza el consejo de un nutricionista o dietista profesional calificado. Si tienes objetivos específicos (pérdida de peso, ganancia muscular, rendimiento deportivo), condiciones médicas, alergias, intolerancias o cualquier duda sobre tu alimentación, <strong>consulta con un experto en nutrición</strong> que pueda evaluar tus necesidades individuales y crear un plan personalizado para ti.</p>
+        </div>
+        
+        <div class="info-box">
+            <h3>🎯 ¿Cómo funciona este tracker?</h3>
+            <p>El enfoque es simple: <strong>establece objetivos específicos y medibles</strong> relacionados con hábitos alimentarios saludables, y márcalos cada día que los cumplas.</p>
+            <p><strong>Ejemplos de buenos objetivos:</strong></p>
+            <ul>
+                <li>✅ "Beber 2 litros de agua al día"</li>
+                <li>✅ "Comer 3 porciones de verduras diarias"</li>
+                <li>✅ "Cocinar en casa 5 días a la semana"</li>
+                <li>✅ "Comer legumbres 3 veces por semana"</li>
+                <li>✅ "Desayunar todos los días"</li>
+            </ul>
+            <p style="margin-top: 15px;"><strong class="highlight-green">Consejo:</strong> Empieza con 3 objetivos simples. Cuando los domines (después de 4 semanas), puedes añadir más o cambiarlos.</p>
+        </div>
+        
+        <div class="week-selector">
+            <button class="week-btn active" onclick="changeWeek(1)">Semana 1</button>
+            <button class="week-btn" onclick="changeWeek(2)">Semana 2</button>
+            <button class="week-btn" onclick="changeWeek(3)">Semana 3</button>
+            <button class="week-btn" onclick="changeWeek(4)">Semana 4</button>
+            <button class="week-btn" onclick="changeWeek(5)">Semana 5+</button>
+        </div>
+        
+        <div class="objectives-section">
+            <div class="objectives-title">🎯 Mis Objetivos Nutricionales</div>
+            <div id="objectivesContent"></div>
+        </div>
+        
+        <div class="recommendations-section">
+            <div class="recommendations-title">📌 Técnicas adicionales que puedes aplicar</div>
+            
+            <div class="recommendation-item">
+                <h4>🗓️ 1. Planificación Semanal de Comidas</h4>
+                <p>Dedicar tiempo a planificar te ayuda a tomar mejores decisiones alimentarias y evitar improvisaciones poco saludables:</p>
+                <ul>
+                    <li>Dedica 30 minutos cada domingo a planificar tus comidas de la semana</li>
+                    <li>Crea una lista de compras basada en tu planificación</li>
+                    <li>Prioriza cocinar en casa cuando sea posible (mayor control de ingredientes)</li>
+                    <li>Prepara algunos alimentos básicos con anticipación (arroz, legumbres, verduras lavadas)</li>
+                </ul>
+            </div>
+            
+            <div class="recommendation-item">
+                <h4>🍽️ 2. Método del Plato Saludable (Harvard)</h4>
+                <p>Una forma visual y sencilla de estructurar tus comidas principales de forma equilibrada:</p>
+                
+                <div class="plate-example">
+                    <img src="https://cdn.sph.harvard.edu/wp-content/uploads/sites/30/2012/09/SpanishHealthyEatingPlate.jpg" alt="Plato Saludable de Harvard">
+                    <p class="plate-caption">Plato para una alimentación saludable - Universidad de Harvard</p>
+                </div>
+                
+                <ul>
+                    <li><strong>½ del plato:</strong> Verduras y frutas variadas (cuantos más colores, mejor)</li>
+                    <li><strong>¼ del plato:</strong> Proteína saludable (legumbres, pollo, pescado, huevos, tofu, tempeh)</li>
+                    <li><strong>¼ del plato:</strong> Carbohidratos integrales (arroz integral, quinoa, avena, pasta integral, patata)</li>
+                    <li><strong>Añade:</strong> Grasas saludables (aceite de oliva virgen extra, aguacate, frutos secos, semillas)</li>
+                    <li><strong>Bebida:</strong> Agua como opción principal, evita bebidas azucaradas</li>
+                </ul>
+            </div>
+            
+            <div class="recommendation-item">
+                <h4>💡 3. Registro y Conciencia Alimentaria</h4>
+                <p>Si quieres profundizar en el seguimiento de tu alimentación:</p>
+                <ul>
+                    <li>Considera usar apps como Cronometer o MyFitnessPal para registrar lo que comes</li>
+                    <li>Toma fotos de tus comidas principales para crear conciencia visual</li>
+                    <li>Lleva un diario simple de cómo te sientes después de comer (energía, saciedad, digestión)</li>
+                </ul>
+                <p style="margin-top: 10px;"><strong class="highlight-green">Importante:</strong> El registro NO debe convertirse en obsesión. Es una herramienta educativa temporal.</p>
+            </div>
+            
+            <p style="margin-top: 20px; color: #b8b8b8;"><strong>💚 Estas técnicas complementan tus objetivos</strong> y te ayudan a mantener una alimentación balanceada de forma sostenible. No necesitas aplicarlas todas al mismo tiempo - elige la que mejor se adapte a tu estilo de vida.</p>
+        </div>
+        
+        <div class="notes-section">
+            <h3>📝 Reflexiones de la Semana</h3>
+            <textarea class="notes-input" id="weekNotes" placeholder="¿Cómo te fue esta semana con tus objetivos? ¿Qué te facilitó cumplirlos? ¿Qué obstáculos encontraste? ¿Necesitas ajustar algún objetivo? Anota tus reflexiones aquí..."></textarea>
+        </div>
+        
+        <div class="action-buttons">
+            <button class="btn btn-primary" onclick="window.print()">🖨️ Imprimir</button>
+            <button class="btn btn-secondary" onclick="exportData()">💾 Exportar Datos</button>
+            <button class="btn btn-danger" onclick="resetTracker()">🔄 Reiniciar Todo</button>
+        </div>
+        
+        <div class="footer">
+            <p><strong class="highlight-green">Del Deseo a la Acción</strong></p>
+            <p>Pequeños hábitos, grandes cambios. La consistencia vence a la perfección.</p>
+            <p style="margin-top: 15px;">
+                <a href="https://soyroafit.github.io/Herramientas-Gratuitas/">← Volver a Herramientas</a>
+            </p>
+        </div>
+    </div>
+    
+    <script>
+        var currentWeek = 1;
+        var trackerData = {};
+        var days = ['LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB', 'DOM'];
+        var defaultObjectives = [
+            'Ejemplo: Beber 2 litros de agua al día',
+            'Ejemplo: Comer 3 porciones de verduras diarias',
+            'Ejemplo: Cocinar en casa 5 días a la semana',
+            'Ejemplo: Comer legumbres 3 veces por semana',
+            'Ejemplo: Desayunar todos los días'
+        ];
+        
+        function initializeWeekData() {
+            if (!trackerData[currentWeek]) {
+                trackerData[currentWeek] = {
+                    objectives: [],
+                    notes: ''
+                };
+                
+                for (var i = 0; i < 5; i++) {
+                    trackerData[currentWeek].objectives.push({
+                        text: '',
+                        days: [false, false, false, false, false, false, false]
+                    });
+                }
+            }
+        }
+        
+        function renderObjectives() {
+            initializeWeekData();
+            var content = document.getElementById('objectivesContent');
+            var html = '';
+            
+            for (var i = 0; i < 5; i++) {
+                var objective = trackerData[currentWeek].objectives[i];
+                
+                html += '<div class="objective-card">';
+                html += '<div class="objective-header">';
+                html += '<div class="objective-number">' + (i + 1) + '</div>';
+                html += '<input type="text" class="objective-input" ';
+                html += 'placeholder="' + defaultObjectives[i] + '" ';
+                html += 'value="' + (objective.text || '') + '" ';
+                html += 'onchange="updateObjectiveText(' + i + ', this.value)">';
+                html += '</div>';
+                
+                html += '<div class="days-grid">';
+                for (var d = 0; d < 7; d++) {
+                    var checked = objective.days[d] ? 'checked' : '';
+                    html += '<div class="day-box ' + checked + '" onclick="toggleDay(' + i + ', ' + d + ')">';
+                    html += '<div class="day-name">' + days[d] + '</div>';
+                    html += '<div class="checkbox">' + (objective.days[d] ? '✓' : '') + '</div>';
+                    html += '</div>';
+                }
+                html += '</div>';
+                
+                var completedDays = objective.days.filter(function(d) { return d; }).length;
+                var percentage = Math.round((completedDays / 7) * 100);
+                
+                html += '<div class="progress-section">';
+                html += '<div class="progress-title">Progreso semanal</div>';
+                html += '<div class="progress-bar-container">';
+                html += '<div class="progress-bar" style="width: ' + percentage + '%">';
+                if (percentage > 15) {
+                    html += percentage + '%';
+                }
+                html += '</div>';
+                html += '</div>';
+                html += '<div class="progress-text">' + completedDays + ' de 7 días cumplidos</div>';
+                html += '</div>';
+                
+                html += '</div>';
+            }
+            
+            content.innerHTML = html;
+            
+            var notesInput = document.getElementById('weekNotes');
+            notesInput.value = trackerData[currentWeek].notes || '';
+        }
+        
+        function updateObjectiveText(index, value) {
+            trackerData[currentWeek].objectives[index].text = value;
+            saveData();
+        }
+        
+        function toggleDay(objIndex, dayIndex) {
+            trackerData[currentWeek].objectives[objIndex].days[dayIndex] = 
+                !trackerData[currentWeek].objectives[objIndex].days[dayIndex];
+            renderObjectives();
+            saveData();
+        }
+        
+        function changeWeek(week) {
+            currentWeek = week;
+            
+            var buttons = document.querySelectorAll('.week-btn');
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].classList.remove('active');
+            }
+            buttons[week - 1].classList.add('active');
+            
+            renderObjectives();
+        }
+        
+        function saveData() {
+            try {
+                var notesInput = document.getElementById('weekNotes');
+                if (notesInput) {
+                    trackerData[currentWeek].notes = notesInput.value;
+                }
+                
+                var dataString = JSON.stringify(trackerData);
+                localStorage.setItem('nutritionTracker', dataString);
+                
+                showSaveIndicator();
+            } catch (e) {
+                console.error('Error guardando datos:', e);
+            }
+        }
+        
+        function loadData() {
+            try {
+                var savedData = localStorage.getItem('nutritionTracker');
+                if (savedData) {
+                    trackerData = JSON.parse(savedData);
+                }
+            } catch (e) {
+                console.error('Error cargando datos:', e);
+            }
+        }
+        
+        function showSaveIndicator() {
+            var indicator = document.getElementById('saveIndicator');
+            indicator.classList.add('show');
+            setTimeout(function() {
+                indicator.classList.remove('show');
+            }, 2000);
+        }
+        
+        function exportData() {
+            try {
+                var dataString = JSON.stringify(trackerData, null, 2);
+                var blob = new Blob([dataString], { type: 'application/json' });
+                var url = URL.createObjectURL(blob);
+                
+                var a = document.createElement('a');
+                a.href = url;
+                var today = new Date();
+                var dateString = today.getFullYear() + '-' + 
+                               (today.getMonth() + 1) + '-' + 
+                               today.getDate();
+                a.download = 'nutrition-tracker-' + dateString + '.json';
+                a.click();
+                
+                URL.revokeObjectURL(url);
+            } catch (e) {
+                alert('Error al exportar: ' + e.message);
+            }
+        }
+        
+        function resetTracker() {
+            if (confirm('¿Estás seguro de que quieres borrar todos tus datos? Esta acción no se puede deshacer.')) {
+                localStorage.removeItem('nutritionTracker');
+                location.reload();
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            renderObjectives();
+            
+            var notesInput = document.getElementById('weekNotes');
+            notesInput.addEventListener('input', function() {
+                saveData();
+            });
+        });
+    </script>
+</body>
+</html>
