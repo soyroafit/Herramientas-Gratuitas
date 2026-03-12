@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Valoración Inicial - ROAFIT</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #2a2a2a;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #f5f5f5;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            border: 1px solid #3a3a3a;
+        }
+
+        /* Botón volver */
+        .back-link {
+            display: inline-block;
+            margin-bottom: 25px;
+            color: #F2CB05;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1em;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: #d4af04;
+        }
+
+        /* Header con logo */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 25px;
+            border-bottom: 3px solid #F2CB05;
+        }
+
+        .logo-container {
+            margin-bottom: 20px;
+        }
+
+        .logo-image {
+            max-width: 400px;
+            width: 80%;
+            height: auto;
+        }
+
+        h1 {
+            color: #1a1a1a;
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.1em;
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            color: #F2CB05;
+            font-weight: bold;
+            margin-top: 10px;
+            font-size: 1.1em;
+        }
+
+        /* Caja de introducción */
+        .intro-box {
+            background: linear-gradient(135deg, #F2CB05 0%, #ffd700 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            color: #1a1a1a;
+            box-shadow: 0 5px 15px rgba(242, 203, 5, 0.2);
+        }
+
+        .intro-box h2 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .intro-box ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .intro-box li {
+            padding: 8px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .intro-box li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        /* Secciones del formulario */
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            color: #1a1a1a;
+            font-size: 1.4em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-number {
+            background: #F2CB05;
+            color: #1a1a1a;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* Campos del formulario */
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .required {
+            color: #e74c3c;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #d0d0d0;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+            background: white;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #F2CB05;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .help-text {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        /* Radio y Checkbox groups */
+        .radio-group,
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .radio-option,
+        .checkbox-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            border: 2px solid #d0d0d0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .radio-option:hover,
+        .checkbox-option:hover {
+            border-color: #F2CB05;
+            background: #fffef0;
+        }
+
+        .radio-option input[type="radio"],
+        .checkbox-option input[type="checkbox"] {
+            width: auto;
+            cursor: pointer;
+        }
+
+        /* Grid de 2 columnas */
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        /* Botón de envío */
+        .submit-button {
+            background: linear-gradient(135deg, #F2CB05 0%, #ffd700 100%);
+            color: #1a1a1a;
+            border: none;
+            padding: 18px 40px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin-top: 30px;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(242, 203, 5, 0.3);
+        }
+
+        .submit-button:active {
+            transform: translateY(0);
+        }
+
+        .submit-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Mensajes de éxito/error */
+        .message-box {
+            display: none;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .message-box.show {
+            display: block;
+        }
+
+        .success-message {
+            background: #10b981;
+            color: white;
+        }
+
+        .error-message {
+            background: #e74c3c;
+            color: white;
+        }
+
+        /* Indicador de guardado */
+        .save-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #10b981;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+        }
+
+        .save-indicator.show {
+            display: flex;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+            color: #666;
+        }
+
+        .footer-tagline {
+            color: #F2CB05;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px 20px;
+            }
+
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 1.7em;
+            }
+
+            .section-title {
+                font-size: 1.2em;
+            }
+
+            .logo-image {
+                max-width: 280px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Indicador de guardado -->
+    <div class="save-indicator" id="saveIndicator">
+        ✓ Guardado automáticamente
+    </div>
+
+    <div class="container">
+        <a href="index.html" class="back-link">← Volver a Herramientas</a>
+        
+        <!-- Header con logo -->
+        <div class="header">
+            <div class="logo-container">
+                <img src="logo-roafit.png" alt="ROAFIT Logo" class="logo-image">
+            </div>
+            <h1>Valoración Inicial - Semana 0</h1>
+            <p class="subtitle">Comienza tu proceso de cambio real con tu plan personalizado</p>
+            <p class="tagline">💪 Del Deseo a la Acción</p>
+        </div>
+
+        <!-- Introducción -->
+        <div class="intro-box">
+            <h2>🎯 ¿Qué incluye el servicio personalizado?</h2>
+            <ul>
+                <li>Valoración completa de tu estado actual</li>
+                <li>Plan de entrenamiento adaptado a ti</li>
+                <li>Guía nutricional personalizada</li>
+                <li>Seguimiento semanal y ajustes</li>
+                <li>Soporte directo vía WhatsApp</li>
+                <li>Enfoque en hábitos sostenibles</li>
+            </ul>
+        </div>
+
+        <form id="valoracionForm">
+            <!-- Sección 1: Datos Personales -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span class="section-number">1</span>
+                    <span>Datos Personales</span>
+                </h2>
+                
+                <div class="two-column">
+                    <div class="form-group">
+                        <label>Nombre completo <span class="required">*</span></label>
+                        <input type="text" name="nombre" id="nombre" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Edad <span class="required">*</span></label>
+                        <input type="number" name="edad" id="edad" min="15" max="100" required>
+                    </div>
+                </div>
+
+                <div class="two-column">
+                    <div class="form-group">
+                        <label>Email (Correo electrónico) <span class="required">*</span></label>
+                        <input type="email" name="email" id="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>WhatsApp <span class="required">*</span></label>
+                        <input type="tel" name="whatsapp" id="whatsapp" placeholder="+34 600 000 000" required>
+                        <p class="help-text">Con código de país (ej: +34 para España)</p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Ciudad / País</label>
+                    <input type="text" name="ciudad" id="ciudad" placeholder="Madrid, España">
+                </div>
+            </div>
+
+            <!-- Sección 2: Objetivos -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span class="section-number">2</span>
+                    <span>Tus Objetivos</span>
+                </h2>
+
+                <div class="form-group">
+                    <label>¿Cuál es tu objetivo principal? <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="objetivo" value="Perder grasa" required>
+                            <span>Perder grasa / Definir</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="objetivo" value="Ganar masa muscular" required>
+                            <span>Ganar masa muscular</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="objetivo" value="Mejorar condición física" required>
+                            <span>Mejorar mi condición física</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="objetivo" value="Crear hábito" required>
+                            <span>Crear el hábito de entrenar</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="objetivo" value="Mejorar salud general" required>
+                            <span>Mejorar mi salud y bienestar general</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Aquí puedes expresarte libremente y sin prejuicios: Describe específicamente qué quieres lograr <span class="required">*</span></label>
+                    <textarea name="objetivo_detalle" id="objetivo_detalle" placeholder="Ejemplos: &quot;Perder 10 kg&quot;, &quot;Sentirme con más energía&quot;, &quot;Tener un cuerpo más estético&quot;, &quot;Prefiero no decirlo aquí&quot;, etc." required></textarea>
+                </div>
+
+                <div class="two-column">
+                    <div class="form-group">
+                        <label>¿En cuánto tiempo quieres lograrlo?</label>
+                        <select name="tiempo_objetivo" id="tiempo_objetivo">
+                            <option value="1-3 meses">1-3 meses</option>
+                            <option value="3-6 meses" selected>3-6 meses</option>
+                            <option value="6-12 meses">6-12 meses</option>
+                            <option value="Sin prisa">Sin prisa, enfoque en hábitos</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>¿Has entrenado antes?</label>
+                        <select name="experiencia" id="experiencia">
+                            <option value="Nunca">Nunca he entrenado</option>
+                            <option value="Principiante">Sí, pero soy principiante</option>
+                            <option value="Intermedio" selected>Nivel intermedio</option>
+                            <option value="Avanzado">Nivel avanzado</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección 3: Historial de Salud -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span class="section-number">3</span>
+                    <span>Historial de Salud</span>
+                </h2>
+
+                <div class="form-group">
+                    <label>¿Tienes alguna lesión actual o previa? <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="lesiones" value="No" required>
+                            <span>No tengo lesiones</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="lesiones" value="Sí" required>
+                            <span>Sí tengo lesiones o creo tenerlas (describe abajo)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Detalla lesiones, dolores o limitaciones físicas</label>
+                    <textarea name="lesiones_detalle" id="lesiones_detalle" placeholder="Ejemplo: Dolor lumbar ocasional, rodilla derecha operada en 2020..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>¿Tienes alguna condición médica?</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="condiciones" value="Diabetes">
+                            <span>Diabetes</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="condiciones" value="Hipertensión">
+                            <span>Hipertensión</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="condiciones" value="Problemas cardíacos">
+                            <span>Problemas cardíacos</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="condiciones" value="Problemas respiratorios">
+                            <span>Problemas respiratorios (asma, etc.)</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="condiciones" value="Ninguna">
+                            <span>Ninguna</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>¿Tomas algún medicamento regularmente?</label>
+                    <textarea name="medicamentos" id="medicamentos" placeholder="Si no tomas ninguno, escribe 'Ninguno'"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>¿Estás aplicándote inyecciones, pastillas o tratamientos específicos para la pérdida de peso con OZEMPIC, MOUNJARO (Semaglutida, Tirzepatide, etc.) o tienes pensado hacerlo?</label>
+                    <textarea name="tratamiento_perdida_peso" id="tratamiento_perdida_peso" placeholder="Puedes ser sincera/o, esto es opcional y para brindarte el mejor apoyo y seguridad en tu proceso, sin juzgar."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>¿Estás aplicándote inyecciones, pastillas o tratamientos específicos para la ganancia de masa muscular como ANABÓLICOS, SARMS, terapias hormonales o tienes pensado hacerlo?</label>
+                    <textarea name="tratamiento_ganancia_muscular" id="tratamiento_ganancia_muscular" placeholder="Puedes ser sincera/o, esto es opcional y para brindarte el mejor apoyo y seguridad en tu proceso, sin juzgar."></textarea>
+                </div>
+            </div>
+
+            <!-- Sección 4: Estado Actual -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span class="section-number">4</span>
+                    <span>Estado Actual</span>
+                </h2>
+
+                <div class="two-column">
+                    <div class="form-group">
+                        <label>Peso actual (kg) <span class="required">*</span></label>
+                        <input type="number" name="peso" id="peso" step="0.1" min="30" max="200" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Altura (cm) <span class="required">*</span></label>
+                        <input type="number" name="altura" id="altura" min="120" max="230" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Nivel de actividad física actual <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="actividad" value="Sedentario" required>
+                            <span>Sedentario (Ej: trabajo de oficina, 6 a 8 horas sentado, casi sin o nada de ejercicio)</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="actividad" value="Ligera" required>
+                            <span>Actividad ligera (camino ocasionalmente, ejercicio 1-2 días/semana)</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="actividad" value="Moderada" required>
+                            <span>Actividad moderada (ejercicio 3-4 días/semana)</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="actividad" value="Alta" required>
+                            <span>Actividad alta (ejercicio 5-7 días/semana)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>¿Cómo describirías tu alimentación actual?</label>
+                    <textarea name="alimentacion" id="alimentacion" placeholder="Ejemplo: Como fuera mucho, no desayuno, picoteo entre horas..."></textarea>
+                </div>
+            </div>
+
+            <!-- Sección 5: Disponibilidad -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span class="section-number">5</span>
+                    <span>Disponibilidad y Recursos</span>
+                </h2>
+
+                <div class="form-group">
+                    <label>¿Cuántos días a la semana puedes entrenar? <span class="required">*</span></label>
+                    <select name="dias_semana" id="dias_semana" required>
+                        <option value="2 días">2 días</option>
+                        <option value="3 días" selected>3 días</option>
+                        <option value="4 días">4 días</option>
+                        <option value="5 días">5 días</option>
+                        <option value="6+ días">6 o más días</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>¿Dónde vas a entrenar? <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="lugar" value="Gimnasio" required>
+                            <span>Gimnasio (con equipo completo)</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="lugar" value="Casa con equipo" required>
+                            <span>Casa con equipo (mancuernas, bandas, etc.)</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="lugar" value="Casa sin equipo" required>
+                            <span>Casa sin equipo (peso corporal)</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="lugar" value="Mixto" required>
+                            <span>Mixto (gym + casa)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Si entrenas en casa, ¿qué equipo tienes?</label>
+                    <textarea name="equipo" id="equipo" placeholder="Ejemplo: Mancuernas hasta 15kg, bandas elásticas, esterilla..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Presupuesto mensual aproximado para el servicio personalizado</label>
+                    <select name="presupuesto" id="presupuesto">
+                        <option value="50-75€">50-75€ / mes</option>
+                        <option value="75-100€" selected>75-100€ / mes</option>
+                        <option value="100-150€">100-150€ / mes</option>
+                        <option value="150+€">150€+ / mes</option>
+                        <option value="Primero quiero más info">Primero quiero más información</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Sección 6: Motivación y Compromiso -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span class="section-number">6</span>
+                    <span>Motivación y Compromiso</span>
+                </h2>
+
+                <div class="form-group">
+                    <label>¿Por qué AHORA es el momento de empezar? <span class="required">*</span></label>
+                    <textarea name="por_que_ahora" id="por_que_ahora" placeholder="Sé honesto/a. ¿Qué ha cambiado? ¿Qué evento o situación te ha motivado?" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>¿Qué te ha detenido antes de conseguir tus objetivos?</label>
+                    <textarea name="obstaculos" id="obstaculos" placeholder="Ejemplo: Falta de constancia, no saber qué hacer en el gym, dietas restrictivas que no aguanto..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>¿Qué esperas de un entrenador/coach?</label>
+                    <textarea name="expectativas" id="expectativas" placeholder="Ejemplo: Alguien que me mantenga motivado, que me explique bien los ejercicios, que entienda mi situación personal..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>¿Algo más que quieras compartir?</label>
+                    <textarea name="informacion_adicional" id="informacion_adicional" placeholder="Cualquier cosa que creas importante que deba saber..."></textarea>
+                </div>
+            </div>
+
+            <!-- Botón de envío -->
+            <button type="submit" class="submit-button" id="submitBtn">
+                📧 Enviar Valoración
+            </button>
+
+            <!-- Mensajes -->
+            <div class="message-box success-message" id="successMessage">
+                <h3>✅ ¡Valoración enviada con éxito!</h3>
+                <p>Gracias por tu interés. Revisaré tu información y me pondré en contacto contigo por WhatsApp en las próximas 24-48 horas.</p>
+                <p style="margin-top: 15px;">📱 Mientras tanto, sígueme en Instagram <a href="https://instagram.com/soyroafit" style="color: #fff; font-weight: bold; text-decoration: underline;">@soyroafit</a></p>
+            </div>
+
+            <div class="message-box error-message" id="errorMessage">
+                <h3>❌ Error al enviar</h3>
+                <p>Hubo un problema al enviar tu valoración. Por favor, intenta de nuevo o contáctame directamente por Instagram <a href="https://instagram.com/soyroafit" style="color: #fff; font-weight: bold; text-decoration: underline;">@soyroafit</a></p>
+            </div>
+        </form>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p class="footer-tagline">💪 Del Deseo a la Acción</p>
+        </div>
+    </div>
+
+    <!-- EmailJS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
+    <script>
+        // ============================================
+        // CONFIGURACIÓN DE EMAILJS
+        // ============================================
+        // REEMPLAZA ESTOS VALORES CON TUS CREDENCIALES
+        const EMAILJS_CONFIG = {
+            publicKey: 'YOUR_PUBLIC_KEY',      // Tu Public Key de EmailJS
+            serviceId: 'YOUR_SERVICE_ID',      // Tu Service ID
+            templateId: 'YOUR_TEMPLATE_ID'     // Tu Template ID para Valoración Inicial
+        };
+
+        // Inicializar EmailJS
+        (function() {
+            emailjs.init(EMAILJS_CONFIG.publicKey);
+        })();
+
+        // ============================================
+        // GUARDADO AUTOMÁTICO EN LOCALSTORAGE
+        // ============================================
+        const form = document.getElementById('valoracionForm');
+        const saveIndicator = document.getElementById('saveIndicator');
+        const STORAGE_KEY = 'roafit_valoracion_draft';
+
+        // Cargar datos guardados al iniciar
+        function loadSavedData() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    Object.keys(data).forEach(key => {
+                        const field = document.getElementById(key);
+                        if (field) {
+                            if (field.type === 'radio') {
+                                const radio = document.querySelector(`input[name="${key}"][value="${data[key]}"]`);
+                                if (radio) radio.checked = true;
+                            } else if (field.type === 'checkbox') {
+                                field.checked = data[key];
+                            } else {
+                                field.value = data[key];
+                            }
+                        }
+                    });
+                    console.log('Datos guardados cargados');
+                } catch (e) {
+                    console.error('Error al cargar datos:', e);
+                }
+            }
+        }
+
+        // Guardar datos automáticamente
+        function saveFormData() {
+            const formData = new FormData(form);
+            const data = {};
+            
+            // Campos de texto
+            ['nombre', 'edad', 'email', 'whatsapp', 'ciudad', 'objetivo_detalle', 
+             'tiempo_objetivo', 'experiencia', 'lesiones_detalle', 'medicamentos',
+             'tratamiento_perdida_peso', 'tratamiento_ganancia_muscular',
+             'peso', 'altura', 'alimentacion', 'dias_semana', 'equipo', 'presupuesto',
+             'por_que_ahora', 'obstaculos', 'expectativas', 'informacion_adicional'].forEach(id => {
+                const field = document.getElementById(id);
+                if (field) data[id] = field.value;
+            });
+
+            // Radio buttons
+            ['objetivo', 'lesiones', 'actividad', 'lugar'].forEach(name => {
+                const selected = document.querySelector(`input[name="${name}"]:checked`);
+                if (selected) data[name] = selected.value;
+            });
+
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            
+            // Mostrar indicador
+            saveIndicator.classList.add('show');
+            setTimeout(() => {
+                saveIndicator.classList.remove('show');
+            }, 2000);
+        }
+
+        // Auto-guardar cada 3 segundos cuando hay cambios
+        let saveTimeout;
+        form.addEventListener('input', () => {
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(saveFormData, 3000);
+        });
+
+        // Cargar datos al iniciar
+        loadSavedData();
+
+        // ============================================
+        // ENVÍO DEL FORMULARIO
+        // ============================================
+        const submitBtn = document.getElementById('submitBtn');
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Deshabilitar botón
+            submitBtn.disabled = true;
+            submitBtn.textContent = '⏳ Enviando...';
+
+            // Recopilar condiciones médicas seleccionadas
+            const condicionesCheckboxes = document.querySelectorAll('input[name="condiciones"]:checked');
+            const condiciones = Array.from(condicionesCheckboxes).map(cb => cb.value).join(', ') || 'Ninguna';
+
+            // Preparar datos del formulario
+            const formData = {
+                // Datos personales
+                nombre: form.nombre.value,
+                edad: form.edad.value,
+                email: form.email.value,
+                whatsapp: form.whatsapp.value,
+                ciudad: form.ciudad.value || 'No especificado',
+                
+                // Objetivos
+                objetivo: form.objetivo.value,
+                objetivo_detalle: form.objetivo_detalle.value,
+                tiempo_objetivo: form.tiempo_objetivo.value,
+                experiencia: form.experiencia.value,
+                
+                // Salud
+                lesiones: form.lesiones.value,
+                lesiones_detalle: form.lesiones_detalle.value || 'Ninguna',
+                condiciones: condiciones,
+                medicamentos: form.medicamentos.value || 'Ninguno',
+                tratamiento_perdida_peso: form.tratamiento_perdida_peso.value || 'No especificado',
+                tratamiento_ganancia_muscular: form.tratamiento_ganancia_muscular.value || 'No especificado',
+                
+                // Estado actual
+                peso: form.peso.value,
+                altura: form.altura.value,
+                actividad: form.actividad.value,
+                alimentacion: form.alimentacion.value || 'No especificado',
+                
+                // Disponibilidad
+                dias_semana: form.dias_semana.value,
+                lugar: form.lugar.value,
+                equipo: form.equipo.value || 'No especificado',
+                presupuesto: form.presupuesto.value,
+                
+                // Motivación
+                por_que_ahora: form.por_que_ahora.value,
+                obstaculos: form.obstaculos.value || 'No especificado',
+                expectativas: form.expectativas.value || 'No especificado',
+                informacion_adicional: form.informacion_adicional.value || 'Ninguna',
+                
+                // Metadata
+                fecha_envio: new Date().toLocaleString('es-ES')
+            };
+
+            // Enviar email usando EmailJS
+            emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, formData)
+                .then(function(response) {
+                    console.log('SUCCESS!', response.status, response.text);
+                    
+                    // Mostrar mensaje de éxito
+                    successMessage.classList.add('show');
+                    form.style.display = 'none';
+                    
+                    // Limpiar localStorage
+                    localStorage.removeItem(STORAGE_KEY);
+                    
+                    // Scroll al mensaje
+                    successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    
+                }, function(error) {
+                    console.log('FAILED...', error);
+                    
+                    // Mostrar mensaje de error
+                    errorMessage.classList.add('show');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = '📧 Enviar Valoración';
+                    
+                    // Scroll al mensaje
+                    errorMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    
+                    // Ocultar error después de 5 segundos
+                    setTimeout(() => {
+                        errorMessage.classList.remove('show');
+                    }, 5000);
+                });
+        });
+    </script>
+</body>
+</html>
