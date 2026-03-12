@@ -357,6 +357,15 @@
             <button class="btn btn-danger" onclick="resetTracker()">🔄 Reiniciar Todo</button>
         </div>
         
+        <!-- Contenedor para botón de Coach -->
+        <div id="coachButtonContainer" style="text-align: center; margin-top: 40px; padding: 30px; background: linear-gradient(135deg, #F2CB05 0%, #ffd700 100%); border-radius: 20px;">
+            <h3 style="color: #1a1a1a; margin-bottom: 15px;">¿Necesitas ayuda personalizada?</h3>
+            <p style="color: #1a1a1a; margin-bottom: 20px;">
+                Te puedo ayudar a crear un plan adaptado a ti y hacer seguimiento de tus objetivos.
+            </p>
+            <!-- El botón se insertará aquí automáticamente -->
+        </div>
+        
         <div class="footer">
             <p><strong>Recuerda:</strong> La consistencia vence a la perfección. Pequeños pasos, todos los días.</p>
             <p style="margin-top: 10px;">Del Deseo a la Acción</p>
@@ -518,6 +527,25 @@
             notesInput.addEventListener('input', function() {
                 saveData();
             });
+            
+        });
+    </script>
+    
+    <!-- EmailJS SDK - DEBE CARGARSE PRIMERO -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
+    <!-- ROAFIT Coach Sender Module - SE CARGA SEGUNDO -->
+    <script src="roafit-coach-sender.js"></script>
+    
+    <!-- Inicialización - SE EJECUTA AL FINAL -->
+    <script>
+        // Inicializar botón "Enviar a mi coach" cuando todo esté listo
+        window.addEventListener('load', function() {
+            if (typeof RoafitCoachSender !== 'undefined') {
+                RoafitCoachSender.init('coachButtonContainer');
+            } else {
+                console.error('RoafitCoachSender no está disponible');
+            }
         });
     </script>
 </body>
