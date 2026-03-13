@@ -314,7 +314,7 @@
                 </select>
             </div>
             
-            <button class="calculate-btn" onclick="calcular()">💪 Calcular mis Calorías</button>
+            <button class="calculate-btn" onclick="calcular()">Calcular mis Calorías</button>
         </div>
         
         <div class="results" id="results">
@@ -334,6 +334,15 @@
             <div class="info-box">
                 <h3>💡 ¿Qué significan estos resultados?</h3>
                 <p id="infoText"></p>
+            </div>
+            
+            <!-- Contenedor para botón de Coach -->
+            <div id="coachButtonContainer" style="text-align: center; margin-top: 40px; padding: 30px; background: linear-gradient(135deg, #F2CB05 0%, #ffd700 100%); border-radius: 20px;">
+                <h3 style="color: #1a1a1a; margin-bottom: 15px;">¿Quieres un plan nutricional personalizado?</h3>
+                <p style="color: #1a1a1a; margin-bottom: 20px;">
+                    Basado en tus calorías y objetivos, puedo crear un plan de alimentación adaptado a ti.
+                </p>
+                <!-- El botón se insertará aquí automáticamente -->
             </div>
         </div>
         
@@ -423,8 +432,35 @@
             document.getElementById('infoText').innerHTML = infoTexto;
             document.getElementById('results').classList.add('show');
             
+            // Guardar resultados en localStorage para el módulo de coach
+            localStorage.setItem('calorieData', JSON.stringify({
+                sexo: sexo,
+                edad: edad,
+                peso: peso,
+                altura: altura,
+                actividad: actividad,
+                objetivo: objetivo,
+                tmb: Math.round(tmb),
+                tdee: Math.round(tdee),
+                calorias: calorias,
+                fecha: new Date().toLocaleString('es-ES')
+            }));
+            
             document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
+        
+        // Inicializar botón "Enviar a mi coach" cuando la página cargue
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof RoafitCoachSender !== 'undefined') {
+                RoafitCoachSender.init('coachButtonContainer');
+            }
+        });
     </script>
+    
+    <!-- EmailJS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
+    <!-- ROAFIT Coach Sender Module -->
+    <script src="roafit-coach-sender.js"></script>
 </body>
 </html>
