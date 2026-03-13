@@ -181,12 +181,14 @@
                 data.resumen = crearResumenEntrenamiento(workoutData);
                 break;
             case 'nutricion':
-                data.datos = JSON.parse(localStorage.getItem('nutritionGoals') || '{}');
-                data.resumen = 'Objetivos nutricionales registrados';
+                const nutritionData = JSON.parse(localStorage.getItem('nutritionTracker') || '{}');
+                data.datos = nutritionData;
+                data.resumen = crearResumenNutricion(nutritionData);
                 break;
             case 'calorias':
-                data.datos = JSON.parse(localStorage.getItem('calorieData') || '{}');
-                data.resumen = 'Cálculo de calorías completado';
+                const calorieData = JSON.parse(localStorage.getItem('calorieData') || '{}');
+                data.datos = calorieData;
+                data.resumen = crearResumenCalorias(calorieData);
                 break;
             default:
                 data.datos = { mensaje: 'Datos del tracker' };
@@ -330,6 +332,95 @@
             // Agregar notas generales si existen
             if (semanaData.notes && semanaData.notes.trim()) {
                 resumen += '📝 NOTAS GENERALES DE LA SEMANA:\n';
+                resumen += semanaData.notes + '\n\n';
+            }
+            
+            resumen += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
+        });
+        
+        return resumen;
+    }
+    
+    // Crear resumen legible de la calculadora de calorías
+    function crearResumenCalorias(calorieData) {
+        if (!calorieData || !calorieData.tdee) {
+            return 'Sin datos calculados';
+        }
+        
+        let resumen = '\n🔢 CALCULADORA DE CALORÍAS - RESULTADOS\n';
+        resumen += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
+        
+        resumen += '👤 DATOS PERSONALES:\n';
+        resumen += `   Sexo: ${calorieData.sexo === 'hombre' ? 'Hombre' : 'Mujer'}\n`;
+        resumen += `   Edad: ${calorieData.edad} años\n`;
+        resumen += `   Peso: ${calorieData.peso} kg\n`;
+        resumen += `   Altura: ${calorieData.altura} cm\n`;
+        resumen += `   Nivel de actividad: ${calorieData.actividad}\n`;
+        resumen += `   Objetivo: ${calorieData.objetivo}\n\n`;
+        
+        resumen += '📊 RESULTADOS CALCULADOS:\n';
+        resumen += `   Metabolismo Basal (TMB): ${calorieData.tmb} kcal/día\n`;
+        resumen += `   Gasto Total Diario (TDEE): ${calorieData.tdee} kcal/día\n\n`;
+        
+        resumen += '🎯 RECOMENDACIONES CALÓRICAS:\n';
+        if (calorieData.calorias) {
+            resumen += `   Conservador: ${calorieData.calorias.conservador} kcal/día\n`;
+            resumen += `   Moderado: ${calorieData.calorias.moderado} kcal/día\n`;
+            if (calorieData.calorias.agresivo) {
+                resumen += `   Agresivo: ${calorieData.calorias.agresivo} kcal/día\n`;
+            }
+        }
+        
+        resumen += '\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+        resumen += `Calculado el: ${calorieData.fecha}\n`;
+        resumen += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+        
+        return resumen;
+    }
+    
+    // Crear resumen legible de objetivos nutricionales
+    function crearResumenNutricion(nutritionData) {
+        if (!nutritionData || Object.keys(nutritionData).length === 0) {
+            return 'Sin objetivos registrados';
+        }
+        
+        let resumen = '\n🥗 TRACKER DE OBJETIVOS NUTRICIONALES - RESUMEN\n';
+        resumen += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
+        
+        const dias = ['LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB', 'DOM'];
+        
+        // Recorrer todas las semanas
+        Object.keys(nutritionData).forEach(semanaNum => {
+            const semanaData = nutritionData[semanaNum];
+            
+            resumen += `📅 SEMANA ${semanaNum}\n`;
+            resumen += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
+            
+            // Mostrar cada objetivo
+            semanaData.objectives.forEach((obj, idx) => {
+                if (obj.text && obj.text.trim()) {
+                    const diasCompletados = obj.days.filter(d => d).length;
+                    const porcentaje = Math.round((diasCompletados / 7) * 100);
+                    
+                    resumen += `${idx + 1}. ${obj.text}\n`;
+                    resumen += `   Progreso: ${diasCompletados}/7 días (${porcentaje}%)\n`;
+                    resumen += '   ';
+                    
+                    // Mostrar cada día
+                    obj.days.forEach((completado, diaIdx) => {
+                        if (completado) {
+                            resumen += `${dias[diaIdx]} ✅  `;
+                        } else {
+                            resumen += `${dias[diaIdx]} ⬜  `;
+                        }
+                    });
+                    resumen += '\n\n';
+                }
+            });
+            
+            // Agregar notas si existen
+            if (semanaData.notes && semanaData.notes.trim()) {
+                resumen += '📝 REFLEXIONES DE LA SEMANA:\n';
                 resumen += semanaData.notes + '\n\n';
             }
             
