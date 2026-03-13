@@ -473,7 +473,7 @@
     <div class="container">
         <div class="header">
             <img src="logo-roafit.png" alt="ROAFIT" class="logo-image">
-            <h1>💪 TRACKER DE ENTRENAMIENTO</h1>
+            <h1>TRACKER DE ENTRENAMIENTO</h1>
             <p>Tu Registro Completo de tu Rutina</p>
         </div>
         
@@ -537,6 +537,15 @@
             <button class="btn btn-primary" onclick="printTracker()">🖨️ Imprimir</button>
             <button class="btn btn-secondary" onclick="exportData()">💾 Exportar Datos</button>
             <button class="btn btn-danger" onclick="resetTracker()">🔄 Reiniciar Todo</button>
+        </div>
+        
+        <!-- Contenedor para botón de Coach -->
+        <div id="coachButtonContainer" style="text-align: center; margin-top: 40px; padding: 30px; background: linear-gradient(135deg, #F2CB05 0%, #ffd700 100%); border-radius: 20px;">
+            <h3 style="color: #1a1a1a; margin-bottom: 15px;">¿Necesitas un plan personalizado?</h3>
+            <p style="color: #1a1a1a; margin-bottom: 20px;">
+                Puedo ayudarte a optimizar tu rutina y hacer seguimiento de tus entrenamientos.
+            </p>
+            <!-- El botón se insertará aquí automáticamente -->
         </div>
         
         <div class="footer">
@@ -807,7 +816,18 @@
             cardioInput.addEventListener('input', function() {
                 saveData();
             });
+            
+            // Inicializar botón "Enviar a mi coach"
+            if (typeof RoafitCoachSender !== 'undefined') {
+                RoafitCoachSender.init('coachButtonContainer');
+            }
         });
     </script>
+    
+    <!-- EmailJS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
+    <!-- ROAFIT Coach Sender Module -->
+    <script src="roafit-coach-sender.js"></script>
 </body>
 </html>
