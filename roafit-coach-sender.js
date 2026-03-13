@@ -99,8 +99,9 @@
                     </form>
                     
                     <div id="coachSuccessMsg" style="display: none; background: #10b981; color: white; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px;">
-                        <h3 style="margin-bottom: 10px;">✅ ¡Datos enviados!</h3>
-                        <p style="margin: 0;">Me pondré en contacto contigo en las próximas 24-48 horas. ¡Gracias por tu interés!</p>
+                        <h3 style="margin-bottom: 10px;">✅ ¡Datos enviados correctamente!</h3>
+                        <p style="margin: 0;">He recibido tu información. Me pondré en contacto contigo en las próximas 24-48 horas por email o WhatsApp.</p>
+                        <p style="margin-top: 10px; font-size: 0.9em; opacity: 0.9;">¡Gracias por tu interés!</p>
                     </div>
                     
                     <div id="coachErrorMsg" style="display: none; background: #e74c3c; color: white; padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px;">
@@ -207,59 +208,39 @@
         // Exportar datos del tracker
         const trackerData = exportTrackerData(trackerType);
         
-        // Preparar datos para EmailJS
-        const templateParams = {
-            nombre: nombre,  // Para el template de confirmación
-            from_name: nombre,
-            from_email: email,
+        // Preparar datos para enviarte A TI con los datos del lead
+        const coachParams = {
+            nombre: nombre + ' (Lead desde Tracker)',
             email: email,
             whatsapp: whatsapp,
-            objetivo: objetivo,
-            tracker_type: trackerType,
-            tracker_data: trackerData,
+            edad: 'Lead desde tracker',
+            ciudad: 'Por confirmar',
+            objetivo_principal: objetivo,
+            tiempo_objetivo: 'Por definir',
+            experiencia: 'Por definir',
+            lesiones: 'No',
+            lesiones_detalle: '',
+            condiciones: 'Por confirmar',
+            medicamentos: 'Por confirmar',
+            tratamiento_perdida_peso: 'No',
+            tratamiento_ganancia_muscular: 'No',
+            peso: 'Por medir',
+            altura: 'Por medir',
+            actividad: 'Por evaluar',
+            alimentacion: 'Por evaluar',
+            dias_semana: 'Por definir',
+            lugar: 'Por definir',
+            equipo: 'Por definir',
+            presupuesto: 'Por consultar',
+            por_que_ahora: objetivo,
+            obstaculos: 'Por identificar',
+            expectativas: 'Seguimiento personalizado',
+            informacion_adicional: '=== LEAD DESDE TRACKER: ' + trackerType.toUpperCase() + ' ===\n\nDATOS DEL TRACKER:\n' + trackerData,
             fecha_envio: new Date().toLocaleString('es-ES')
         };
         
-        // ENVÍO 1: Email de confirmación al cliente
-        emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, templateParams)
-            .then(function(response) {
-                console.log('Email de confirmación enviado!', response.status);
-                
-                // ENVÍO 2: Email a ti (coach) con BCC o usando el template de valoración
-                const coachParams = {
-                    nombre: nombre,
-                    email: email,
-                    whatsapp: whatsapp,
-                    objetivo: 'Lead desde Tracker ' + trackerType + ': ' + objetivo,
-                    // Los demás campos del template de valoración vacíos o con info básica
-                    edad: 'N/A',
-                    ciudad: 'N/A',
-                    tiempo_objetivo: 'N/A',
-                    experiencia: 'N/A',
-                    lesiones: 'N/A',
-                    lesiones_detalle: 'Datos del tracker: ' + trackerData.substring(0, 500),
-                    condiciones: 'N/A',
-                    medicamentos: 'N/A',
-                    tratamiento_perdida_peso: 'N/A',
-                    tratamiento_ganancia_muscular: 'N/A',
-                    peso: 'N/A',
-                    altura: 'N/A',
-                    actividad: 'N/A',
-                    alimentacion: 'N/A',
-                    dias_semana: 'N/A',
-                    lugar: 'N/A',
-                    equipo: 'N/A',
-                    presupuesto: 'N/A',
-                    por_que_ahora: 'Lead desde tracker - Ver datos en formato JSON arriba',
-                    obstaculos: 'N/A',
-                    expectativas: 'N/A',
-                    informacion_adicional: trackerData,
-                    fecha_envio: new Date().toLocaleString('es-ES')
-                };
-                
-                // Enviar a ti usando el template de valoración
-                return emailjs.send(EMAILJS_CONFIG.serviceId, 'template_1t0lfe9', coachParams);
-            })
+        // Enviar SOLO a ti usando el template de valoración
+        emailjs.send(EMAILJS_CONFIG.serviceId, 'template_1t0lfe9', coachParams)
             .then(function(response) {
                 console.log('Email al coach enviado!', response.status);
                 
