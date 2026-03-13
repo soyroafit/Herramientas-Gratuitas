@@ -173,16 +173,12 @@
             case 'habitos':
                 const habitData = JSON.parse(localStorage.getItem('fitnessTracker') || '{}');
                 data.datos = habitData;
-                // Crear resumen legible
                 data.resumen = crearResumenHabitos(habitData);
                 break;
             case 'entrenamiento':
-                data.datos = {
-                    dia1: JSON.parse(localStorage.getItem('workout-day1') || '{}'),
-                    dia2: JSON.parse(localStorage.getItem('workout-day2') || '{}'),
-                    dia3: JSON.parse(localStorage.getItem('workout-day3') || '{}')
-                };
-                data.resumen = 'Datos de entrenamiento registrados';
+                const workoutData = JSON.parse(localStorage.getItem('gymWorkoutTracker') || '{}');
+                data.datos = workoutData;
+                data.resumen = crearResumenEntrenamiento(workoutData);
                 break;
             case 'nutricion':
                 data.datos = JSON.parse(localStorage.getItem('nutritionGoals') || '{}');
@@ -271,6 +267,74 @@
             resumen += habitData.notes + '\n';
             resumen += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
         }
+        
+        return resumen;
+    }
+    
+    // Crear resumen legible del tracker de entrenamiento
+    function crearResumenEntrenamiento(workoutData) {
+        if (!workoutData || Object.keys(workoutData).length === 0) {
+            return 'Sin datos registrados en el tracker';
+        }
+        
+        let resumen = '\n💪 TRACKER DE ENTRENAMIENTO - RESUMEN VISUAL\n';
+        resumen += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
+        
+        const diasNombres = {
+            'day1': '🏋️ DÍA 1: TREN SUPERIOR',
+            'day2': '🦵 DÍA 2: TREN INFERIOR',
+            'day3': '💫 DÍA 3: CORE/ABDOMEN'
+        };
+        
+        // Recorrer todas las semanas registradas
+        Object.keys(workoutData).forEach(semanaNum => {
+            const semanaData = workoutData[semanaNum];
+            
+            resumen += `📅 SEMANA ${semanaNum}\n`;
+            resumen += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
+            
+            // Para cada día de entrenamiento
+            ['day1', 'day2', 'day3'].forEach(diaKey => {
+                if (semanaData[diaKey] && semanaData[diaKey].exercises) {
+                    resumen += `${diasNombres[diaKey]}\n\n`;
+                    
+                    semanaData[diaKey].exercises.forEach((ejercicio, idx) => {
+                        if (ejercicio.name || ejercicio.series.some(s => s.reps || s.weight)) {
+                            resumen += `   ${idx + 1}. ${ejercicio.name || 'Sin nombre'}\n`;
+                            
+                            // Mostrar series
+                            ejercicio.series.forEach((serie, sIdx) => {
+                                if (serie.reps || serie.weight) {
+                                    resumen += `      Serie ${sIdx + 1}: ${serie.reps || '-'} reps x ${serie.weight || '-'} kg\n`;
+                                }
+                            });
+                            
+                            // Mostrar comentarios si existen
+                            if (ejercicio.comments && ejercicio.comments.trim()) {
+                                resumen += `      💬 ${ejercicio.comments}\n`;
+                            }
+                            resumen += '\n';
+                        }
+                    });
+                    
+                    resumen += '\n';
+                }
+            });
+            
+            // Agregar cardio si existe
+            if (semanaData.cardio && semanaData.cardio.trim()) {
+                resumen += '🏃 ACTIVIDAD CARDIOVASCULAR:\n';
+                resumen += semanaData.cardio + '\n\n';
+            }
+            
+            // Agregar notas generales si existen
+            if (semanaData.notes && semanaData.notes.trim()) {
+                resumen += '📝 NOTAS GENERALES DE LA SEMANA:\n';
+                resumen += semanaData.notes + '\n\n';
+            }
+            
+            resumen += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
+        });
         
         return resumen;
     }
