@@ -482,7 +482,7 @@
     <div class="container">
         <div class="header">
             <img src="logo-roafit.png" alt="ROAFIT" class="logo-image">
-            <h1>🥗 TRACKER DE OBJETIVOS NUTRICIONALES</h1>
+            <h1>TRACKER DE OBJETIVOS NUTRICIONALES</h1>
             <p>Crea <span class="highlight-green">hábitos saludables</span> paso a paso</p>
         </div>
         
@@ -573,6 +573,15 @@
             <button class="btn btn-primary" onclick="window.print()">🖨️ Imprimir</button>
             <button class="btn btn-secondary" onclick="exportData()">💾 Exportar Datos</button>
             <button class="btn btn-danger" onclick="resetTracker()">🔄 Reiniciar Todo</button>
+        </div>
+        
+        <!-- Contenedor para botón de Coach -->
+        <div id="coachButtonContainer" style="text-align: center; margin-top: 40px; padding: 30px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 20px;">
+            <h3 style="color: white; margin-bottom: 15px;">¿Necesitas ayuda con tus objetivos nutricionales?</h3>
+            <p style="color: white; margin-bottom: 20px;">
+                Puedo ayudarte a definir objetivos realistas y crear un plan de seguimiento personalizado.
+            </p>
+            <!-- El botón se insertará aquí automáticamente -->
         </div>
         
         <div class="footer">
@@ -758,7 +767,18 @@
             notesInput.addEventListener('input', function() {
                 saveData();
             });
+            
+            // Inicializar botón "Enviar a mi coach"
+            if (typeof RoafitCoachSender !== 'undefined') {
+                RoafitCoachSender.init('coachButtonContainer');
+            }
         });
     </script>
+    
+    <!-- EmailJS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
+    <!-- ROAFIT Coach Sender Module -->
+    <script src="roafit-coach-sender.js"></script>
 </body>
 </html>
