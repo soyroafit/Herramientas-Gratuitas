@@ -710,11 +710,11 @@
         // ============================================
         // CONFIGURACIÓN DE EMAILJS
         // ============================================
-        // REEMPLAZA ESTOS VALORES CON TUS CREDENCIALES
         const EMAILJS_CONFIG = {
-            publicKey: 'YOUR_PUBLIC_KEY',      // Tu Public Key de EmailJS
-            serviceId: 'YOUR_SERVICE_ID',      // Tu Service ID
-            templateId: 'YOUR_TEMPLATE_ID'     // Tu Template ID para Valoración Inicial
+            publicKey: 'Db0CLad-rNtFZbAmE',
+            serviceId: 'service_oih7v4a',
+            templateIdCoach: 'template_1t0lfe9',      // Para ti (todos los datos)
+            templateIdCliente: 'template_3hnbih4'     // Para cliente (confirmación)
         };
 
         // Inicializar EmailJS
@@ -813,6 +813,12 @@
             const condicionesCheckboxes = document.querySelectorAll('input[name="condiciones"]:checked');
             const condiciones = Array.from(condicionesCheckboxes).map(cb => cb.value).join(', ') || 'Ninguna';
 
+            // Obtener valores de radio buttons
+            const objetivoRadio = document.querySelector('input[name="objetivo"]:checked');
+            const lesionesRadio = document.querySelector('input[name="lesiones"]:checked');
+            const actividadRadio = document.querySelector('input[name="actividad"]:checked');
+            const lugarRadio = document.querySelector('input[name="lugar"]:checked');
+
             // Preparar datos del formulario
             const formData = {
                 // Datos personales
@@ -823,13 +829,13 @@
                 ciudad: form.ciudad.value || 'No especificado',
                 
                 // Objetivos
-                objetivo: form.objetivo.value,
+                objetivo_principal: objetivoRadio ? objetivoRadio.value : 'No especificado',
                 objetivo_detalle: form.objetivo_detalle.value,
                 tiempo_objetivo: form.tiempo_objetivo.value,
                 experiencia: form.experiencia.value,
                 
                 // Salud
-                lesiones: form.lesiones.value,
+                lesiones: lesionesRadio ? lesionesRadio.value : 'No especificado',
                 lesiones_detalle: form.lesiones_detalle.value || 'Ninguna',
                 condiciones: condiciones,
                 medicamentos: form.medicamentos.value || 'Ninguno',
@@ -839,12 +845,12 @@
                 // Estado actual
                 peso: form.peso.value,
                 altura: form.altura.value,
-                actividad: form.actividad.value,
+                actividad: actividadRadio ? actividadRadio.value : 'No especificado',
                 alimentacion: form.alimentacion.value || 'No especificado',
                 
                 // Disponibilidad
                 dias_semana: form.dias_semana.value,
-                lugar: form.lugar.value,
+                lugar: lugarRadio ? lugarRadio.value : 'No especificado',
                 equipo: form.equipo.value || 'No especificado',
                 presupuesto: form.presupuesto.value,
                 
@@ -858,10 +864,21 @@
                 fecha_envio: new Date().toLocaleString('es-ES')
             };
 
-            // Enviar email usando EmailJS
-            emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, formData)
+            // Enviar email A TI con todos los datos
+            emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateIdCoach, formData)
                 .then(function(response) {
-                    console.log('SUCCESS!', response.status, response.text);
+                    console.log('Email al coach enviado!', response.status);
+                    
+                    // Enviar email DE CONFIRMACIÓN AL CLIENTE
+                    const clientData = {
+                        nombre: formData.nombre,
+                        email: formData.email
+                    };
+                    
+                    return emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateIdCliente, clientData);
+                })
+                .then(function(response) {
+                    console.log('Email de confirmación al cliente enviado!', response.status);
                     
                     // Mostrar mensaje de éxito
                     successMessage.classList.add('show');
