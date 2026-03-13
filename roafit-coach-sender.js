@@ -155,10 +155,17 @@
 
     // Exportar datos del tracker actual
     function exportTrackerData(trackerType) {
+        const data = exportTrackerDataObject(trackerType);
+        return JSON.stringify(data, null, 2);
+    }
+    
+    // Exportar datos del tracker como objeto
+    function exportTrackerDataObject(trackerType) {
         const data = {
             trackerType: trackerType,
             fecha: new Date().toLocaleString('es-ES'),
-            datos: {}
+            datos: {},
+            resumen: ''
         };
         
         // Obtener datos del localStorage según el tipo de tracker
@@ -190,18 +197,79 @@
                 data.resumen = 'Interesado en el servicio';
         }
         
-        return JSON.stringify(data, null, 2);
+        return data;
     }
     
     // Crear resumen legible de hábitos
     function crearResumenHabitos(habitData) {
-        if (!habitData.checks) return 'Sin datos registrados';
+        if (!habitData.checks || Object.keys(habitData.checks).length === 0) {
+            return 'Sin datos registrados en el tracker';
+        }
         
-        const totalDias = Object.keys(habitData.checks).length;
-        let resumen = `Total de días completados: ${totalDias}\n`;
+        const dias = ['LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB', 'DOM'];
+        const estrategias = {
+            '1': 'Estrategia #1: La Regla de los 2 Minutos',
+            '2': 'Estrategia #2: Imperfección Productiva',
+            '3': 'Estrategia #3: Ancla de Hábitos'
+        };
         
-        if (habitData.notes) {
-            resumen += `\nNotas del usuario:\n${habitData.notes}`;
+        // Organizar datos por estrategia y semana
+        const datosOrganizados = {};
+        Object.keys(habitData.checks).forEach(key => {
+            const [estrategia, semana, dia] = key.split('-');
+            if (!datosOrganizados[estrategia]) {
+                datosOrganizados[estrategia] = {};
+            }
+            if (!datosOrganizados[estrategia][semana]) {
+                datosOrganizados[estrategia][semana] = [];
+            }
+            datosOrganizados[estrategia][semana].push(parseInt(dia));
+        });
+        
+        let resumen = '\n📋 TRACKER DE HÁBITOS - RESUMEN VISUAL\n';
+        resumen += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
+        
+        // Para cada estrategia usada
+        Object.keys(datosOrganizados).forEach(estrategia => {
+            resumen += `📍 ${estrategias[estrategia]}\n`;
+            resumen += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
+            
+            let totalDias = 0;
+            const semanas = datosOrganizados[estrategia];
+            
+            // Para cada semana
+            for (let s = 1; s <= 4; s++) {
+                const diasMarcados = semanas[s] || [];
+                const numDias = diasMarcados.length;
+                totalDias += numDias;
+                const porcentaje = Math.round((numDias / 7) * 100);
+                
+                resumen += `📅 Semana ${s}: ${numDias} de 7 días completados (${porcentaje}%)\n`;
+                resumen += '   ';
+                
+                // Mostrar cada día de la semana
+                for (let d = 0; d < 7; d++) {
+                    if (diasMarcados.includes(d)) {
+                        resumen += `${dias[d]} ✅  `;
+                    } else {
+                        resumen += `${dias[d]} ⬜  `;
+                    }
+                }
+                resumen += '\n\n';
+            }
+            
+            const totalPosible = 28;
+            const porcentajeTotal = Math.round((totalDias / totalPosible) * 100);
+            resumen += `📊 TOTAL: ${totalDias} días completados de ${totalPosible} posibles (${porcentajeTotal}%)\n`;
+            resumen += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
+        });
+        
+        // Agregar notas si existen
+        if (habitData.notes && habitData.notes.trim()) {
+            resumen += '💭 REFLEXIONES DEL USUARIO:\n';
+            resumen += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+            resumen += habitData.notes + '\n';
+            resumen += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
         }
         
         return resumen;
@@ -230,7 +298,8 @@
         else if (currentPage.includes('calculadora-calorias')) trackerType = 'calorias';
         
         // Exportar datos del tracker
-        const trackerData = exportTrackerData(trackerType);
+        const exportedData = exportTrackerDataObject(trackerType);
+        const trackerData = JSON.stringify(exportedData.datos, null, 2);
         
         // Preparar datos para enviarte A TI con los datos del lead
         const coachParams = {
@@ -259,7 +328,7 @@
             por_que_ahora: objetivo,
             obstaculos: 'Por identificar',
             expectativas: 'Seguimiento personalizado',
-            informacion_adicional: '=== LEAD DESDE TRACKER: ' + trackerType.toUpperCase() + ' ===\n\nDATOS DEL TRACKER:\n' + trackerData,
+            informacion_adicional: exportedData.resumen + '\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n📄 DATOS TÉCNICOS (JSON):\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n' + trackerData,
             fecha_envio: new Date().toLocaleString('es-ES')
         };
         
