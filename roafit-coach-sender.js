@@ -164,7 +164,10 @@
         // Obtener datos del localStorage según el tipo de tracker
         switch(trackerType) {
             case 'habitos':
-                data.datos = JSON.parse(localStorage.getItem('habitTracker') || '{}');
+                const habitData = JSON.parse(localStorage.getItem('fitnessTracker') || '{}');
+                data.datos = habitData;
+                // Crear resumen legible
+                data.resumen = crearResumenHabitos(habitData);
                 break;
             case 'entrenamiento':
                 data.datos = {
@@ -172,15 +175,36 @@
                     dia2: JSON.parse(localStorage.getItem('workout-day2') || '{}'),
                     dia3: JSON.parse(localStorage.getItem('workout-day3') || '{}')
                 };
+                data.resumen = 'Datos de entrenamiento registrados';
                 break;
             case 'nutricion':
                 data.datos = JSON.parse(localStorage.getItem('nutritionGoals') || '{}');
+                data.resumen = 'Objetivos nutricionales registrados';
+                break;
+            case 'calorias':
+                data.datos = JSON.parse(localStorage.getItem('calorieData') || '{}');
+                data.resumen = 'Cálculo de calorías completado';
                 break;
             default:
                 data.datos = { mensaje: 'Datos del tracker' };
+                data.resumen = 'Interesado en el servicio';
         }
         
         return JSON.stringify(data, null, 2);
+    }
+    
+    // Crear resumen legible de hábitos
+    function crearResumenHabitos(habitData) {
+        if (!habitData.checks) return 'Sin datos registrados';
+        
+        const totalDias = Object.keys(habitData.checks).length;
+        let resumen = `Total de días completados: ${totalDias}\n`;
+        
+        if (habitData.notes) {
+            resumen += `\nNotas del usuario:\n${habitData.notes}`;
+        }
+        
+        return resumen;
     }
 
     // Manejar envío del formulario
