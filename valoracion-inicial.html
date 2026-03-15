@@ -348,7 +348,6 @@
     </style>
 </head>
 <body>
-    <!-- Indicador de guardado -->
     <div class="save-indicator" id="saveIndicator">
         ✓ Guardado automáticamente
     </div>
@@ -356,7 +355,6 @@
     <div class="container">
         <a href="index.html" class="back-link">← Volver a Herramientas</a>
         
-        <!-- Header con logo -->
         <div class="header">
             <div class="logo-container">
                 <img src="logo-roafit.png" alt="ROAFIT Logo" class="logo-image">
@@ -366,7 +364,6 @@
             <p class="tagline">Del Deseo a la Acción</p>
         </div>
 
-        <!-- Introducción -->
         <div class="intro-box">
             <h2>¿Qué incluye el servicio personalizado?</h2>
             <ul>
@@ -380,7 +377,6 @@
         </div>
 
         <form id="valoracionForm">
-            <!-- Sección 1: Datos Personales -->
             <div class="section">
                 <h2 class="section-title">
                     <span class="section-number">1</span>
@@ -418,7 +414,6 @@
                 </div>
             </div>
 
-            <!-- Sección 2: Objetivos -->
             <div class="section">
                 <h2 class="section-title">
                     <span class="section-number">2</span>
@@ -479,7 +474,6 @@
                 </div>
             </div>
 
-            <!-- Sección 3: Historial de Salud -->
             <div class="section">
                 <h2 class="section-title">
                     <span class="section-number">3</span>
@@ -547,7 +541,6 @@
                 </div>
             </div>
 
-            <!-- Sección 4: Estado Actual -->
             <div class="section">
                 <h2 class="section-title">
                     <span class="section-number">4</span>
@@ -594,7 +587,6 @@
                 </div>
             </div>
 
-            <!-- Sección 5: Disponibilidad -->
             <div class="section">
                 <h2 class="section-title">
                     <span class="section-number">5</span>
@@ -651,7 +643,6 @@
                 </div>
             </div>
 
-            <!-- Sección 6: Motivación y Compromiso -->
             <div class="section">
                 <h2 class="section-title">
                     <span class="section-number">6</span>
@@ -679,12 +670,10 @@
                 </div>
             </div>
 
-            <!-- Botón de envío -->
             <button type="submit" class="submit-button" id="submitBtn">
                 📧 Enviar Valoración
             </button>
 
-            <!-- Mensajes -->
             <div class="message-box success-message" id="successMessage">
                 <h3>✅ ¡Valoración enviada con éxito!</h3>
                 <p>Gracias por tu interés. Revisaré tu información y me pondré en contacto contigo por WhatsApp en las próximas 24-48 horas.</p>
@@ -697,13 +686,11 @@
             </div>
         </form>
 
-        <!-- Footer -->
         <div class="footer">
             <p class="footer-tagline">Del Deseo a la Acción</p>
         </div>
     </div>
 
-    <!-- EmailJS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     
     <script>
@@ -716,6 +703,9 @@
             templateIdCoach: 'template_1t0lfe9',      // Para ti (todos los datos)
             templateIdCliente: 'template_3hnbih4'     // Para cliente (confirmación)
         };
+
+        // URL DEL WEBHOOK DE MAKE.COM
+        const MAKE_WEBHOOK_URL = 'https://hook.eu1.make.com/nnrgn9vv94zcgm5wjp97i8cymnus3jxs';
 
         // Inicializar EmailJS
         (function() {
@@ -864,12 +854,25 @@
                 fecha_envio: new Date().toLocaleString('es-ES')
             };
 
-            // Enviar email A TI con todos los datos
+            // 1. ENVIAR DATOS A MAKE.COM (Para Google Sheets)
+            fetch(MAKE_WEBHOOK_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            }).then(response => {
+                console.log('Datos enviados a Make.com exitosamente');
+            }).catch(error => {
+                console.error('Error enviando a Make.com:', error);
+            });
+
+            // 2. ENVIAR EMAILJS A TI CON TODOS LOS DATOS
             emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateIdCoach, formData)
                 .then(function(response) {
                     console.log('Email al coach enviado!', response.status);
                     
-                    // Enviar email DE CONFIRMACIÓN AL CLIENTE
+                    // 3. ENVIAR EMAIL DE CONFIRMACIÓN AL CLIENTE
                     const clientData = {
                         nombre: formData.nombre,
                         email: formData.email
