@@ -30,7 +30,6 @@
             border: 1px solid #3a3a3a;
         }
 
-        /* Botón volver */
         .back-link {
             display: inline-block;
             margin-bottom: 25px;
@@ -45,7 +44,6 @@
             color: #d4af04;
         }
 
-        /* Header con logo */
         .header {
             text-align: center;
             margin-bottom: 40px;
@@ -83,7 +81,6 @@
             font-size: 1.1em;
         }
 
-        /* Caja de introducción */
         .intro-box {
             background: linear-gradient(135deg, #F2CB05 0%, #ffd700 100%);
             padding: 25px;
@@ -117,7 +114,6 @@
             font-size: 1.2em;
         }
 
-        /* Secciones del formulario */
         .section {
             margin-bottom: 40px;
         }
@@ -145,7 +141,6 @@
             font-weight: bold;
         }
 
-        /* Campos del formulario */
         .form-group {
             margin-bottom: 25px;
         }
@@ -196,7 +191,6 @@
             font-style: italic;
         }
 
-        /* Radio y Checkbox groups */
         .radio-group,
         .checkbox-group {
             display: flex;
@@ -229,14 +223,12 @@
             cursor: pointer;
         }
 
-        /* Grid de 2 columnas */
         .two-column {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 20px;
         }
 
-        /* Botón de envío */
         .submit-button {
             background: linear-gradient(135deg, #F2CB05 0%, #ffd700 100%);
             color: #1a1a1a;
@@ -265,7 +257,6 @@
             cursor: not-allowed;
         }
 
-        /* Mensajes de éxito/error */
         .message-box {
             display: none;
             padding: 20px;
@@ -288,7 +279,6 @@
             color: white;
         }
 
-        /* Indicador de guardado */
         .save-indicator {
             position: fixed;
             top: 20px;
@@ -308,7 +298,6 @@
             display: flex;
         }
 
-        /* Footer */
         .footer {
             text-align: center;
             margin-top: 40px;
@@ -323,7 +312,6 @@
             margin-top: 10px;
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
             .container {
                 padding: 25px 20px;
@@ -348,7 +336,6 @@
     </style>
 </head>
 <body>
-    <!-- Indicador de guardado -->
     <div class="save-indicator" id="saveIndicator">
         ✓ Guardado automáticamente
     </div>
@@ -356,7 +343,6 @@
     <div class="container">
         <a href="index.html" class="back-link">← Volver a Herramientas</a>
         
-        <!-- Header con logo -->
         <div class="header">
             <div class="logo-container">
                 <img src="logo-roafit.png" alt="ROAFIT Logo" class="logo-image">
@@ -366,7 +352,6 @@
             <p class="tagline">Del Deseo a la Acción</p>
         </div>
 
-        <!-- Introducción -->
         <div class="intro-box">
             <h2>¿Qué incluye el servicio personalizado?</h2>
             <ul>
@@ -679,12 +664,10 @@
                 </div>
             </div>
 
-            <!-- Botón de envío -->
             <button type="submit" class="submit-button" id="submitBtn">
                 📧 Enviar Valoración
             </button>
 
-            <!-- Mensajes -->
             <div class="message-box success-message" id="successMessage">
                 <h3>✅ ¡Valoración enviada con éxito!</h3>
                 <p>Gracias por tu interés. Revisaré tu información y me pondré en contacto contigo por WhatsApp en las próximas 24-48 horas.</p>
@@ -697,7 +680,6 @@
             </div>
         </form>
 
-        <!-- Footer -->
         <div class="footer">
             <p class="footer-tagline">Del Deseo a la Acción</p>
         </div>
@@ -713,9 +695,14 @@
         const EMAILJS_CONFIG = {
             publicKey: 'Db0CLad-rNtFZbAmE',
             serviceId: 'service_oih7v4a',
-            templateIdCoach: 'template_1t0lfe9',      // Para ti (todos los datos)
-            templateIdCliente: 'template_3hnbih4'     // Para cliente (confirmación)
+            templateIdCoach: 'template_1t0lfe9',
+            templateIdCliente: 'template_3hnbih4'
         };
+
+        // ============================================
+        // CONFIGURACIÓN DE MAKE.COM WEBHOOK
+        // ============================================
+        const MAKE_WEBHOOK_URL = 'https://hook.eu1.make.com/nnrgn9vv94zcgm5wjp97i8cymnus3jxs';
 
         // Inicializar EmailJS
         (function() {
@@ -729,7 +716,6 @@
         const saveIndicator = document.getElementById('saveIndicator');
         const STORAGE_KEY = 'roafit_valoracion_draft';
 
-        // Cargar datos guardados al iniciar
         function loadSavedData() {
             const saved = localStorage.getItem(STORAGE_KEY);
             if (saved) {
@@ -748,20 +734,15 @@
                             }
                         }
                     });
-                    console.log('Datos guardados cargados');
                 } catch (e) {
                     console.error('Error al cargar datos:', e);
                 }
             }
         }
 
-        // Guardar datos automáticamente
         function saveFormData() {
-            const formData = new FormData(form);
             const data = {};
-            
-            // Campos de texto
-            ['nombre', 'edad', 'email', 'whatsapp', 'ciudad', 'objetivo_detalle', 
+            ['nombre', 'edad', 'email', 'whatsapp', 'ciudad', 'objetivo_detalle',
              'tiempo_objetivo', 'experiencia', 'lesiones_detalle', 'medicamentos',
              'tratamiento_perdida_peso', 'tratamiento_ganancia_muscular',
              'peso', 'altura', 'alimentacion', 'dias_semana', 'equipo', 'presupuesto',
@@ -769,31 +750,132 @@
                 const field = document.getElementById(id);
                 if (field) data[id] = field.value;
             });
-
-            // Radio buttons
             ['objetivo', 'lesiones', 'actividad', 'lugar'].forEach(name => {
                 const selected = document.querySelector(`input[name="${name}"]:checked`);
                 if (selected) data[name] = selected.value;
             });
-
             localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-            
-            // Mostrar indicador
             saveIndicator.classList.add('show');
-            setTimeout(() => {
-                saveIndicator.classList.remove('show');
-            }, 2000);
+            setTimeout(() => saveIndicator.classList.remove('show'), 2000);
         }
 
-        // Auto-guardar cada 3 segundos cuando hay cambios
         let saveTimeout;
         form.addEventListener('input', () => {
             clearTimeout(saveTimeout);
             saveTimeout = setTimeout(saveFormData, 3000);
         });
 
-        // Cargar datos al iniciar
         loadSavedData();
+
+        // ============================================
+        // FUNCIÓN: ENVIAR A MAKE.COM (GOOGLE SHEETS)
+        // Los nombres de las keys deben coincidir exactamente
+        // con lo que configures en Make.com para mapear las columnas
+        // ============================================
+        async function sendToMake(formData) {
+            const makePayload = {
+                // --- Columna: Marca de tiempo ---
+                "Marca de tiempo": formData.fecha_envio,
+
+                // --- Columna: Nombre completo ---
+                "Nombre completo": formData.nombre,
+
+                // --- Columna: Edad ---
+                "Edad": formData.edad,
+
+                // --- Columna: Email ---
+                "Email": formData.email,
+
+                // --- Columna: WhatsApp ---
+                "WhatsApp": formData.whatsapp,
+
+                // --- Columna: Ciudad / País ---
+                "Ciudad / País": formData.ciudad,
+
+                // --- Columna: Objetivo Principal ---
+                "Objetivo Principal": formData.objetivo_principal,
+
+                // --- Columna: Descripción del Objetivo ---
+                "Descripción del Objetivo": formData.objetivo_detalle,
+
+                // --- Columna: Plazo deseado ---
+                "Plazo deseado": formData.tiempo_objetivo,
+
+                // --- Columna: Experiencia previa ---
+                "Experiencia previa": formData.experiencia,
+
+                // --- Columna: Lesiones/Limitaciones ---
+                "Lesiones/Limitaciones": formData.lesiones,
+
+                // --- Columna: Detalles Lesiones ---
+                "Detalles Lesiones": formData.lesiones_detalle,
+
+                // --- Columna: Condición Médica ---
+                "Condición Médica": formData.condiciones,
+
+                // --- Columna: Medicamentos ---
+                "Medicamentos": formData.medicamentos,
+
+                // --- Columna: Uso Ozempic/Mounjaro ---
+                "Uso Ozempic/Mounjaro (Semaglutida o Tirzepatide)": formData.tratamiento_perdida_peso,
+
+                // --- Columna: Uso Anabólicos/SARMS ---
+                "Uso Anabólicos/SARMS": formData.tratamiento_ganancia_muscular,
+
+                // --- Columna: Peso (kg) ---
+                "Peso (kg)": formData.peso,
+
+                // --- Columna: Altura (cm) ---
+                "Altura (cm)": formData.altura,
+
+                // --- Columna: Nivel Actividad ---
+                "Nivel Actividad": formData.actividad,
+
+                // --- Columna: Alimentación Actual ---
+                "Alimentación Actual": formData.alimentacion,
+
+                // --- Columna: Días entreno/semana ---
+                "Días entreno/semana": formData.dias_semana,
+
+                // --- Columna: Lugar de entreno ---
+                "Lugar de entreno": formData.lugar,
+
+                // --- Columna: Equipo en casa ---
+                "Equipo en casa": formData.equipo,
+
+                // --- Columna: Presupuesto ---
+                "Presupuesto": formData.presupuesto,
+
+                // --- Columna: Motivación (¿Por qué ahora?) ---
+                "Motivación (¿Por qué ahora?)": formData.por_que_ahora,
+
+                // --- Columna: Obstáculos previos ---
+                "Obstáculos previos": formData.obstaculos,
+
+                // --- Columna: Expectativas Coach ---
+                "Expectativas Coach": formData.expectativas,
+
+                // --- Columna: Notas extra ---
+                "Notas extra": formData.informacion_adicional,
+
+                // --- Columna: Estado de contacto ---
+                // Se rellena automáticamente como "Nuevo" al entrar
+                "Estado de contacto": "Nuevo"
+            };
+
+            const response = await fetch(MAKE_WEBHOOK_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(makePayload)
+            });
+
+            if (!response.ok) {
+                throw new Error(`Make.com respondió con error: ${response.status}`);
+            }
+
+            console.log('✅ Datos enviados a Make.com / Google Sheets correctamente');
+            return response;
+        }
 
         // ============================================
         // ENVÍO DEL FORMULARIO
@@ -802,110 +884,83 @@
         const successMessage = document.getElementById('successMessage');
         const errorMessage = document.getElementById('errorMessage');
 
-        form.addEventListener('submit', function(e) {
+        form.addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            // Deshabilitar botón
             submitBtn.disabled = true;
             submitBtn.textContent = '⏳ Enviando...';
 
-            // Recopilar condiciones médicas seleccionadas
+            // Recopilar condiciones médicas
             const condicionesCheckboxes = document.querySelectorAll('input[name="condiciones"]:checked');
             const condiciones = Array.from(condicionesCheckboxes).map(cb => cb.value).join(', ') || 'Ninguna';
 
-            // Obtener valores de radio buttons
+            // Radio buttons
             const objetivoRadio = document.querySelector('input[name="objetivo"]:checked');
             const lesionesRadio = document.querySelector('input[name="lesiones"]:checked');
             const actividadRadio = document.querySelector('input[name="actividad"]:checked');
             const lugarRadio = document.querySelector('input[name="lugar"]:checked');
 
-            // Preparar datos del formulario
+            // Objeto con todos los datos
             const formData = {
-                // Datos personales
                 nombre: form.nombre.value,
                 edad: form.edad.value,
                 email: form.email.value,
                 whatsapp: form.whatsapp.value,
                 ciudad: form.ciudad.value || 'No especificado',
-                
-                // Objetivos
                 objetivo_principal: objetivoRadio ? objetivoRadio.value : 'No especificado',
                 objetivo_detalle: form.objetivo_detalle.value,
                 tiempo_objetivo: form.tiempo_objetivo.value,
                 experiencia: form.experiencia.value,
-                
-                // Salud
                 lesiones: lesionesRadio ? lesionesRadio.value : 'No especificado',
                 lesiones_detalle: form.lesiones_detalle.value || 'Ninguna',
                 condiciones: condiciones,
                 medicamentos: form.medicamentos.value || 'Ninguno',
                 tratamiento_perdida_peso: form.tratamiento_perdida_peso.value || 'No especificado',
                 tratamiento_ganancia_muscular: form.tratamiento_ganancia_muscular.value || 'No especificado',
-                
-                // Estado actual
                 peso: form.peso.value,
                 altura: form.altura.value,
                 actividad: actividadRadio ? actividadRadio.value : 'No especificado',
                 alimentacion: form.alimentacion.value || 'No especificado',
-                
-                // Disponibilidad
                 dias_semana: form.dias_semana.value,
                 lugar: lugarRadio ? lugarRadio.value : 'No especificado',
                 equipo: form.equipo.value || 'No especificado',
                 presupuesto: form.presupuesto.value,
-                
-                // Motivación
                 por_que_ahora: form.por_que_ahora.value,
                 obstaculos: form.obstaculos.value || 'No especificado',
                 expectativas: form.expectativas.value || 'No especificado',
                 informacion_adicional: form.informacion_adicional.value || 'Ninguna',
-                
-                // Metadata
                 fecha_envio: new Date().toLocaleString('es-ES')
             };
 
-            // Enviar email A TI con todos los datos
-            emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateIdCoach, formData)
-                .then(function(response) {
-                    console.log('Email al coach enviado!', response.status);
-                    
-                    // Enviar email DE CONFIRMACIÓN AL CLIENTE
-                    const clientData = {
-                        nombre: formData.nombre,
-                        email: formData.email
-                    };
-                    
+            // ── Lanzar EmailJS y Make.com EN PARALELO ──
+            // Si Make falla, el email sigue; nunca se pierde un cliente.
+            const makePromise = sendToMake(formData).catch(err => {
+                console.warn('⚠️ Make.com falló (el email sigue en marcha):', err);
+            });
+
+            const emailPromise = emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateIdCoach, formData)
+                .then(() => {
+                    const clientData = { nombre: formData.nombre, email: formData.email };
                     return emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateIdCliente, clientData);
-                })
-                .then(function(response) {
-                    console.log('Email de confirmación al cliente enviado!', response.status);
-                    
-                    // Mostrar mensaje de éxito
-                    successMessage.classList.add('show');
-                    form.style.display = 'none';
-                    
-                    // Limpiar localStorage
-                    localStorage.removeItem(STORAGE_KEY);
-                    
-                    // Scroll al mensaje
-                    successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    
-                }, function(error) {
-                    console.log('FAILED...', error);
-                    
-                    // Mostrar mensaje de error
-                    errorMessage.classList.add('show');
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = '📧 Enviar Valoración';
-                    
-                    // Scroll al mensaje
-                    errorMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    
-                    // Ocultar error después de 5 segundos
-                    setTimeout(() => {
-                        errorMessage.classList.remove('show');
-                    }, 5000);
                 });
+
+            try {
+                await Promise.all([makePromise, emailPromise]);
+
+                // ✅ Todo OK
+                successMessage.classList.add('show');
+                form.style.display = 'none';
+                localStorage.removeItem(STORAGE_KEY);
+                successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            } catch (error) {
+                console.error('Error en el envío:', error);
+                errorMessage.classList.add('show');
+                submitBtn.disabled = false;
+                submitBtn.textContent = '📧 Enviar Valoración';
+                errorMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                setTimeout(() => errorMessage.classList.remove('show'), 5000);
+            }
         });
     </script>
 </body>
