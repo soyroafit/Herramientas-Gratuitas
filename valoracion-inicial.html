@@ -348,6 +348,7 @@
     </style>
 </head>
 <body>
+    <!-- Indicador de guardado -->
     <div class="save-indicator" id="saveIndicator">
         ✓ Guardado automáticamente
     </div>
@@ -355,6 +356,7 @@
     <div class="container">
         <a href="index.html" class="back-link">← Volver a Herramientas</a>
         
+        <!-- Header con logo -->
         <div class="header">
             <div class="logo-container">
                 <img src="logo-roafit.png" alt="ROAFIT Logo" class="logo-image">
@@ -364,6 +366,7 @@
             <p class="tagline">Del Deseo a la Acción</p>
         </div>
 
+        <!-- Introducción -->
         <div class="intro-box">
             <h2>¿Qué incluye el servicio personalizado?</h2>
             <ul>
@@ -377,6 +380,7 @@
         </div>
 
         <form id="valoracionForm">
+            <!-- Sección 1: Datos Personales -->
             <div class="section">
                 <h2 class="section-title">
                     <span class="section-number">1</span>
@@ -414,6 +418,7 @@
                 </div>
             </div>
 
+            <!-- Sección 2: Objetivos -->
             <div class="section">
                 <h2 class="section-title">
                     <span class="section-number">2</span>
@@ -474,6 +479,7 @@
                 </div>
             </div>
 
+            <!-- Sección 3: Historial de Salud -->
             <div class="section">
                 <h2 class="section-title">
                     <span class="section-number">3</span>
@@ -541,6 +547,7 @@
                 </div>
             </div>
 
+            <!-- Sección 4: Estado Actual -->
             <div class="section">
                 <h2 class="section-title">
                     <span class="section-number">4</span>
@@ -587,6 +594,7 @@
                 </div>
             </div>
 
+            <!-- Sección 5: Disponibilidad -->
             <div class="section">
                 <h2 class="section-title">
                     <span class="section-number">5</span>
@@ -643,6 +651,7 @@
                 </div>
             </div>
 
+            <!-- Sección 6: Motivación y Compromiso -->
             <div class="section">
                 <h2 class="section-title">
                     <span class="section-number">6</span>
@@ -670,10 +679,12 @@
                 </div>
             </div>
 
+            <!-- Botón de envío -->
             <button type="submit" class="submit-button" id="submitBtn">
                 📧 Enviar Valoración
             </button>
 
+            <!-- Mensajes -->
             <div class="message-box success-message" id="successMessage">
                 <h3>✅ ¡Valoración enviada con éxito!</h3>
                 <p>Gracias por tu interés. Revisaré tu información y me pondré en contacto contigo por WhatsApp en las próximas 24-48 horas.</p>
@@ -682,3 +693,220 @@
 
             <div class="message-box error-message" id="errorMessage">
                 <h3>❌ Error al enviar</h3>
+                <p>Hubo un problema al enviar tu valoración. Por favor, intenta de nuevo o contáctame directamente por Instagram <a href="https://instagram.com/soyroafit" style="color: #fff; font-weight: bold; text-decoration: underline;">@soyroafit</a></p>
+            </div>
+        </form>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p class="footer-tagline">Del Deseo a la Acción</p>
+        </div>
+    </div>
+
+    <!-- EmailJS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
+    <script>
+        // ============================================
+        // CONFIGURACIÓN DE EMAILJS
+        // ============================================
+        const EMAILJS_CONFIG = {
+            publicKey: 'Db0CLad-rNtFZbAmE',
+            serviceId: 'service_oih7v4a',
+            templateIdCoach: 'template_1t0lfe9',      // Para ti (todos los datos)
+            templateIdCliente: 'template_3hnbih4'     // Para cliente (confirmación)
+        };
+
+        // Inicializar EmailJS
+        (function() {
+            emailjs.init(EMAILJS_CONFIG.publicKey);
+        })();
+
+        // ============================================
+        // GUARDADO AUTOMÁTICO EN LOCALSTORAGE
+        // ============================================
+        const form = document.getElementById('valoracionForm');
+        const saveIndicator = document.getElementById('saveIndicator');
+        const STORAGE_KEY = 'roafit_valoracion_draft';
+
+        // Cargar datos guardados al iniciar
+        function loadSavedData() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    Object.keys(data).forEach(key => {
+                        const field = document.getElementById(key);
+                        if (field) {
+                            if (field.type === 'radio') {
+                                const radio = document.querySelector(`input[name="${key}"][value="${data[key]}"]`);
+                                if (radio) radio.checked = true;
+                            } else if (field.type === 'checkbox') {
+                                field.checked = data[key];
+                            } else {
+                                field.value = data[key];
+                            }
+                        }
+                    });
+                    console.log('Datos guardados cargados');
+                } catch (e) {
+                    console.error('Error al cargar datos:', e);
+                }
+            }
+        }
+
+        // Guardar datos automáticamente
+        function saveFormData() {
+            const formData = new FormData(form);
+            const data = {};
+            
+            // Campos de texto
+            ['nombre', 'edad', 'email', 'whatsapp', 'ciudad', 'objetivo_detalle', 
+             'tiempo_objetivo', 'experiencia', 'lesiones_detalle', 'medicamentos',
+             'tratamiento_perdida_peso', 'tratamiento_ganancia_muscular',
+             'peso', 'altura', 'alimentacion', 'dias_semana', 'equipo', 'presupuesto',
+             'por_que_ahora', 'obstaculos', 'expectativas', 'informacion_adicional'].forEach(id => {
+                const field = document.getElementById(id);
+                if (field) data[id] = field.value;
+            });
+
+            // Radio buttons
+            ['objetivo', 'lesiones', 'actividad', 'lugar'].forEach(name => {
+                const selected = document.querySelector(`input[name="${name}"]:checked`);
+                if (selected) data[name] = selected.value;
+            });
+
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            
+            // Mostrar indicador
+            saveIndicator.classList.add('show');
+            setTimeout(() => {
+                saveIndicator.classList.remove('show');
+            }, 2000);
+        }
+
+        // Auto-guardar cada 3 segundos cuando hay cambios
+        let saveTimeout;
+        form.addEventListener('input', () => {
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(saveFormData, 3000);
+        });
+
+        // Cargar datos al iniciar
+        loadSavedData();
+
+        // ============================================
+        // ENVÍO DEL FORMULARIO
+        // ============================================
+        const submitBtn = document.getElementById('submitBtn');
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Deshabilitar botón
+            submitBtn.disabled = true;
+            submitBtn.textContent = '⏳ Enviando...';
+
+            // Recopilar condiciones médicas seleccionadas
+            const condicionesCheckboxes = document.querySelectorAll('input[name="condiciones"]:checked');
+            const condiciones = Array.from(condicionesCheckboxes).map(cb => cb.value).join(', ') || 'Ninguna';
+
+            // Obtener valores de radio buttons
+            const objetivoRadio = document.querySelector('input[name="objetivo"]:checked');
+            const lesionesRadio = document.querySelector('input[name="lesiones"]:checked');
+            const actividadRadio = document.querySelector('input[name="actividad"]:checked');
+            const lugarRadio = document.querySelector('input[name="lugar"]:checked');
+
+            // Preparar datos del formulario
+            const formData = {
+                // Datos personales
+                nombre: form.nombre.value,
+                edad: form.edad.value,
+                email: form.email.value,
+                whatsapp: form.whatsapp.value,
+                ciudad: form.ciudad.value || 'No especificado',
+                
+                // Objetivos
+                objetivo_principal: objetivoRadio ? objetivoRadio.value : 'No especificado',
+                objetivo_detalle: form.objetivo_detalle.value,
+                tiempo_objetivo: form.tiempo_objetivo.value,
+                experiencia: form.experiencia.value,
+                
+                // Salud
+                lesiones: lesionesRadio ? lesionesRadio.value : 'No especificado',
+                lesiones_detalle: form.lesiones_detalle.value || 'Ninguna',
+                condiciones: condiciones,
+                medicamentos: form.medicamentos.value || 'Ninguno',
+                tratamiento_perdida_peso: form.tratamiento_perdida_peso.value || 'No especificado',
+                tratamiento_ganancia_muscular: form.tratamiento_ganancia_muscular.value || 'No especificado',
+                
+                // Estado actual
+                peso: form.peso.value,
+                altura: form.altura.value,
+                actividad: actividadRadio ? actividadRadio.value : 'No especificado',
+                alimentacion: form.alimentacion.value || 'No especificado',
+                
+                // Disponibilidad
+                dias_semana: form.dias_semana.value,
+                lugar: lugarRadio ? lugarRadio.value : 'No especificado',
+                equipo: form.equipo.value || 'No especificado',
+                presupuesto: form.presupuesto.value,
+                
+                // Motivación
+                por_que_ahora: form.por_que_ahora.value,
+                obstaculos: form.obstaculos.value || 'No especificado',
+                expectativas: form.expectativas.value || 'No especificado',
+                informacion_adicional: form.informacion_adicional.value || 'Ninguna',
+                
+                // Metadata
+                fecha_envio: new Date().toLocaleString('es-ES')
+            };
+
+            // Enviar email A TI con todos los datos
+            emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateIdCoach, formData)
+                .then(function(response) {
+                    console.log('Email al coach enviado!', response.status);
+                    
+                    // Enviar email DE CONFIRMACIÓN AL CLIENTE
+                    const clientData = {
+                        nombre: formData.nombre,
+                        email: formData.email
+                    };
+                    
+                    return emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateIdCliente, clientData);
+                })
+                .then(function(response) {
+                    console.log('Email de confirmación al cliente enviado!', response.status);
+                    
+                    // Mostrar mensaje de éxito
+                    successMessage.classList.add('show');
+                    form.style.display = 'none';
+                    
+                    // Limpiar localStorage
+                    localStorage.removeItem(STORAGE_KEY);
+                    
+                    // Scroll al mensaje
+                    successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    
+                }, function(error) {
+                    console.log('FAILED...', error);
+                    
+                    // Mostrar mensaje de error
+                    errorMessage.classList.add('show');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = '📧 Enviar Valoración';
+                    
+                    // Scroll al mensaje
+                    errorMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    
+                    // Ocultar error después de 5 segundos
+                    setTimeout(() => {
+                        errorMessage.classList.remove('show');
+                    }, 5000);
+                });
+        });
+    </script>
+</body>
+</html>
