@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Seguimiento Semanal - ROAFIT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --amarillo: #F2CB05;
+            --negro: #0f0f0f;
+            --gris-oscuro: #1a1a1a;
+            --gris-medio: #2a2a2a;
+            --gris-borde: #333;
+            --blanco: #f0f0f0;
+            --verde: #10b981;
+            --rojo: #ef4444;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--negro);
+            color: var(--blanco);
+            min-height: 100vh;
+            padding: 20px 16px 60px;
+        }
+
+        /* ── HEADER ── */
+        .header {
+            max-width: 640px;
+            margin: 0 auto 40px;
+            text-align: center;
+            padding-top: 20px;
+        }
+
+        .logo-img {
+            max-width: 220px;
+            width: 70%;
+            height: auto;
+            margin-bottom: 24px;
+            opacity: 0.95;
+        }
+
+        .semana-badge {
+            display: inline-block;
+            background: var(--amarillo);
+            color: var(--negro);
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 3px;
+            padding: 6px 18px;
+            border-radius: 2px;
+            margin-bottom: 16px;
+        }
+
+        .header h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(2.2rem, 7vw, 3.2rem);
+            color: var(--blanco);
+            line-height: 1;
+            margin-bottom: 12px;
+            letter-spacing: 2px;
+        }
+
+        .header h1 span { color: var(--amarillo); }
+
+        .header p {
+            color: #888;
+            font-size: 0.95rem;
+            font-weight: 300;
+            line-height: 1.6;
+        }
+
+        /* ── CONTENEDOR ── */
+        .container {
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        /* ── SECCIONES ── */
+        .section {
+            margin-bottom: 32px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp 0.5s forwards;
+        }
+
+        .section:nth-child(1) { animation-delay: 0.1s; }
+        .section:nth-child(2) { animation-delay: 0.2s; }
+        .section:nth-child(3) { animation-delay: 0.3s; }
+        .section:nth-child(4) { animation-delay: 0.4s; }
+        .section:nth-child(5) { animation-delay: 0.5s; }
+        .section:nth-child(6) { animation-delay: 0.6s; }
+        .section:nth-child(7) { animation-delay: 0.7s; }
+
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .section-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--amarillo);
+            color: var(--negro);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .section-label h2 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--blanco);
+            letter-spacing: 0.3px;
+        }
+
+        .section-label p {
+            font-size: 0.8rem;
+            color: #666;
+            font-weight: 300;
+        }
+
+        /* ── CARD ── */
+        .card {
+            background: var(--gris-oscuro);
+            border: 1px solid var(--gris-borde);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        /* ── INPUTS ── */
+        input[type="text"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            background: var(--gris-medio);
+            border: 1px solid var(--gris-borde);
+            border-radius: 8px;
+            padding: 12px 14px;
+            color: var(--blanco);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+            outline: none;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--amarillo);
+        }
+
+        textarea { min-height: 90px; resize: vertical; }
+
+        label.field-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #aaa;
+            margin-bottom: 8px;
+        }
+
+        .form-group { margin-bottom: 16px; }
+        .form-group:last-child { margin-bottom: 0; }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        /* ── ESCALA EMOJIS ── */
+        .emoji-scale {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .emoji-option {
+            display: none;
+        }
+
+        .emoji-option + label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 10px 8px;
+            background: var(--gris-medio);
+            border: 2px solid var(--gris-borde);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1.5rem;
+            min-width: 52px;
+            flex: 1;
+        }
+
+        .emoji-option + label span.num {
+            font-size: 0.65rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .emoji-option:checked + label {
+            border-color: var(--amarillo);
+            background: rgba(242, 203, 5, 0.1);
+        }
+
+        .emoji-option + label:hover {
+            border-color: #555;
+        }
+
+        /* ── SESIONES ── */
+        .sesiones-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .sesion-box {
+            background: var(--gris-medio);
+            border: 1px solid var(--gris-borde);
+            border-radius: 8px;
+            padding: 14px;
+            text-align: center;
+        }
+
+        .sesion-box label {
+            display: block;
+            font-size: 0.75rem;
+            color: #888;
+            margin-bottom: 8px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .sesion-box input[type="number"] {
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: 600;
+            padding: 8px;
+            border-radius: 6px;
+        }
+
+        .sesion-resultado {
+            margin-top: 10px;
+            padding: 10px 14px;
+            border-radius: 8px;
+            background: var(--gris-medio);
+            border: 1px solid var(--gris-borde);
+            font-size: 0.9rem;
+            color: #aaa;
+            text-align: center;
+            min-height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ── DIFICULTADES CHECKBOXES ── */
+        .check-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .check-item {
+            display: none;
+        }
+
+        .check-item + label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            background: var(--gris-medio);
+            border: 1px solid var(--gris-borde);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: #aaa;
+            transition: all 0.2s;
+        }
+
+        .check-item + label::before {
+            content: "";
+            width: 16px;
+            height: 16px;
+            border: 2px solid #444;
+            border-radius: 4px;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+
+        .check-item:checked + label {
+            border-color: var(--amarillo);
+            color: var(--blanco);
+        }
+
+        .check-item:checked + label::before {
+            background: var(--amarillo);
+            border-color: var(--amarillo);
+            content: "✓";
+            color: var(--negro);
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+        }
+
+        /* ── NUTRICIÓN ESTRELLAS ── */
+        .stars-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .star-option { display: none; }
+
+        .star-option + label {
+            font-size: 1.6rem;
+            cursor: pointer;
+            filter: grayscale(1) opacity(0.3);
+            transition: all 0.15s;
+        }
+
+        .star-option:checked ~ label,
+        .stars-row:has(.star-option:checked) .star-option + label {
+            filter: none;
+        }
+
+        /* Hack para estrellas hacia adelante */
+        .stars-container {
+            display: flex;
+            flex-direction: row-reverse;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        .stars-container .star-option + label {
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: all 0.15s;
+            color: #333;
+        }
+
+        .stars-container .star-option:checked ~ .star-option + label,
+        .stars-container .star-option + label:hover,
+        .stars-container .star-option + label:hover ~ .star-option + label {
+            color: var(--amarillo);
+        }
+
+        .stars-container .star-option:checked + label {
+            color: var(--amarillo);
+        }
+
+        /* ── INFO PERSONAL ── */
+        .info-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        /* ── DIVIDER ── */
+        .divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--gris-borde), transparent);
+            margin: 8px 0 16px;
+        }
+
+        /* ── BOTÓN ── */
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: var(--amarillo);
+            color: var(--negro);
+            border: none;
+            border-radius: 10px;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.3rem;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 8px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(242, 203, 5, 0.3);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ── MENSAJE ÉXITO ── */
+        .success-screen {
+            display: none;
+            text-align: center;
+            padding: 60px 20px;
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        .success-screen.show { display: block; }
+
+        .success-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            animation: pop 0.4s ease;
+        }
+
+        @keyframes pop {
+            0% { transform: scale(0); }
+            80% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .success-screen h2 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.2rem;
+            color: var(--amarillo);
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+        }
+
+        .success-screen p {
+            color: #888;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        /* ── ERROR ── */
+        .error-banner {
+            display: none;
+            background: rgba(239,68,68,0.1);
+            border: 1px solid var(--rojo);
+            border-radius: 8px;
+            padding: 14px;
+            color: var(--rojo);
+            font-size: 0.9rem;
+            margin-top: 12px;
+            text-align: center;
+        }
+
+        .error-banner.show { display: block; }
+
+        /* ── FOOTER ── */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #444;
+            font-size: 0.8rem;
+        }
+
+        .footer span { color: var(--amarillo); }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 480px) {
+            .two-col, .sesiones-row, .info-row, .check-grid {
+                grid-template-columns: 1fr;
+            }
+            .emoji-scale { gap: 4px; }
+            .emoji-option + label { min-width: 44px; padding: 8px 4px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- FORMULARIO -->
+    <div id="formWrapper">
+        <div class="header">
+            <img src="logo-roafit.png" alt="ROAFIT" class="logo-img" onerror="this.style.display='none'">
+            <div class="semana-badge">SEGUIMIENTO SEMANAL</div>
+            <h1>¿Cómo fue tu<br><span>semana?</span></h1>
+            <p>2 minutos para registrar tu progreso.<br>La constancia construye el cambio.</p>
+        </div>
+
+        <form id="checkinForm" class="container">
+
+            <!-- 0: DATOS BASE -->
+            <div class="section">
+                <div class="section-label">
+                    <div class="section-icon">👤</div>
+                    <div>
+                        <h2>Tus datos</h2>
+                        <p>Para identificar tu seguimiento</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="info-row">
+                        <div class="form-group">
+                            <label class="field-label">Nombre *</label>
+                            <input type="text" id="nombre" placeholder="Tu nombre" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="field-label">Semana nº *</label>
+                            <input type="number" id="semana" min="1" max="52" placeholder="Ej: 3" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="field-label">Fase actual</label>
+                        <select id="fase">
+                            <option value="">Selecciona...</option>
+                            <option value="Semana 0 — Test y Adaptación">Semana 0 — Test y Adaptación</option>
+                            <option value="Bloque 1 — Base y Técnica">Bloque 1 — Base y Técnica</option>
+                            <option value="Bloque 2 — Progresión">Bloque 2 — Progresión</option>
+                            <option value="Bloque 3 — Intensificación">Bloque 3 — Intensificación</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 1: SESIONES -->
+            <div class="section">
+                <div class="section-label">
+                    <div class="section-icon">✅</div>
+                    <div>
+                        <h2>Sesiones completadas</h2>
+                        <p>¿Cuántas hiciste vs las planificadas?</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="sesiones-row">
+                        <div class="sesion-box">
+                            <label>Sesiones planificadas</label>
+                            <input type="number" id="sesiones_planificadas" min="0" max="7" placeholder="3" oninput="calcularSesiones()">
+                        </div>
+                        <div class="sesion-box">
+                            <label>Sesiones realizadas</label>
+                            <input type="number" id="sesiones_realizadas" min="0" max="7" placeholder="3" oninput="calcularSesiones()">
+                        </div>
+                    </div>
+                    <div class="sesion-resultado" id="sesionResultado">
+                        Introduce los números para ver tu adherencia 💪
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2: ENERGÍA Y SUEÑO -->
+            <div class="section">
+                <div class="section-label">
+                    <div class="section-icon">⚡</div>
+                    <div>
+                        <h2>Energía y sueño</h2>
+                        <p>¿Cómo ha estado tu cuerpo esta semana?</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="form-group">
+                        <label class="field-label">Nivel de energía general</label>
+                        <div class="emoji-scale">
+                            <input class="emoji-option" type="radio" name="energia" id="e1" value="1">
+                            <label for="e1">😴<span class="num">1</span></label>
+                            <input class="emoji-option" type="radio" name="energia" id="e2" value="2">
+                            <label for="e2">😩<span class="num">2</span></label>
+                            <input class="emoji-option" type="radio" name="energia" id="e3" value="3">
+                            <label for="e3">😕<span class="num">3</span></label>
+                            <input class="emoji-option" type="radio" name="energia" id="e4" value="4">
+                            <label for="e4">😐<span class="num">4</span></label>
+                            <input class="emoji-option" type="radio" name="energia" id="e5" value="5">
+                            <label for="e5">🙂<span class="num">5</span></label>
+                            <input class="emoji-option" type="radio" name="energia" id="e6" value="6">
+                            <label for="e6">😊<span class="num">6</span></label>
+                            <input class="emoji-option" type="radio" name="energia" id="e7" value="7">
+                            <label for="e7">😁<span class="num">7</span></label>
+                            <input class="emoji-option" type="radio" name="energia" id="e8" value="8">
+                            <label for="e8">🔥<span class="num">8</span></label>
+                            <input class="emoji-option" type="radio" name="energia" id="e9" value="9">
+                            <label for="e9">⚡<span class="num">9</span></label>
+                            <input class="emoji-option" type="radio" name="energia" id="e10" value="10">
+                            <label for="e10">🚀<span class="num">10</span></label>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="form-group">
+                        <label class="field-label">Calidad del sueño</label>
+                        <div class="emoji-scale">
+                            <input class="emoji-option" type="radio" name="sueno" id="s1" value="1">
+                            <label for="s1">😫<span class="num">1</span></label>
+                            <input class="emoji-option" type="radio" name="sueno" id="s2" value="2">
+                            <label for="s2">😩<span class="num">2</span></label>
+                            <input class="emoji-option" type="radio" name="sueno" id="s3" value="3">
+                            <label for="s3">😞<span class="num">3</span></label>
+                            <input class="emoji-option" type="radio" name="sueno" id="s4" value="4">
+                            <label for="s4">😐<span class="num">4</span></label>
+                            <input class="emoji-option" type="radio" name="sueno" id="s5" value="5">
+                            <label for="s5">🙂<span class="num">5</span></label>
+                            <input class="emoji-option" type="radio" name="sueno" id="s6" value="6">
+                            <label for="s6">😊<span class="num">6</span></label>
+                            <input class="emoji-option" type="radio" name="sueno" id="s7" value="7">
+                            <label for="s7">😴<span class="num">7</span></label>
+                            <input class="emoji-option" type="radio" name="sueno" id="s8" value="8">
+                            <label for="s8">💤<span class="num">8</span></label>
+                            <input class="emoji-option" type="radio" name="sueno" id="s9" value="9">
+                            <label for="s9">🌙<span class="num">9</span></label>
+                            <input class="emoji-option" type="radio" name="sueno" id="s10" value="10">
+                            <label for="s10">⭐<span class="num">10</span></label>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="form-group" style="margin-bottom:0">
+                        <label class="field-label">Horas de sueño promedio por noche</label>
+                        <input type="number" id="horas_sueno" min="3" max="12" step="0.5" placeholder="Ej: 7.5">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3: NUTRICIÓN -->
+            <div class="section">
+                <div class="section-label">
+                    <div class="section-icon">🍽️</div>
+                    <div>
+                        <h2>Nutrición</h2>
+                        <p>¿Seguiste el plan alimenticio?</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="form-group">
+                        <label class="field-label">Adherencia al plan de alimentación (1 = muy mal / 5 = perfecta)</label>
+                        <div class="emoji-scale">
+                            <input class="emoji-option" type="radio" name="nutricion" id="n1" value="1 — Muy poca adherencia">
+                            <label for="n1">😬<span class="num">1</span></label>
+                            <input class="emoji-option" type="radio" name="nutricion" id="n2" value="2 — Poca adherencia">
+                            <label for="n2">😕<span class="num">2</span></label>
+                            <input class="emoji-option" type="radio" name="nutricion" id="n3" value="3 — Adherencia media">
+                            <label for="n3">😐<span class="num">3</span></label>
+                            <input class="emoji-option" type="radio" name="nutricion" id="n4" value="4 — Buena adherencia">
+                            <label for="n4">😊<span class="num">4</span></label>
+                            <input class="emoji-option" type="radio" name="nutricion" id="n5" value="5 — Adherencia perfecta">
+                            <label for="n5">🏆<span class="num">5</span></label>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="form-group" style="margin-bottom:0">
+                        <label class="field-label">¿Algo que quieras comentar sobre tu alimentación esta semana?</label>
+                        <textarea id="nutricion_notas" placeholder="Ej: Comí fuera varios días, tuve ansiedad el jueves..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4: ESTADO EMOCIONAL -->
+            <div class="section">
+                <div class="section-label">
+                    <div class="section-icon">🧠</div>
+                    <div>
+                        <h2>Estado emocional</h2>
+                        <p>Tu mente también forma parte del proceso</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="form-group">
+                        <label class="field-label">¿Cómo te has sentido emocionalmente esta semana?</label>
+                        <div class="emoji-scale">
+                            <input class="emoji-option" type="radio" name="emocional" id="em1" value="1 — Muy mal">
+                            <label for="em1">😢<span class="num">1</span></label>
+                            <input class="emoji-option" type="radio" name="emocional" id="em2" value="2 — Mal">
+                            <label for="em2">😞<span class="num">2</span></label>
+                            <input class="emoji-option" type="radio" name="emocional" id="em3" value="3 — Regular">
+                            <label for="em3">😐<span class="num">3</span></label>
+                            <input class="emoji-option" type="radio" name="emocional" id="em4" value="4 — Bien">
+                            <label for="em4">🙂<span class="num">4</span></label>
+                            <input class="emoji-option" type="radio" name="emocional" id="em5" value="5 — Muy bien">
+                            <label for="em5">😊<span class="num">5</span></label>
+                            <input class="emoji-option" type="radio" name="emocional" id="em6" value="6 — Genial">
+                            <label for="em6">😄<span class="num">6</span></label>
+                            <input class="emoji-option" type="radio" name="emocional" id="em7" value="7 — Excelente">
+                            <label for="em7">🤩<span class="num">7</span></label>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="form-group" style="margin-bottom:0">
+                        <label class="field-label">¿Quieres contarme algo más sobre cómo te has sentido?</label>
+                        <textarea id="emocional_notas" placeholder="Este es un espacio seguro. Todo lo que compartas me ayuda a apoyarte mejor."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5: DIFICULTADES -->
+            <div class="section">
+                <div class="section-label">
+                    <div class="section-icon">💪</div>
+                    <div>
+                        <h2>Entrenamiento</h2>
+                        <p>¿Qué fue difícil o qué salió bien?</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="form-group">
+                        <label class="field-label">¿Qué dificultades tuviste? (puedes marcar varias)</label>
+                        <div class="check-grid">
+                            <input class="check-item" type="checkbox" id="d1" value="Falta de tiempo">
+                            <label for="d1">⏰ Falta de tiempo</label>
+                            <input class="check-item" type="checkbox" id="d2" value="Ejercicio muy difícil técnicamente">
+                            <label for="d2">🎯 Técnica difícil</label>
+                            <input class="check-item" type="checkbox" id="d3" value="Peso/intensidad muy alta">
+                            <label for="d3">🏋️ Peso muy alto</label>
+                            <input class="check-item" type="checkbox" id="d4" value="Peso/intensidad muy baja">
+                            <label for="d4">😴 Peso muy bajo</label>
+                            <input class="check-item" type="checkbox" id="d5" value="Dolor o molestia física">
+                            <label for="d5">🤕 Dolor / molestia</label>
+                            <input class="check-item" type="checkbox" id="d6" value="Poca motivación">
+                            <label for="d6">😶 Poca motivación</label>
+                            <input class="check-item" type="checkbox" id="d7" value="Sin dificultades — todo bien">
+                            <label for="d7">✅ Todo bien</label>
+                            <input class="check-item" type="checkbox" id="d8" value="Otro">
+                            <label for="d8">💬 Otro</label>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="form-group" style="margin-bottom:0">
+                        <label class="field-label">¿Qué ejercicio o parte del entrenamiento te costó más? ¿Y cuál disfrutaste más?</label>
+                        <textarea id="entreno_notas" placeholder="Ej: Las sentadillas me costaron mucho, pero el press banca se sintió genial..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6: PREGUNTAS AL COACH -->
+            <div class="section">
+                <div class="section-label">
+                    <div class="section-icon">💬</div>
+                    <div>
+                        <h2>Preguntas para el coach</h2>
+                        <p>¿Tienes dudas o algo que quieras ajustar?</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="form-group" style="margin-bottom:0">
+                        <label class="field-label">Escribe aquí tus preguntas, dudas o lo que quieras decirme</label>
+                        <textarea id="preguntas_coach" placeholder="No hay preguntas tontas. Todo lo que me preguntes me ayuda a darte un mejor servicio."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BOTÓN -->
+            <div class="section">
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    ENVIAR MI SEGUIMIENTO ✓
+                </button>
+                <div class="error-banner" id="errorBanner">
+                    Hubo un error al enviar. Por favor inténtalo de nuevo o escríbeme por WhatsApp.
+                </div>
+            </div>
+
+        </form>
+
+        <div class="footer">
+            <p><span>Del Deseo a la Acción</span> — ROAFIT</p>
+        </div>
+    </div>
+
+    <!-- PANTALLA ÉXITO -->
+    <div class="success-screen" id="successScreen">
+        <div class="success-icon">✅</div>
+        <h2>Seguimiento enviado</h2>
+        <p>Tu reporte ha llegado correctamente.<br>
+        Lo revisaré pronto y te daré las indicaciones que necesitas para seguir avanzando.<br><br>
+        <strong style="color: var(--amarillo)">Cada semana que reportas es una semana que no pierdes. Sigue así.</strong></p>
+    </div>
+
+    <!-- EmailJS -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script>
+        // ════════════════════════════════════════
+        // CONFIGURACIÓN
+        // ════════════════════════════════════════
+        const EMAILJS_CONFIG = {
+            publicKey: 'Db0CLad-rNtFZbAmE',
+            serviceId: 'service_oih7v4a',
+            templateIdCoach: 'template_1t0lfe9'
+        };
+
+        const MAKE_WEBHOOK_URL = 'https://hook.eu1.make.com/nnrgn9vv94zcgm5wjp97i8cymnus3jxs'; // ← Cambia por webhook de check-in
+
+        emailjs.init(EMAILJS_CONFIG.publicKey);
+
+        // ════════════════════════════════════════
+        // CÁLCULO DE ADHERENCIA SESIONES
+        // ════════════════════════════════════════
+        function calcularSesiones() {
+            const planificadas = parseInt(document.getElementById('sesiones_planificadas').value) || 0;
+            const realizadas   = parseInt(document.getElementById('sesiones_realizadas').value) || 0;
+            const resultado    = document.getElementById('sesionResultado');
+
+            if (!planificadas || !realizadas) {
+                resultado.innerHTML = 'Introduce los números para ver tu adherencia 💪';
+                resultado.style.color = '#666';
+                return;
+            }
+
+            const pct = Math.round((realizadas / planificadas) * 100);
+            let emoji, msg, color;
+
+            if (pct >= 100)      { emoji = '🏆'; msg = `¡Perfecto! Completaste el ${pct}% de tus sesiones`;  color = '#10b981'; }
+            else if (pct >= 75)  { emoji = '💪'; msg = `¡Muy bien! Completaste el ${pct}% de tus sesiones`;  color = '#F2CB05'; }
+            else if (pct >= 50)  { emoji = '🙂'; msg = `Completaste el ${pct}%. ¡La próxima semana más!`;     color = '#F59E0B'; }
+            else                 { emoji = '💬'; msg = `Completaste el ${pct}%. Cuéntame qué pasó abajo`;     color = '#ef4444'; }
+
+            resultado.innerHTML = `${emoji} ${msg}`;
+            resultado.style.color = color;
+        }
+
+        // ════════════════════════════════════════
+        // ENVÍO
+        // ════════════════════════════════════════
+        document.getElementById('checkinForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.textContent = '⏳ Enviando...';
+
+            // Recopilar dificultades
+            const dificultades = Array.from(document.querySelectorAll('.check-item:checked'))
+                .map(cb => cb.value).join(', ') || 'Ninguna marcada';
+
+            const data = {
+                nombre:                document.getElementById('nombre').value,
+                semana:                document.getElementById('semana').value,
+                fase:                  document.getElementById('fase').value || 'No especificada',
+                sesiones_planificadas: document.getElementById('sesiones_planificadas').value || '—',
+                sesiones_realizadas:   document.getElementById('sesiones_realizadas').value || '—',
+                energia:               document.querySelector('input[name="energia"]:checked')?.value || '—',
+                sueno:                 document.querySelector('input[name="sueno"]:checked')?.value || '—',
+                horas_sueno:           document.getElementById('horas_sueno').value || '—',
+                nutricion:             document.querySelector('input[name="nutricion"]:checked')?.value || '—',
+                nutricion_notas:       document.getElementById('nutricion_notas').value || '—',
+                emocional:             document.querySelector('input[name="emocional"]:checked')?.value || '—',
+                emocional_notas:       document.getElementById('emocional_notas').value || '—',
+                dificultades:          dificultades,
+                entreno_notas:         document.getElementById('entreno_notas').value || '—',
+                preguntas_coach:       document.getElementById('preguntas_coach').value || '—',
+                fecha_envio:           new Date().toLocaleString('es-ES')
+            };
+
+            // Enviar a Make.com (Google Sheets)
+            const makePromise = fetch(MAKE_WEBHOOK_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            }).catch(err => console.warn('Make.com falló:', err));
+
+            // Enviar email al coach
+            const emailPromise = emailjs.send(
+                EMAILJS_CONFIG.serviceId,
+                EMAILJS_CONFIG.templateIdCoach,
+                data
+            ).catch(err => console.warn('EmailJS falló:', err));
+
+            await Promise.allSettled([makePromise, emailPromise]);
+
+            // Mostrar éxito
+            document.getElementById('formWrapper').style.display = 'none';
+            document.getElementById('successScreen').classList.add('show');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>
