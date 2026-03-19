@@ -693,11 +693,30 @@
                 📧 Enviar Valoración
             </button>
 
-            <div class="message-box success-message" id="successMessage">
-                <h3>✅ Valoración enviada correctamente</h3>
-                <p>Tu valoración ha llegado. La revisaré en detalle y me pondré en contacto contigo en un máximo de <strong>48 horas</strong> para darte los próximos pasos de tu proceso.</p>
-                <p style="margin-top: 12px; font-weight: bold;">El cambio real empieza con este paso. Bienvenido/a a ROAFIT. 💪</p>
-                <p style="margin-top: 15px;">📱 Mientras tanto, sígueme en Instagram <a href="https://instagram.com/soyroafit" style="color: #fff; font-weight: bold; text-decoration: underline;">@soyroafit</a></p>
+            <div class="message-box success-message" id="successMessage" style="background: transparent; padding: 0; border-radius: 0;">
+                <!-- Mensaje principal -->
+                <div style="background: #10b981; border-radius: 15px; padding: 35px 30px; margin-bottom: 20px;">
+                    <div style="font-size: 2.5em; margin-bottom: 15px;">✅</div>
+                    <h3 style="font-size: 1.6em; margin-bottom: 15px; color: white;">¡Valoración recibida!</h3>
+                    <p style="font-size: 1.05em; line-height: 1.7; color: white;">
+                        Hola <strong id="nombreConfirmacion"></strong>, gracias por completar tu valoración inicial.<br><br>
+                        Revisaré toda tu información y me pondré en contacto contigo por WhatsApp en las <strong>próximas 48 horas</strong> con los próximos pasos de tu proceso de cambio.
+                    </p>
+                </div>
+                <!-- Mientras tanto -->
+                <div style="background: #2d2d2d; border-radius: 15px; padding: 25px 30px; margin-bottom: 20px; border-left: 4px solid #F2CB05; text-align: left;">
+                    <p style="color: #F2CB05; font-weight: bold; font-size: 1em; margin-bottom: 15px;">📋 Mientras tanto:</p>
+                    <ul style="color: #E6E6E6; font-size: 0.95em; line-height: 2; padding-left: 20px;">
+                        <li>Mantén tu WhatsApp activo — te escribiré por ahí</li>
+                        <li>Revisa tu email por si te enviamos algo adicional</li>
+                        <li>Sigue con tu rutina actual hasta recibir tu plan</li>
+                    </ul>
+                </div>
+                <!-- Instagram -->
+                <div style="background: #2d2d2d; border-radius: 15px; padding: 20px 30px; text-align: center;">
+                    <p style="color: #b8b8b8; font-size: 0.9em; margin-bottom: 10px;">Sígueme en Instagram para contenido gratuito diario</p>
+                    <a href="https://instagram.com/soyroafit" target="_blank" style="color: #F2CB05; font-weight: bold; font-size: 1.05em; text-decoration: none;">📱 @soyroafit</a>
+                </div>
             </div>
 
             <div class="message-box error-message" id="errorMessage">
@@ -978,6 +997,7 @@
                 await Promise.all([makePromise, emailPromise]);
 
                 // ✅ Todo OK
+                document.getElementById('nombreConfirmacion').textContent = formData.nombre;
                 successMessage.classList.add('show');
                 form.style.display = 'none';
                 localStorage.removeItem(STORAGE_KEY);
