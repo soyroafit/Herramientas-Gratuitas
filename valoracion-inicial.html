@@ -357,7 +357,7 @@
             <ul>
                 <li>Valoración completa de tu estado actual</li>
                 <li>Plan de entrenamiento adaptado a ti</li>
-                <li>Guía nutricional personalizada</li>
+                <li>Guía nutricional según tus necesidades</li>
                 <li>Seguimiento semanal y ajustes</li>
                 <li>Soporte directo vía WhatsApp</li>
                 <li>Enfoque en hábitos sostenibles</li>
@@ -433,6 +433,10 @@
                             <input type="radio" name="objetivo" value="Mejorar salud general" required>
                             <span>Mejorar mi salud y bienestar general</span>
                         </label>
+                        <label class="radio-option">
+                            <input type="radio" name="objetivo" value="Otro" required>
+                            <span>Otro</span>
+                        </label>
                     </div>
                 </div>
 
@@ -457,8 +461,8 @@
                         <select name="experiencia" id="experiencia">
                             <option value="Nunca">Nunca he entrenado</option>
                             <option value="Principiante">Sí, pero soy principiante</option>
-                            <option value="Intermedio" selected>Nivel intermedio</option>
-                            <option value="Avanzado">Nivel avanzado</option>
+                            <option value="Intermedio" selected>Nivel intermedio (llevo más de 1 año entrenando constante)</option>
+                            <option value="Avanzado">Nivel avanzado (más de 2 años entrenando constante)</option>
                         </select>
                     </div>
                 </div>
@@ -514,6 +518,11 @@
                             <span>Ninguna</span>
                         </label>
                     </div>
+                </div>
+
+                <div class="form-group">
+                    <label>¿Tienes otra condición médica no listada? (opcional)</label>
+                    <input type="text" name="condicion_otra" id="condicion_otra" placeholder="Escribe aquí si tienes otra condición...">
                 </div>
 
                 <div class="form-group">
@@ -606,11 +615,11 @@
                         </label>
                         <label class="radio-option">
                             <input type="radio" name="lugar" value="Casa con equipo" required>
-                            <span>Casa con equipo (mancuernas, bandas, etc.)</span>
+                            <span>Casa o espacio abierto con equipo (mancuernas, bandas, etc.)</span>
                         </label>
                         <label class="radio-option">
                             <input type="radio" name="lugar" value="Casa sin equipo" required>
-                            <span>Casa sin equipo (peso corporal)</span>
+                            <span>Casa o espacio abierto sin equipo (peso corporal)</span>
                         </label>
                         <label class="radio-option">
                             <input type="radio" name="lugar" value="Mixto" required>
@@ -620,7 +629,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Si entrenas en casa, ¿qué equipo tienes?</label>
+                    <label>Si entrenas en casa o espacio abierto, ¿qué equipo tienes?</label>
                     <textarea name="equipo" id="equipo" placeholder="Ejemplo: Mancuernas hasta 15kg, bandas elásticas, esterilla..."></textarea>
                 </div>
 
@@ -664,13 +673,30 @@
                 </div>
             </div>
 
+            <!-- CONSENTIMIENTO LEGAL -->
+            <div class="form-group" style="margin-top: 30px; padding: 20px; background: #1a1a1a; border-radius: 12px; border: 1px solid #3a3a3a;">
+                <p style="color: #F2CB05; font-weight: bold; margin-bottom: 12px; font-size: 1em;">🔒 Consentimiento y Protección de Datos</p>
+                <p style="color: #b8b8b8; font-size: 0.85em; line-height: 1.7; margin-bottom: 15px;">
+                    <strong style="color: #E6E6E6;">Responsable:</strong> ROA FIT. 
+                    <strong style="color: #E6E6E6;">Finalidad:</strong> Gestionar tu valoración, enviarte las herramientas prometidas y remitirte consejos, novedades y promociones relacionadas con el fitness y la mentalidad. 
+                    <strong style="color: #E6E6E6;">Legitimación:</strong> Tu consentimiento expreso al marcar esta casilla. 
+                    <strong style="color: #E6E6E6;">Destinatarios:</strong> Tus datos se guardan en Google, que cumple con las normativas de seguridad. No se cederán datos a terceros, salvo obligación legal. 
+                    <strong style="color: #E6E6E6;">Derechos:</strong> Tienes derecho a acceder, rectificar y suprimir tus datos en cualquier momento enviando un email o respondiendo a nuestros correos.
+                </p>
+                <label class="checkbox-option" style="background: #2d2d2d; border-color: #3a3a3a;">
+                    <input type="checkbox" id="consentimiento" required>
+                    <span style="color: #E6E6E6; font-size: 0.9em;">He leído y acepto el tratamiento de mis datos para recibir las herramientas gratuitas, novedades y consejos de ROAFIT <span style="color: #e74c3c;">*</span></span>
+                </label>
+            </div>
+
             <button type="submit" class="submit-button" id="submitBtn">
                 📧 Enviar Valoración
             </button>
 
             <div class="message-box success-message" id="successMessage">
-                <h3>✅ ¡Valoración enviada con éxito!</h3>
-                <p>Gracias por tu interés. Revisaré tu información y me pondré en contacto contigo por WhatsApp en las próximas 24-48 horas.</p>
+                <h3>✅ Valoración enviada correctamente</h3>
+                <p>Tu valoración ha llegado. La revisaré en detalle y me pondré en contacto contigo en un máximo de <strong>48 horas</strong> para darte los próximos pasos de tu proceso.</p>
+                <p style="margin-top: 12px; font-weight: bold;">El cambio real empieza con este paso. Bienvenido/a a ROAFIT. 💪</p>
                 <p style="margin-top: 15px;">📱 Mientras tanto, sígueme en Instagram <a href="https://instagram.com/soyroafit" style="color: #fff; font-weight: bold; text-decoration: underline;">@soyroafit</a></p>
             </div>
 
@@ -745,7 +771,7 @@
             ['nombre', 'edad', 'email', 'whatsapp', 'ciudad', 'objetivo_detalle',
              'tiempo_objetivo', 'experiencia', 'lesiones_detalle', 'medicamentos',
              'tratamiento_perdida_peso', 'tratamiento_ganancia_muscular',
-             'peso', 'altura', 'alimentacion', 'dias_semana', 'equipo', 'presupuesto',
+             'condicion_otra', 'peso', 'altura', 'alimentacion', 'dias_semana', 'equipo', 'presupuesto',
              'por_que_ahora', 'obstaculos', 'expectativas', 'informacion_adicional'].forEach(id => {
                 const field = document.getElementById(id);
                 if (field) data[id] = field.value;
@@ -914,6 +940,7 @@
                 lesiones: lesionesRadio ? lesionesRadio.value : 'No especificado',
                 lesiones_detalle: form.lesiones_detalle.value || 'Ninguna',
                 condiciones: condiciones,
+                condicion_otra: form.condicion_otra?.value || 'Ninguna',
                 medicamentos: form.medicamentos.value || 'Ninguno',
                 tratamiento_perdida_peso: form.tratamiento_perdida_peso.value || 'No especificado',
                 tratamiento_ganancia_muscular: form.tratamiento_ganancia_muscular.value || 'No especificado',
