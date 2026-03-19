@@ -693,7 +693,9 @@
                 📧 Enviar Valoración
             </button>
 
-            <div class="message-box success-message" id="successMessage" style="background: transparent; padding: 0; border-radius: 0;">
+        </form>
+
+        <div class="message-box success-message" id="successMessage" style="background: transparent; padding: 0; border-radius: 0;">
                 <!-- Mensaje principal -->
                 <div style="background: #10b981; border-radius: 15px; padding: 35px 30px; margin-bottom: 20px;">
                     <div style="font-size: 2.5em; margin-bottom: 15px;">✅</div>
@@ -719,11 +721,10 @@
                 </div>
             </div>
 
-            <div class="message-box error-message" id="errorMessage">
+        <div class="message-box error-message" id="errorMessage">
                 <h3>❌ Error al enviar</h3>
                 <p>Hubo un problema al enviar tu valoración. Por favor, intenta de nuevo o contáctame directamente por Instagram <a href="https://instagram.com/soyroafit" style="color: #fff; font-weight: bold; text-decoration: underline;">@soyroafit</a></p>
             </div>
-        </form>
 
         <div class="footer">
             <p class="footer-tagline">Del Deseo a la Acción</p>
@@ -1000,6 +1001,7 @@
                 document.getElementById('nombreConfirmacion').textContent = formData.nombre;
                 successMessage.classList.add('show');
                 form.style.display = 'none';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
                 localStorage.removeItem(STORAGE_KEY);
                 successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
