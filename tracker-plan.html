@@ -1,188 +1,126 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
-    <title>Tracker ROAFIT</title>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --am: #F2CB05;
-            --bg: #0a0a0a;
-            --g1: #141414;
-            --g2: #1e1e1e;
-            --g3: #252525;
-            --gb: #2e2e2e;
-            --wh: #f0f0f0;
-            --gr: #10b981;
-            --rd: #ef4444;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--wh); min-height: 100vh; }
-
-        /* SAVE */
-        .si { position: fixed; top: 16px; right: 16px; background: var(--gr); color: #fff; padding: 8px 16px; border-radius: 6px; font-size: .8rem; font-weight: 600; opacity: 0; transition: opacity .3s; z-index: 999; }
-        .si.on { opacity: 1; }
-
-        /* HEADER */
-        .hd { background: var(--g1); border-bottom: 3px solid var(--am); padding: 20px 16px; text-align: center; }
-        .hd img { max-width: 160px; width: 55%; height: auto; margin-bottom: 12px; display: block; margin-left: auto; margin-right: auto; }
-        .cn { font-family: 'Bebas Neue', sans-serif; font-size: clamp(1.5rem, 5vw, 2.2rem); color: var(--wh); letter-spacing: 2px; }
-        .cn span { color: var(--am); }
-        .mb { display: inline-block; background: var(--am); color: var(--bg); font-family: 'Bebas Neue', sans-serif; font-size: .8rem; letter-spacing: 3px; padding: 4px 14px; border-radius: 2px; margin-top: 6px; }
-
-        /* ERROR */
-        .error-screen { max-width: 500px; margin: 60px auto; padding: 32px 24px; text-align: center; }
-        .error-screen h2 { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; color: var(--rd); margin-bottom: 12px; }
-        .error-screen p { color: #666; font-size: .9rem; line-height: 1.7; }
-
-        /* MAIN */
-        .mn { max-width: 760px; margin: 0 auto; padding: 20px 14px 80px; }
-
-        /* WEEK TABS */
-        .wt { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 20px; scrollbar-width: none; }
-        .wt::-webkit-scrollbar { display: none; }
-        .wk { flex-shrink: 0; padding: 9px 18px; background: var(--g2); border: 1px solid var(--gb); border-radius: 8px; color: #666; font-weight: 600; font-size: .82rem; cursor: pointer; transition: all .2s; white-space: nowrap; }
-        .wk.ac { background: var(--am); color: var(--bg); border-color: var(--am); }
-        .wk.hd2 { border-color: var(--gr); color: var(--gr); }
-        .wk.hd2.ac { background: var(--am); color: var(--bg); border-color: var(--am); }
-
-        /* DAY CARD */
-        .dc { background: var(--g2); border: 1px solid var(--gb); border-radius: 14px; margin-bottom: 16px; overflow: hidden; }
-        .dh { display: flex; align-items: center; justify-content: space-between; padding: 15px 18px; cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; }
-        .dhl { display: flex; align-items: center; gap: 12px; }
-        .dd { width: 10px; height: 10px; border-radius: 50%; background: var(--gb); flex-shrink: 0; transition: background .2s; }
-        .dd.dn { background: var(--gr); }
-        .dt { font-family: 'Bebas Neue', sans-serif; font-size: 1.15rem; letter-spacing: 1.5px; color: var(--wh); }
-        .ds { font-size: .72rem; color: #555; margin-top: 2px; }
-        .dg { color: #444; font-size: 1rem; transition: transform .3s; }
-        .dg.op { transform: rotate(180deg); }
-        .db { display: none; padding: 0 16px 18px; border-top: 1px solid var(--gb); }
-        .db.op { display: block; }
-
-        /* FEELING */
-        .fr { display: flex; align-items: center; gap: 10px; padding: 14px 0 10px; flex-wrap: wrap; }
-        .fl { font-size: .78rem; color: #666; font-weight: 500; white-space: nowrap; }
-        .fbs { display: flex; gap: 5px; flex-wrap: wrap; }
-        .fb { width: 30px; height: 30px; border-radius: 6px; border: 1px solid var(--gb); background: var(--g3); color: #555; font-size: .78rem; font-weight: 700; cursor: pointer; transition: all .15s; -webkit-tap-highlight-color: transparent; }
-        .fb.sl { background: var(--am); color: var(--bg); border-color: var(--am); }
-
-        /* EXERCISE */
-        .eb { background: var(--g3); border: 1px solid var(--gb); border-radius: 10px; padding: 14px; margin-bottom: 10px; }
-        .et { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-        .en { width: 26px; height: 26px; background: var(--am); color: var(--bg); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .78rem; flex-shrink: 0; }
-        .ex-name { font-size: .92rem; font-weight: 600; color: var(--wh); line-height: 1.3; }
-
-        /* SERIES */
-        .sh { display: grid; grid-template-columns: 46px 1fr 1fr 1fr 1fr; gap: 5px; margin-bottom: 5px; }
-        .sh span { font-size: .6rem; font-weight: 700; color: #444; text-align: center; text-transform: uppercase; letter-spacing: .4px; }
-        .sr { display: grid; grid-template-columns: 46px 1fr 1fr 1fr 1fr; gap: 5px; margin-bottom: 5px; }
-        .sl2 { display: flex; align-items: center; justify-content: center; font-size: .72rem; font-weight: 600; color: #555; background: var(--g2); border-radius: 5px; padding: 7px 3px; }
-        .si2 { background: var(--g2); border: 1px solid var(--gb); border-radius: 5px; padding: 7px 2px; color: var(--wh); font-family: 'DM Sans', sans-serif; font-size: .82rem; text-align: center; outline: none; width: 100%; -webkit-appearance: none; }
-        .si2:focus { border-color: var(--am); }
-
-        /* NOTES */
-        .en2 { width: 100%; background: var(--g2); border: 1px solid var(--gb); border-radius: 7px; padding: 9px 11px; color: var(--wh); font-family: 'DM Sans', sans-serif; font-size: .8rem; resize: vertical; min-height: 55px; outline: none; margin-top: 8px; }
-        .en2:focus { border-color: var(--am); }
-        .na { margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--gb); }
-        .nl { font-size: .72rem; color: #555; font-weight: 600; margin-bottom: 7px; text-transform: uppercase; letter-spacing: .5px; }
-        .ni { width: 100%; background: var(--g2); border: 1px solid var(--gb); border-radius: 8px; padding: 11px; color: var(--wh); font-family: 'DM Sans', sans-serif; font-size: .82rem; resize: vertical; min-height: 65px; outline: none; }
-        .ni:focus { border-color: var(--am); }
-
-        /* SEND */
-        .ss { background: var(--g2); border: 1px solid var(--gb); border-radius: 14px; padding: 22px 18px; margin-top: 20px; text-align: center; }
-        .ss h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.25rem; letter-spacing: 1.5px; color: var(--am); margin-bottom: 6px; }
-        .ss p { font-size: .82rem; color: #555; margin-bottom: 18px; line-height: 1.6; }
-        .sb { background: var(--am); color: var(--bg); border: none; padding: 15px 32px; border-radius: 10px; font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 2px; cursor: pointer; transition: all .2s; width: 100%; max-width: 340px; -webkit-tap-highlight-color: transparent; }
-        .sb:active { transform: scale(.97); }
-        .sb:disabled { opacity: .5; cursor: not-allowed; }
-        .sc { display: none; background: rgba(16,185,129,.1); border: 1px solid var(--gr); border-radius: 10px; padding: 14px; color: var(--gr); font-size: .88rem; margin-top: 12px; text-align: center; }
-        .sc.on { display: block; }
-
-        /* FOOTER */
-        .ft { text-align: center; margin-top: 36px; padding: 18px; color: #2a2a2a; font-size: .78rem; }
-        .ft span { color: var(--am); }
-
-        /* MOBILE */
-        @media (max-width: 420px) {
-            .sh, .sr { grid-template-columns: 40px 1fr 1fr 1fr 1fr; gap: 3px; }
-            .si2 { font-size: .75rem; padding: 6px 1px; }
-            .fb { width: 27px; height: 27px; font-size: .72rem; }
-            .sh span { font-size: .55rem; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Tracker ROAFIT</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--am:#F2CB05;--bg:#0a0a0a;--g1:#141414;--g2:#1e1e1e;--g3:#252525;--gb:#2e2e2e;--wh:#f0f0f0;--gr:#10b981;--az:#3b82f6;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--wh);min-height:100vh;}
+.si{position:fixed;top:16px;right:16px;background:var(--gr);color:#fff;padding:8px 16px;border-radius:6px;font-size:.8rem;font-weight:600;opacity:0;transition:opacity .3s;z-index:999;}
+.si.on{opacity:1;}
+.hd{background:var(--g1);border-bottom:3px solid var(--am);padding:20px 16px;text-align:center;}
+.hd img{max-width:160px;width:55%;height:auto;margin-bottom:12px;display:block;margin-left:auto;margin-right:auto;}
+.cn{font-family:"Bebas Neue",sans-serif;font-size:clamp(1.5rem,5vw,2.2rem);color:var(--wh);letter-spacing:2px;}
+.cn span{color:var(--am);}
+.mb{display:inline-block;background:var(--am);color:var(--bg);font-family:"Bebas Neue",sans-serif;font-size:.8rem;letter-spacing:3px;padding:4px 14px;border-radius:2px;margin-top:6px;}
+.err{max-width:500px;margin:60px auto;padding:32px 24px;text-align:center;}
+.err h2{font-family:"Bebas Neue",sans-serif;font-size:1.8rem;color:#ef4444;margin-bottom:12px;}
+.err p{color:#666;font-size:.9rem;line-height:1.7;}
+.mn{max-width:760px;margin:0 auto;padding:20px 14px 80px;}
+.wt{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:20px;scrollbar-width:none;}
+.wt::-webkit-scrollbar{display:none;}
+.wk{flex-shrink:0;padding:9px 18px;background:var(--g2);border:1px solid var(--gb);border-radius:8px;color:#666;font-weight:600;font-size:.82rem;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.wk.ac{background:var(--am);color:var(--bg);border-color:var(--am);}
+.wk.hd2{border-color:var(--gr);color:var(--gr);}
+.wk.hd2.ac{background:var(--am);color:var(--bg);border-color:var(--am);}
+.dc{background:var(--g2);border:1px solid var(--gb);border-radius:14px;margin-bottom:16px;overflow:hidden;}
+.dh{display:flex;align-items:center;justify-content:space-between;padding:15px 18px;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;}
+.dhl{display:flex;align-items:center;gap:12px;}
+.dd{width:10px;height:10px;border-radius:50%;background:var(--gb);flex-shrink:0;transition:background .2s;}
+.dd.dn{background:var(--gr);}
+.dt{font-family:"Bebas Neue",sans-serif;font-size:1.15rem;letter-spacing:1.5px;color:var(--wh);}
+.ds{font-size:.72rem;color:#555;margin-top:2px;}
+.dg{color:#444;font-size:1rem;transition:transform .3s;}
+.dg.op{transform:rotate(180deg);}
+.db{display:none;padding:0 16px 18px;border-top:1px solid var(--gb);}
+.db.op{display:block;}
+.fr{display:flex;align-items:center;gap:10px;padding:14px 0 10px;flex-wrap:wrap;}
+.fl{font-size:.78rem;color:#666;font-weight:500;white-space:nowrap;}
+.fbs{display:flex;gap:5px;flex-wrap:wrap;}
+.fb{width:30px;height:30px;border-radius:6px;border:1px solid var(--gb);background:var(--g3);color:#555;font-size:.78rem;font-weight:700;cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent;}
+.fb.sl{background:var(--am);color:var(--bg);border-color:var(--am);}
+.eb{background:var(--g3);border:1px solid var(--gb);border-radius:10px;padding:14px;margin-bottom:10px;}
+.et{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.en{width:26px;height:26px;background:var(--am);color:var(--bg);border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.78rem;flex-shrink:0;}
+.exn{font-size:.92rem;font-weight:600;color:var(--wh);}
+.coach-hint{background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.25);border-radius:6px;padding:6px 10px;margin-bottom:10px;font-size:.72rem;color:#888;line-height:1.5;}
+.coach-hint strong{color:var(--az);}
+.sh{display:grid;grid-template-columns:46px 1fr 1fr 1fr 1fr;gap:5px;margin-bottom:5px;}
+.sh span{font-size:.6rem;font-weight:700;color:#444;text-align:center;text-transform:uppercase;letter-spacing:.4px;}
+.sr{display:grid;grid-template-columns:46px 1fr 1fr 1fr 1fr;gap:5px;margin-bottom:5px;}
+.sl2{display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:600;color:#555;background:var(--g2);border-radius:5px;padding:7px 3px;}
+.si2{background:var(--g2);border:1px solid var(--gb);border-radius:5px;padding:7px 2px;color:var(--wh);font-family:"DM Sans",sans-serif;font-size:.82rem;text-align:center;outline:none;width:100%;-webkit-appearance:none;}
+.si2:focus{border-color:var(--am);}
+.si2.sug{border-color:rgba(59,130,246,.4);color:#aac4ff;}
+.en2{width:100%;background:var(--g2);border:1px solid var(--gb);border-radius:7px;padding:9px 11px;color:var(--wh);font-family:"DM Sans",sans-serif;font-size:.8rem;resize:vertical;min-height:55px;outline:none;margin-top:8px;}
+.en2:focus{border-color:var(--am);}
+.na{margin-top:14px;padding-top:14px;border-top:1px dashed var(--gb);}
+.nl{font-size:.72rem;color:#555;font-weight:600;margin-bottom:7px;text-transform:uppercase;letter-spacing:.5px;}
+.ni{width:100%;background:var(--g2);border:1px solid var(--gb);border-radius:8px;padding:11px;color:var(--wh);font-family:"DM Sans",sans-serif;font-size:.82rem;resize:vertical;min-height:65px;outline:none;}
+.ni:focus{border-color:var(--am);}
+.ss{background:var(--g2);border:1px solid var(--gb);border-radius:14px;padding:22px 18px;margin-top:20px;text-align:center;}
+.ss h3{font-family:"Bebas Neue",sans-serif;font-size:1.25rem;letter-spacing:1.5px;color:var(--am);margin-bottom:6px;}
+.ss p{font-size:.82rem;color:#555;margin-bottom:18px;line-height:1.6;}
+.sb{background:var(--am);color:var(--bg);border:none;padding:15px 32px;border-radius:10px;font-family:"Bebas Neue",sans-serif;font-size:1.1rem;letter-spacing:2px;cursor:pointer;width:100%;max-width:340px;-webkit-tap-highlight-color:transparent;}
+.sb:disabled{opacity:.5;cursor:not-allowed;}
+.sc{display:none;background:rgba(16,185,129,.1);border:1px solid var(--gr);border-radius:10px;padding:14px;color:var(--gr);font-size:.88rem;margin-top:12px;text-align:center;}
+.sc.on{display:block;}
+.ft{text-align:center;margin-top:36px;padding:18px;color:#2a2a2a;font-size:.78rem;}
+.ft span{color:var(--am);}
+@media(max-width:420px){.sh,.sr{grid-template-columns:40px 1fr 1fr 1fr 1fr;gap:3px;}.si2{font-size:.75rem;padding:6px 1px;}.fb{width:27px;height:27px;}.sh span{font-size:.55rem;}}
+</style>
 </head>
 <body>
-
-<div class="si" id="si">✓ Guardado</div>
-
+<div class="si" id="si">Guardado</div>
 <div class="hd">
-    <img src="https://soyroafit.github.io/Herramientas-Gratuitas/logo-roafit.png" alt="ROAFIT" onerror="this.style.display='none'">
-    <div class="cn">Plan de <span id="cn">...</span></div>
-    <div class="mb" id="mb">CARGANDO</div>
+  <img src="https://soyroafit.github.io/Herramientas-Gratuitas/logo-roafit.png" alt="ROAFIT" onerror="this.style.display='none'">
+  <div class="cn">Plan de <span id="cn">...</span></div>
+  <div class="mb" id="mb">CARGANDO</div>
 </div>
-
-<div id="errorScreen" class="error-screen" style="display:none">
-    <h2>⚠️ Link inválido</h2>
-    <p>Este link no contiene un plan válido.<br>Contacta a tu coach para que te envíe el link correcto.</p>
+<div id="errorScreen" class="err" style="display:none">
+  <h2>Link invalido</h2>
+  <p>Este link no contiene un plan valido.<br>Contacta a tu coach para que te envie el link correcto.</p>
 </div>
-
 <div class="mn" id="mainContent" style="display:none">
-    <div class="wt" id="wt"></div>
-    <div id="dc"></div>
-    <div class="ss">
-        <h3>📤 Actualizar y enviar al coach</h3>
-        <p>Pulsa cuando termines la semana o quieras actualizar tu progreso.<br>Puedes enviarlo las veces que quieras.</p>
-        <button class="sb" id="sb" onclick="enviar()">ACTUALIZAR Y ENVIAR AL COACH →</button>
-        <div class="sc" id="sc">✅ Registro enviado. Tu coach lo revisará pronto.</div>
-    </div>
-    <div class="ft"><p><span>Del Deseo a la Acción</span> — ROAFIT</p></div>
+  <div class="wt" id="wt"></div>
+  <div id="dc"></div>
+  <div class="ss">
+    <h3>Actualizar y enviar al coach</h3>
+    <p>Pulsa cuando termines la semana o quieras actualizar tu progreso.</p>
+    <button class="sb" id="sb" onclick="enviar()">ACTUALIZAR Y ENVIAR AL COACH</button>
+    <div class="sc" id="sc">Registro enviado. Tu coach lo revisara pronto.</div>
+  </div>
+  <div class="ft"><p><span>Del Deseo a la Accion</span> - ROAFIT</p></div>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 <script>
-var PLAN = null;
-var SK = "";
-var cw = 1, D = {};
+var PLAN = null, SK = "", cw = 1, D = {};
 
 function init() {
     emailjs.init("Db0CLad-rNtFZbAmE");
-
-    // Read plan from URL
     var params = new URLSearchParams(window.location.search);
     var encoded = params.get("p");
-
-    if (!encoded) {
-        document.getElementById("errorScreen").style.display = "block";
-        return;
-    }
-
+    if (!encoded) { showError(); return; }
     try {
-        var decoded = decodeURIComponent(encoded);
-        var json = atob(decoded);
+        var json = decodeURIComponent(escape(atob(decodeURIComponent(encoded))));
         PLAN = JSON.parse(json);
-    } catch(e) {
-        document.getElementById("errorScreen").style.display = "block";
-        return;
-    }
-
-    if (!PLAN || !PLAN.cliente || !PLAN.dias) {
-        document.getElementById("errorScreen").style.display = "block";
-        return;
-    }
-
+    } catch(e) { showError(); return; }
+    if (!PLAN || !PLAN.cliente || !PLAN.dias) { showError(); return; }
     SK = "roafit_" + PLAN.cliente.toLowerCase().replace(/\s+/g, "_");
     document.getElementById("cn").textContent = PLAN.cliente;
-    document.getElementById("mb").textContent = PLAN.metodo ? PLAN.metodo.toUpperCase() : "PERSONALIZADO";
-    document.title = "Tracker de " + PLAN.cliente + " — ROAFIT";
-
+    document.getElementById("mb").textContent = (PLAN.metodo || "PERSONALIZADO").toUpperCase();
+    document.title = "Tracker de " + PLAN.cliente + " - ROAFIT";
     cargar();
     document.getElementById("mainContent").style.display = "block";
     tabs();
     dias();
 }
+
+function showError() { document.getElementById("errorScreen").style.display = "block"; }
 
 function cargar() {
     try { var s = localStorage.getItem(SK); if (s) D = JSON.parse(s); } catch(e) {}
@@ -191,18 +129,27 @@ function cargar() {
 function guardar() {
     try {
         localStorage.setItem(SK, JSON.stringify(D));
-        var i = document.getElementById("si");
-        i.classList.add("on");
-        setTimeout(function() { i.classList.remove("on"); }, 1800);
+        var el = document.getElementById("si");
+        el.classList.add("on");
+        setTimeout(function() { el.classList.remove("on"); }, 1800);
     } catch(e) {}
 }
 
-function gd(w) {
+function getWeekData(w) {
     if (!D[w]) {
-        D[w] = { days: PLAN.dias.map(function(d) {
-            return { feeling: null, notes: "", exercises: d.ejercicios.map(function() {
-                return { series: [{r:"",w:"",rpe:"",rest:""},{r:"",w:"",rpe:"",rest:""},{r:"",w:"",rpe:"",rest:""},{r:"",w:"",rpe:"",rest:""}], notes: "" };
-            })};
+        D[w] = { days: PLAN.dias.map(function(day) {
+            return {
+                feeling: null,
+                notes: "",
+                exercises: day.ejercicios.map(function(ex) {
+                    return {
+                        notes: "",
+                        series: ex.series.map(function(sg) {
+                            return { r: sg.r || "", w: sg.w || "", rpe: sg.rpe || "", rest: sg.rest || "", edited: false };
+                        })
+                    };
+                })
+            };
         })};
     }
     return D[w];
@@ -216,7 +163,7 @@ function tabs() {
             var wd = D[ww];
             var has = wd && wd.days && wd.days.some(function(d) {
                 return d.feeling !== null || d.exercises.some(function(e) {
-                    return e.series.some(function(s) { return s.r || s.w; });
+                    return e.series.some(function(s) { return s.edited; });
                 });
             });
             var btn = document.createElement("button");
@@ -229,132 +176,210 @@ function tabs() {
 }
 
 function sw(w) {
-    cw = w;
-    tabs();
-    dias();
+    cw = w; tabs(); dias();
     document.getElementById("sc").classList.remove("on");
 }
 
 function dias() {
-    var c = document.getElementById("dc");
-    c.innerHTML = "";
-    var wd = gd(cw);
+    var container = document.getElementById("dc");
+    container.innerHTML = "";
+    var wd = getWeekData(cw);
 
     PLAN.dias.forEach(function(day, di) {
         var dd = wd.days[di];
         var done = dd.feeling !== null;
 
-        // Feeling bar
-        var fb = "<div class='fr'><span class='fl'>¿Cómo te sentiste? (1-10)</span><div class='fbs'>";
-        for (var i = 1; i <= 10; i++) {
-            fb += "<button class='fb" + (dd.feeling == i ? " sl" : "") + "' onclick='sf(" + di + "," + i + ")'>" + i + "</button>";
-        }
-        fb += "</div></div>";
-
-        // Exercises
-        var exs = "";
-        day.ejercicios.forEach(function(ex, ei) {
-            var ed = dd.exercises[ei];
-            var rows = "";
-            for (var s = 0; s < 4; s++) {
-                var sd = ed.series[s];
-                rows += "<div class='sr'>" +
-                    "<div class='sl2'>S" + (s+1) + "</div>" +
-                    "<input class='si2' type='number' inputmode='decimal' placeholder='12' value='" + (sd.r||"") + "' onchange='us(" + di + "," + ei + "," + s + ",\"r\",this.value)'>" +
-                    "<input class='si2' type='number' inputmode='decimal' placeholder='20' step='0.5' value='" + (sd.w||"") + "' onchange='us(" + di + "," + ei + "," + s + ",\"w\",this.value)'>" +
-                    "<input class='si2' type='number' inputmode='decimal' placeholder='2' min='0' max='10' value='" + (sd.rpe||"") + "' onchange='us(" + di + "," + ei + "," + s + ",\"rpe\",this.value)'>" +
-                    "<input class='si2' type='text' inputmode='text' placeholder='90s' value='" + (sd.rest||"") + "' onchange='us(" + di + "," + ei + "," + s + ",\"rest\",this.value)'>" +
-                    "</div>";
-            }
-            exs += "<div class='eb'>" +
-                "<div class='et'><div class='en'>" + (ei+1) + "</div><div class='ex-name'>" + ex + "</div></div>" +
-                "<div class='sh'><span></span><span>REPS</span><span>PESO kg</span><span>RIR/RPE</span><span>DESCANSO</span></div>" +
-                rows +
-                "<textarea class='en2' placeholder='Notas: molestias, técnica, ajustes...' onchange='une(" + di + "," + ei + ",this.value)'>" + (ed.notes||"") + "</textarea>" +
-                "</div>";
-        });
-
+        // Day card
         var card = document.createElement("div");
         card.className = "dc";
-        card.innerHTML =
-            "<div class='dh' onclick='td(" + di + ")'>" +
-                "<div class='dhl'>" +
-                    "<div class='dd" + (done ? " dn" : "") + "' id='dd" + di + "'></div>" +
-                    "<div><div class='dt'>" + day.titulo + " — " + day.subtitulo + "</div>" +
-                    "<div class='ds'>" + day.ejercicios.length + " ejercicios · " + (done ? "✓ Registrado" : "Sin registrar") + "</div></div>" +
-                "</div>" +
-                "<div class='dg' id='dg" + di + "'>▼</div>" +
+
+        // Header
+        var hdr = document.createElement("div");
+        hdr.className = "dh";
+        hdr.onclick = function() { toggleDay(di); };
+        hdr.innerHTML =
+            "<div class='dhl'>" +
+                "<div class='dd" + (done ? " dn" : "") + "' id='dd" + di + "'></div>" +
+                "<div><div class='dt'>" + day.titulo + " - " + day.subtitulo + "</div>" +
+                "<div class='ds'>" + day.ejercicios.length + " ejercicios - " + (done ? "Registrado" : "Sin registrar") + "</div></div>" +
             "</div>" +
-            "<div class='db' id='db" + di + "'>" +
-                fb + exs +
-                "<div class='na'><div class='nl'>📝 Notas del día</div>" +
-                "<textarea class='ni' placeholder='¿Cómo fue el entrenamiento? ¿Algo que ajustar?...' onchange='un2(" + di + ",this.value)'>" + (dd.notes||"") + "</textarea></div>" +
-            "</div>";
-        c.appendChild(card);
+            "<div class='dg' id='dg" + di + "'>v</div>";
+        card.appendChild(hdr);
+
+        // Body
+        var body = document.createElement("div");
+        body.className = "db";
+        body.id = "db" + di;
+
+        // Feeling
+        var feelDiv = document.createElement("div");
+        feelDiv.className = "fr";
+        feelDiv.innerHTML = "<span class='fl'>Como te sentiste (1-10)</span>";
+        var fbtns = document.createElement("div");
+        fbtns.className = "fbs";
+        for (var i = 1; i <= 10; i++) {
+            (function(val) {
+                var btn = document.createElement("button");
+                btn.className = "fb" + (dd.feeling == val ? " sl" : "");
+                btn.textContent = val;
+                btn.onclick = function() { sf(di, val); };
+                fbtns.appendChild(btn);
+            })(i);
+        }
+        feelDiv.appendChild(fbtns);
+        body.appendChild(feelDiv);
+
+        // Exercises
+        day.ejercicios.forEach(function(ex, ei) {
+            var ed = dd.exercises[ei];
+            var exBlock = document.createElement("div");
+            exBlock.className = "eb";
+
+            // Exercise title
+            var etDiv = document.createElement("div");
+            etDiv.className = "et";
+            etDiv.innerHTML = "<div class='en'>" + (ei + 1) + "</div><div class='exn'>" + (typeof ex.nombre === "string" ? ex.nombre : JSON.stringify(ex)) + "</div>";
+            exBlock.appendChild(etDiv);
+
+            // Coach hint
+            var sg0 = ex.series[0];
+            if (sg0 && (sg0.r || sg0.w || sg0.rpe || sg0.rest)) {
+                var parts = [];
+                if (sg0.r) parts.push(sg0.r + " reps");
+                if (sg0.w) parts.push(sg0.w + " kg");
+                if (sg0.rpe) parts.push("RIR/RPE " + sg0.rpe);
+                if (sg0.rest) parts.push(sg0.rest + " descanso");
+                var hint = document.createElement("div");
+                hint.className = "coach-hint";
+                hint.innerHTML = "<strong>Coach:</strong> " + parts.join(" · ");
+                exBlock.appendChild(hint);
+            }
+
+            // Series header
+            var shDiv = document.createElement("div");
+            shDiv.className = "sh";
+            shDiv.innerHTML = "<span></span><span>REPS</span><span>PESO kg</span><span>RIR/RPE</span><span>DESCANSO</span>";
+            exBlock.appendChild(shDiv);
+
+            // Series rows
+            ex.series.forEach(function(sg, si) {
+                var sd = ed.series[si] || { r: sg.r || "", w: sg.w || "", rpe: sg.rpe || "", rest: sg.rest || "", edited: false };
+                var row = document.createElement("div");
+                row.className = "sr";
+
+                var lbl = document.createElement("div");
+                lbl.className = "sl2";
+                lbl.textContent = "S" + (si + 1);
+                row.appendChild(lbl);
+
+                var fields = [
+                    { field: "r", type: "number", ph: sg.r || "reps", val: sd.r || sg.r || "" },
+                    { field: "w", type: "number", ph: sg.w || "kg", val: sd.w || sg.w || "" },
+                    { field: "rpe", type: "number", ph: sg.rpe || "RPE", val: sd.rpe || sg.rpe || "" },
+                    { field: "rest", type: "text", ph: sg.rest || "desc.", val: sd.rest || sg.rest || "" }
+                ];
+
+                fields.forEach(function(f) {
+                    var inp = document.createElement("input");
+                    inp.className = "si2" + (f.val && !sd.edited ? " sug" : "");
+                    inp.type = f.type;
+                    if (f.type === "number") {  }
+                    inp.placeholder = f.ph;
+                    inp.value = f.val;
+                    (function(fld, sIdx) {
+                        inp.onchange = function() {
+                            updateSeries(di, ei, sIdx, fld, this.value);
+                            this.classList.remove("sug");
+                        };
+                    })(f.field, si);
+                    row.appendChild(inp);
+                });
+
+                exBlock.appendChild(row);
+            });
+
+            // Exercise notes
+            var notesEl = document.createElement("textarea");
+            notesEl.className = "en2";
+            notesEl.placeholder = "Notas: molestias, tecnica, ajustes...";
+            notesEl.value = ed.notes || "";
+            (function(dIdx, eIdx) {
+                notesEl.onchange = function() { updateExNotes(dIdx, eIdx, this.value); };
+            })(di, ei);
+            exBlock.appendChild(notesEl);
+
+            body.appendChild(exBlock);
+        });
+
+        // Day notes
+        var naDiv = document.createElement("div");
+        naDiv.className = "na";
+        naDiv.innerHTML = "<div class='nl'>Notas del dia</div>";
+        var dayNotes = document.createElement("textarea");
+        dayNotes.className = "ni";
+        dayNotes.placeholder = "Como fue el entrenamiento? Algo que ajustar?...";
+        dayNotes.value = dd.notes || "";
+        (function(dIdx) {
+            dayNotes.onchange = function() { updateDayNotes(dIdx, this.value); };
+        })(di);
+        naDiv.appendChild(dayNotes);
+        body.appendChild(naDiv);
+
+        card.appendChild(body);
+        container.appendChild(card);
     });
 }
 
-function td(di) {
+function toggleDay(di) {
     document.getElementById("db" + di).classList.toggle("op");
     document.getElementById("dg" + di).classList.toggle("op");
 }
 
-function sf(di, v) {
-    gd(cw).days[di].feeling = v;
+function sf(di, val) {
+    getWeekData(cw).days[di].feeling = val;
     guardar();
-    document.querySelectorAll("#db" + di + " .fb").forEach(function(b, i) { b.classList.toggle("sl", i+1 === v); });
+    document.querySelectorAll("#db" + di + " .fb").forEach(function(b, i) {
+        b.classList.toggle("sl", i + 1 === val);
+    });
     document.getElementById("dd" + di).classList.add("dn");
     tabs();
 }
 
-function us(di, ei, si, f, v) { gd(cw).days[di].exercises[ei].series[si][f] = v; guardar(); }
-function une(di, ei, v) { gd(cw).days[di].exercises[ei].notes = v; guardar(); }
-function un2(di, v) { gd(cw).days[di].notes = v; guardar(); }
+function updateSeries(di, ei, si, field, val) {
+    var wd = getWeekData(cw);
+    wd.days[di].exercises[ei].series[si][field] = val;
+    wd.days[di].exercises[ei].series[si].edited = true;
+    guardar();
+}
+
+function updateExNotes(di, ei, val) { getWeekData(cw).days[di].exercises[ei].notes = val; guardar(); }
+function updateDayNotes(di, val) { getWeekData(cw).days[di].notes = val; guardar(); }
 
 async function enviar() {
     var btn = document.getElementById("sb");
-    btn.disabled = true;
-    btn.textContent = "⏳ Enviando...";
-
-    var wd = gd(cw);
+    btn.disabled = true; btn.textContent = "Enviando...";
+    var wd = getWeekData(cw);
     var res = "";
     PLAN.dias.forEach(function(day, di) {
         var dd = wd.days[di];
         res += "\n--- " + day.titulo + ": " + day.subtitulo + " ---\n";
-        res += "Sensación: " + (dd.feeling || "No registrado") + "/10\n";
-        dd.exercises.forEach(function(ex, ei) {
-            res += "  " + (ei+1) + ". " + day.ejercicios[ei] + "\n";
-            ex.series.forEach(function(s, si) {
-                if (s.r || s.w) res += "     S" + (si+1) + ": " + (s.r||"-") + " reps / " + (s.w||"-") + "kg / RIR-RPE " + (s.rpe||"-") + " / " + (s.rest||"-") + "\n";
+        res += "Sensacion: " + (dd.feeling || "No registrado") + "/10\n";
+        day.ejercicios.forEach(function(ex, ei) {
+            res += "  " + (ei + 1) + ". " + ex.nombre + "\n";
+            dd.exercises[ei].series.forEach(function(s, si) {
+                if (s.r || s.w) res += "     S" + (si+1) + ": " + (s.r||"-") + " reps / " + (s.w||"-") + "kg / RPE " + (s.rpe||"-") + " / " + (s.rest||"-") + "\n";
             });
-            if (ex.notes) res += "     Notas: " + ex.notes + "\n";
+            if (dd.exercises[ei].notes) res += "     Notas: " + dd.exercises[ei].notes + "\n";
         });
-        if (dd.notes) res += "Notas del día: " + dd.notes + "\n";
+        if (dd.notes) res += "Notas del dia: " + dd.notes + "\n";
     });
-
-    var ep = {
-        cliente: PLAN.cliente,
-        semana: cw,
-        metodo: PLAN.metodo || "Personalizado",
-        resumen_semana: res,
-        fecha_envio: new Date().toLocaleString("es-ES")
-    };
-
-    var ps = [];
-    ps.push(emailjs.send("service_oih7v4a", "template_1t0lfe9", ep).catch(function(e) { console.warn("Email:", e); }));
-
-    if (PLAN.webhook) {
-        ps.push(fetch(PLAN.webhook, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(ep)
-        }).catch(function(e) { console.warn("Webhook:", e); }));
-    }
-
+    var ep = { cliente: PLAN.cliente, semana: cw, metodo: PLAN.metodo || "Personalizado", resumen_semana: res, fecha_envio: new Date().toLocaleString("es-ES") };
+    var ps = [emailjs.send("service_oih7v4a", "template_1t0lfe9", ep).catch(function(e) { console.warn(e); })];
+    if (PLAN.webhook) ps.push(fetch(PLAN.webhook, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(ep) }).catch(function(e) { console.warn(e); }));
     await Promise.all(ps);
     document.getElementById("sc").classList.add("on");
-    btn.textContent = "✓ ENVIADO";
-    setTimeout(function() { btn.disabled = false; btn.textContent = "ACTUALIZAR Y ENVIAR AL COACH →"; }, 4000);
+    btn.textContent = "ENVIADO";
+    setTimeout(function() { btn.disabled = false; btn.textContent = "ACTUALIZAR Y ENVIAR AL COACH"; }, 4000);
 }
 
 init();
