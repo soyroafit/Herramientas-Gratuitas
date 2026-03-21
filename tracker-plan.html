@@ -47,7 +47,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--wh);min-h
 .et{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
 .en{width:26px;height:26px;background:var(--am);color:var(--bg);border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.78rem;flex-shrink:0;}
 .exn{font-size:.92rem;font-weight:600;color:var(--wh);}
-.coach-hint{background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.25);border-radius:6px;padding:6px 10px;margin-bottom:10px;font-size:.72rem;color:#888;line-height:1.5;}
+.coach-hint{background:rgba(242,203,5,.05);border:1px solid rgba(242,203,5,.2);border-radius:6px;padding:8px 12px;margin-bottom:10px;font-size:.75rem;color:#999;line-height:1.6;}.coach-hint strong{color:var(--am);}.coach-hint em{color:#aaa;font-style:normal;text-decoration:underline;}
 .coach-hint strong{color:var(--az);}
 .sh{display:grid;grid-template-columns:46px 1fr 1fr 1fr 1fr;gap:5px;margin-bottom:5px;}
 .sh span{font-size:.6rem;font-weight:700;color:#444;text-align:center;text-transform:uppercase;letter-spacing:.4px;}
@@ -243,15 +243,11 @@ function dias() {
 
             // Coach hint
             var sg0 = ex.series[0];
-            if (sg0 && (sg0.r || sg0.w || sg0.rpe || sg0.rest)) {
-                var parts = [];
-                if (sg0.r) parts.push(sg0.r + " reps");
-                if (sg0.w) parts.push(sg0.w + " kg");
-                if (sg0.rpe) parts.push("RIR/RPE " + sg0.rpe);
-                if (sg0.rest) parts.push(sg0.rest + " descanso");
+            var hasSuggestion = sg0 && (sg0.r || sg0.w || sg0.rpe || sg0.rest);
+            if (hasSuggestion) {
                 var hint = document.createElement("div");
                 hint.className = "coach-hint";
-                hint.innerHTML = "<strong>Coach:</strong> " + parts.join(" · ");
+                hint.innerHTML = "<strong>Tu plan personalizado</strong> — Los valores ya vienen cargados con la sugerencia de tu coach. Puedes dejarlos igual si lo hiciste como se indica, o editarlos con lo que realmente hiciste. Al terminar pulsa <em>Enviar al coach</em>.";
                 exBlock.appendChild(hint);
             }
 
