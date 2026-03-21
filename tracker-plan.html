@@ -369,7 +369,14 @@ async function enviar() {
         });
         if (dd.notes) res += "Notas del dia: " + dd.notes + "\n";
     });
-    var ep = { cliente: PLAN.cliente, semana: cw, metodo: PLAN.metodo || "Personalizado", resumen_semana: res, fecha_envio: new Date().toLocaleString("es-ES") };
+    var ep = {
+        tipo: "Tracker Entrenamiento",
+        nombre: PLAN.cliente,
+        semana: cw,
+        metodo: PLAN.metodo || "Personalizado",
+        resumen_semana: res,
+        fecha_envio: new Date().toLocaleString("es-ES")
+    };
     var ps = [emailjs.send("service_oih7v4a", "template_1t0lfe9", ep).catch(function(e) { console.warn(e); })];
     if (PLAN.webhook) ps.push(fetch(PLAN.webhook, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(ep) }).catch(function(e) { console.warn(e); }));
     await Promise.all(ps);
