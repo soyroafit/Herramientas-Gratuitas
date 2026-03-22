@@ -355,6 +355,8 @@ async function enviar() {
     var btn = document.getElementById("sb");
     btn.disabled = true; btn.textContent = "Enviando...";
     var wd = getWeekData(cw);
+
+    // ── Resumen en texto para el email ──
     var res = "";
     PLAN.dias.forEach(function(day, di) {
         var dd = wd.days[di];
@@ -363,12 +365,14 @@ async function enviar() {
         day.ejercicios.forEach(function(ex, ei) {
             res += "  " + (ei + 1) + ". " + ex.nombre + "\n";
             dd.exercises[ei].series.forEach(function(s, si) {
-                if (s.r || s.w) res += "     S" + (si+1) + ": " + (s.r||"-") + " reps / " + (s.w||"-") + "kg / RPE " + (s.rpe||"-") + " / " + (s.rest||"-") + "\n";
+                if (s.r || s.w) res += "     S" + (si+1) + ": " + (s.r||"-") + " reps / " + (s.w||"-") + "kg / RIR/RPE " + (s.rpe||"-") + " / " + (s.rest||"-") + "\n";
             });
             if (dd.exercises[ei].notes) res += "     Notas: " + dd.exercises[ei].notes + "\n";
         });
         if (dd.notes) res += "Notas del dia: " + dd.notes + "\n";
     });
+
+    // ── Payload para email ──
     var ep = {
         tipo: "Tracker Entrenamiento",
         nombre: PLAN.cliente,
@@ -377,8 +381,41 @@ async function enviar() {
         resumen_semana: res,
         fecha_envio: new Date().toLocaleString("es-ES")
     };
+
+    // ── Payload estructurado por ejercicio para Google Sheets ──
+    var filas = [];
+    var fecha = new Date().toLocaleDateString("es-ES");
+    PLAN.dias.forEach(function(day, di) {
+        var dd = wd.days[di];
+        day.ejercicios.forEach(function(ex, ei) {
+            var ed = dd.exercises[ei];
+            var s = function(i, campo) { return ed.series[i] ? (ed.series[i][campo] || "") : ""; };
+            filas.push({
+                Cliente:    PLAN.cliente,
+                Fecha:      fecha,
+                Semana:     cw,
+                Dia:        day.titulo + " - " + day.subtitulo,
+                Ejercicio:  ex.nombre,
+                "S1 Reps":     s(0,"r"), "S1 Peso":     s(0,"w"), "S1 RIR/RPE": s(0,"rpe"), "S1 Desc":  s(0,"rest"),
+                "S2 Reps":     s(1,"r"), "S2 Peso":     s(1,"w"), "S2 RIR/RPE": s(1,"rpe"), "S2 Desc":  s(1,"rest"),
+                "S3 Reps":     s(2,"r"), "S3 Peso":     s(2,"w"), "S3 RIR/RPE": s(2,"rpe"), "S3 Desc":  s(2,"rest"),
+                "S4 Reps":     s(3,"r"), "S4 Peso":     s(3,"w"), "S4 RIR/RPE": s(3,"rpe"), "S4 Desc":  s(3,"rest"),
+                Notas:      ed.notes || "",
+                Sensacion:  dd.feeling || ""
+            });
+        });
+    });
+
     var ps = [emailjs.send("service_oih7v4a", "template_1t0lfe9", ep).catch(function(e) { console.warn(e); })];
-    if (PLAN.webhook) ps.push(fetch(PLAN.webhook, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(ep) }).catch(function(e) { console.warn(e); }));
+
+    if (PLAN.webhook) {
+        ps.push(fetch(PLAN.webhook, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ filas: filas, resumen: ep })
+        }).catch(function(e) { console.warn(e); }));
+    }
+
     await Promise.all(ps);
     document.getElementById("sc").classList.add("on");
     btn.textContent = "ENVIADO";
