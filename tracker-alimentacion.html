@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Tracker Alimentación ROAFIT</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--am:#F2CB05;--bg:#0a0a0a;--g1:#141414;--g2:#1e1e1e;--g3:#252525;--gb:#2e2e2e;--wh:#f0f0f0;--gr:#10b981;--rd:#ef4444;--az:#3b82f6;--or:#f97316;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--wh);min-height:100vh;}
+.si{position:fixed;top:16px;right:16px;background:var(--gr);color:#fff;padding:8px 16px;border-radius:6px;font-size:.8rem;font-weight:600;opacity:0;transition:opacity .3s;z-index:999;}
+.si.on{opacity:1;}
+.hd{background:var(--g1);border-bottom:3px solid var(--am);padding:20px 16px;text-align:center;}
+.hd img{max-width:160px;width:55%;height:auto;margin-bottom:12px;display:block;margin-left:auto;margin-right:auto;}
+.cn{font-family:"Bebas Neue",sans-serif;font-size:clamp(1.5rem,5vw,2.2rem);color:var(--wh);letter-spacing:2px;}
+.cn span{color:var(--am);}
+.mb{display:inline-block;background:var(--or);color:#fff;font-family:"Bebas Neue",sans-serif;font-size:.8rem;letter-spacing:3px;padding:4px 14px;border-radius:2px;margin-top:6px;}
+.err{max-width:500px;margin:60px auto;padding:32px 24px;text-align:center;}
+.err h2{font-family:"Bebas Neue",sans-serif;font-size:1.8rem;color:var(--rd);margin-bottom:12px;}
+.err p{color:#666;font-size:.9rem;line-height:1.7;}
+.mn{max-width:760px;margin:0 auto;padding:20px 14px 80px;}
+
+/* WEEK TABS */
+.wt{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:20px;scrollbar-width:none;}
+.wt::-webkit-scrollbar{display:none;}
+.wk{flex-shrink:0;padding:9px 18px;background:var(--g2);border:1px solid var(--gb);border-radius:8px;color:#666;font-weight:600;font-size:.82rem;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.wk.ac{background:var(--am);color:var(--bg);border-color:var(--am);}
+.wk.hd2{border-color:var(--gr);color:var(--gr);}
+.wk.hd2.ac{background:var(--am);color:var(--bg);border-color:var(--am);}
+
+/* DAY TABS */
+.dt-wrap{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px;}
+.dt-btn{padding:8px 16px;background:var(--g2);border:1px solid var(--gb);border-radius:8px;color:#666;font-weight:600;font-size:.8rem;cursor:pointer;transition:all .2s;}
+.dt-btn.ac{background:var(--or);color:#fff;border-color:var(--or);}
+.dt-btn.done{border-color:var(--gr);color:var(--gr);}
+.dt-btn.done.ac{background:var(--or);color:#fff;border-color:var(--or);}
+
+/* SUMMARY BAR */
+.summary-bar{background:var(--g2);border:1px solid var(--gb);border-radius:12px;padding:14px 16px;margin-bottom:20px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+.sum-item{text-align:center;}
+.sum-val{font-family:"Bebas Neue",sans-serif;font-size:1.4rem;color:var(--am);letter-spacing:1px;}
+.sum-lbl{font-size:.65rem;color:#555;text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
+
+/* SECTION CARD */
+.sec{background:var(--g2);border:1px solid var(--gb);border-radius:12px;margin-bottom:14px;overflow:hidden;}
+.sec-hd{display:flex;align-items:center;gap:10px;padding:13px 16px;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;}
+.sec-dot{width:10px;height:10px;border-radius:50%;background:var(--gb);flex-shrink:0;}
+.sec-dot.dn{background:var(--gr);}
+.sec-title{font-family:"Bebas Neue",sans-serif;font-size:1.1rem;letter-spacing:1.5px;color:var(--wh);}
+.sec-sub{font-size:.72rem;color:#555;margin-top:2px;}
+.sec-arrow{color:#444;font-size:1rem;transition:transform .3s;margin-left:auto;}
+.sec-arrow.op{transform:rotate(180deg);}
+.sec-body{display:none;padding:0 16px 16px;border-top:1px solid var(--gb);}
+.sec-body.op{display:block;}
+
+/* MEAL INPUTS */
+.meal-grid{display:grid;grid-template-columns:1fr;gap:8px;margin-top:12px;}
+.inp-label{font-size:.72rem;color:#666;font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;}
+.inp-text{width:100%;background:var(--g3);border:1px solid var(--gb);border-radius:7px;padding:10px 12px;color:var(--wh);font-family:"DM Sans",sans-serif;font-size:.88rem;outline:none;resize:vertical;min-height:55px;}
+.inp-text:focus{border-color:var(--am);}
+.inp-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.inp-single{width:100%;background:var(--g3);border:1px solid var(--gb);border-radius:7px;padding:10px 12px;color:var(--wh);font-family:"DM Sans",sans-serif;font-size:.88rem;outline:none;}
+.inp-single:focus{border-color:var(--am);}
+
+/* MACROS */
+.macro-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px;}
+.macro-box{background:var(--g3);border:1px solid var(--gb);border-radius:8px;padding:10px;text-align:center;}
+.macro-lbl{font-size:.65rem;color:#666;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;}
+.macro-inp{width:100%;background:var(--g2);border:1px solid var(--gb);border-radius:5px;padding:7px 4px;color:var(--wh);font-family:"DM Sans",sans-serif;font-size:.9rem;text-align:center;outline:none;}
+.macro-inp:focus{border-color:var(--am);}
+.macro-unit{font-size:.65rem;color:#444;margin-top:4px;}
+
+/* FEELINGS */
+.feel-row{display:flex;align-items:center;gap:10px;padding:12px 0 8px;flex-wrap:wrap;}
+.feel-lbl{font-size:.78rem;color:#666;font-weight:500;white-space:nowrap;}
+.feel-btns{display:flex;gap:5px;flex-wrap:wrap;}
+.fb{width:30px;height:30px;border-radius:6px;border:1px solid var(--gb);background:var(--g3);color:#555;font-size:.78rem;font-weight:700;cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent;}
+.fb.sl{background:var(--or);color:#fff;border-color:var(--or);}
+
+/* WATER */
+.water-row{display:flex;align-items:center;gap:12px;padding:12px 0;flex-wrap:wrap;}
+.water-lbl{font-size:.78rem;color:#666;font-weight:500;}
+.water-btns{display:flex;gap:6px;flex-wrap:wrap;}
+.wb{width:36px;height:36px;border-radius:8px;border:1px solid var(--gb);background:var(--g3);color:#555;font-size:.75rem;font-weight:700;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;}
+.wb.sl{background:var(--az);color:#fff;border-color:var(--az);}
+
+/* SEND */
+.ss{background:var(--g2);border:1px solid var(--gb);border-radius:14px;padding:22px 18px;margin-top:20px;text-align:center;}
+.ss h3{font-family:"Bebas Neue",sans-serif;font-size:1.25rem;letter-spacing:1.5px;color:var(--am);margin-bottom:6px;}
+.ss p{font-size:.82rem;color:#555;margin-bottom:18px;line-height:1.6;}
+.sb{background:var(--am);color:var(--bg);border:none;padding:15px 32px;border-radius:10px;font-family:"Bebas Neue",sans-serif;font-size:1.1rem;letter-spacing:2px;cursor:pointer;width:100%;max-width:340px;-webkit-tap-highlight-color:transparent;}
+.sb:disabled{opacity:.5;cursor:not-allowed;}
+.sc{display:none;background:rgba(16,185,129,.1);border:1px solid var(--gr);border-radius:10px;padding:14px;color:var(--gr);font-size:.88rem;margin-top:12px;text-align:center;}
+.sc.on{display:block;}
+.ft{text-align:center;margin-top:36px;padding:18px;color:#2a2a2a;font-size:.78rem;}
+.ft span{color:var(--am);}
+@media(max-width:420px){.summary-bar{grid-template-columns:repeat(2,1fr);}.macro-grid{grid-template-columns:repeat(3,1fr);}.inp-row{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="si" id="si">Guardado</div>
+<div class="hd">
+  <img src="https://soyroafit.github.io/Herramientas-Gratuitas/logo-roafit.png" alt="ROAFIT" onerror="this.style.display='none'">
+  <div class="cn">Alimentacion de <span id="cn">...</span></div>
+  <div class="mb">TRACKER NUTRICIONAL</div>
+</div>
+<div id="errorScreen" class="err" style="display:none">
+  <h2>Link invalido</h2>
+  <p>Este link no es valido.<br>Contacta a tu coach para que te envie el link correcto.</p>
+</div>
+<div class="mn" id="mainContent" style="display:none">
+  <div class="wt" id="wt"></div>
+  <div class="dt-wrap" id="dayTabs"></div>
+  <div class="summary-bar" id="summaryBar">
+    <div class="sum-item"><div class="sum-val" id="sumCal">0</div><div class="sum-lbl">Calorias</div></div>
+    <div class="sum-item"><div class="sum-val" id="sumProt">0g</div><div class="sum-lbl">Proteina</div></div>
+    <div class="sum-item"><div class="sum-val" id="sumCarb">0g</div><div class="sum-lbl">Carbos</div></div>
+    <div class="sum-item"><div class="sum-val" id="sumGras">0g</div><div class="sum-lbl">Grasas</div></div>
+  </div>
+  <div id="dayContent"></div>
+  <div class="ss">
+    <h3>Enviar dia al coach</h3>
+    <p>Pulsa cuando termines de registrar el dia.<br>Tu coach lo revisara y te dara feedback.</p>
+    <button class="sb" id="sb" onclick="enviar()">ENVIAR DIA AL COACH</button>
+    <div class="sc" id="sc">Registro enviado. Tu coach lo revisara pronto.</div>
+  </div>
+  <div class="ft"><p><span>Del Deseo a la Accion</span> - ROAFIT</p></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script>
+var PLAN = null, SK = "", cw = 1, cd = 0, D = {};
+var MEALS = ["Desayuno","Almuerzo","Cena","Snack 1","Snack 2"];
+
+function init() {
+    emailjs.init("Db0CLad-rNtFZbAmE");
+    var params = new URLSearchParams(window.location.search);
+    var encoded = params.get("p");
+    if (!encoded) { showError(); return; }
+    try { PLAN = JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(encoded))))); }
+    catch(e) { showError(); return; }
+    if (!PLAN || !PLAN.cliente) { showError(); return; }
+    SK = "roafit_ali_" + PLAN.cliente.toLowerCase().replace(/\s+/g,"_");
+    document.getElementById("cn").textContent = PLAN.cliente;
+    document.title = "Alimentacion de " + PLAN.cliente + " - ROAFIT";
+    cargar();
+    document.getElementById("mainContent").style.display = "block";
+    renderWeekTabs();
+    renderDayTabs();
+    renderDay();
+}
+
+function showError() { document.getElementById("errorScreen").style.display = "block"; }
+
+function cargar() {
+    try { var s = localStorage.getItem(SK); if (s) D = JSON.parse(s); } catch(e) {}
+}
+
+function guardar() {
+    try {
+        localStorage.setItem(SK, JSON.stringify(D));
+        var el = document.getElementById("si");
+        el.classList.add("on");
+        setTimeout(function() { el.classList.remove("on"); }, 1800);
+    } catch(e) {}
+}
+
+function getDay(w, d) {
+    if (!D[w]) D[w] = {};
+    if (!D[w][d]) {
+        D[w][d] = {
+            feeling: null,
+            water: 0,
+            adherencia: null,
+            notas: "",
+            meals: {}
+        };
+        MEALS.forEach(function(m) {
+            D[w][d].meals[m] = { descripcion: "", calorias: "", proteina: "", carbos: "", grasas: "", foto: "", notas: "" };
+        });
+    }
+    return D[w][d];
+}
+
+function isDayDone(w, d) {
+    if (!D[w] || !D[w][d]) return false;
+    var dd = D[w][d];
+    return dd.feeling !== null || dd.water > 0 || dd.adherencia !== null;
+}
+
+function isWeekHasData(w) {
+    if (!D[w]) return false;
+    for (var d = 0; d < 7; d++) { if (isDayDone(w, d)) return true; }
+    return false;
+}
+
+function renderWeekTabs() {
+    var c = document.getElementById("wt");
+    c.innerHTML = "";
+    for (var w = 1; w <= PLAN.semanas; w++) {
+        (function(ww) {
+            var btn = document.createElement("button");
+            btn.className = "wk" + (ww === cw ? " ac" : "") + (isWeekHasData(ww) ? " hd2" : "");
+            btn.textContent = "Semana " + ww;
+            btn.onclick = function() { cw = ww; cd = 0; renderWeekTabs(); renderDayTabs(); renderDay(); document.getElementById("sc").classList.remove("on"); };
+            c.appendChild(btn);
+        })(w);
+    }
+}
+
+function renderDayTabs() {
+    var c = document.getElementById("dayTabs");
+    c.innerHTML = "";
+    var days = ["Lun","Mar","Mie","Jue","Vie","Sab","Dom"];
+    days.forEach(function(day, i) {
+        var btn = document.createElement("button");
+        btn.className = "dt-btn" + (i === cd ? " ac" : "") + (isDayDone(cw, i) ? " done" : "");
+        btn.textContent = day;
+        btn.onclick = (function(idx) { return function() { cd = idx; renderDayTabs(); renderDay(); document.getElementById("sc").classList.remove("on"); }; })(i);
+        c.appendChild(btn);
+    });
+}
+
+function renderDay() {
+    var dd = getDay(cw, cd);
+    var c = document.getElementById("dayContent");
+    c.innerHTML = "";
+
+    // MEALS
+    MEALS.forEach(function(meal) {
+        var md = dd.meals[meal];
+        var sec = document.createElement("div");
+        sec.className = "sec";
+        sec.id = "sec-" + meal.replace(/\s/g,"_");
+
+        var hd = document.createElement("div");
+        hd.className = "sec-hd";
+        var hasMeal = md.descripcion || md.calorias;
+        hd.innerHTML =
+            "<div class='sec-dot" + (hasMeal ? " dn" : "") + "' id='dot-" + meal.replace(/\s/g,"_") + "'></div>" +
+            "<div><div class='sec-title'>" + meal + "</div>" +
+            "<div class='sec-sub'>" + (hasMeal ? "Registrado" : "Sin registrar") + "</div></div>" +
+            "<div class='sec-arrow' id='arr-" + meal.replace(/\s/g,"_") + "'>v</div>";
+        hd.onclick = (function(m) { return function() { toggleSec(m); }; })(meal.replace(/\s/g,"_"));
+        sec.appendChild(hd);
+
+        var body = document.createElement("div");
+        body.className = "sec-body";
+        body.id = "body-" + meal.replace(/\s/g,"_");
+
+        // Descripcion
+        var descDiv = document.createElement("div");
+        descDiv.className = "meal-grid";
+        descDiv.innerHTML = "<div class='inp-label'>Que comiste</div>";
+        var descTa = document.createElement("textarea");
+        descTa.className = "inp-text";
+        descTa.placeholder = "Ej: Arroz con pollo y ensalada, 200g de arroz...";
+        descTa.value = md.descripcion || "";
+        descTa.onchange = (function(m) { return function() { getDay(cw,cd).meals[m].descripcion = this.value; guardar(); updateSummary(); }; })(meal);
+        descDiv.appendChild(descTa);
+        body.appendChild(descDiv);
+
+        // Calorias + macros
+        var macroDiv = document.createElement("div");
+        macroDiv.style.marginTop = "10px";
+        macroDiv.innerHTML = "<div class='inp-label'>Calorias y macros (aproximado)</div>";
+        var calRow = document.createElement("div");
+        calRow.style.marginBottom = "8px";
+        var calInp = document.createElement("input");
+        calInp.className = "inp-single";
+        calInp.type = "text";
+        calInp.placeholder = "Calorias totales (ej: 450)";
+        calInp.value = md.calorias || "";
+        calInp.onchange = (function(m) { return function() { getDay(cw,cd).meals[m].calorias = this.value; guardar(); updateSummary(); }; })(meal);
+        calRow.appendChild(calInp);
+        macroDiv.appendChild(calRow);
+
+        var macroGrid = document.createElement("div");
+        macroGrid.className = "macro-grid";
+        var macros = [
+            { key: "proteina", lbl: "Proteina", unit: "gramos", ph: "30" },
+            { key: "carbos", lbl: "Carbos", unit: "gramos", ph: "60" },
+            { key: "grasas", lbl: "Grasas", unit: "gramos", ph: "15" }
+        ];
+        macros.forEach(function(mac) {
+            var box = document.createElement("div");
+            box.className = "macro-box";
+            box.innerHTML = "<div class='macro-lbl'>" + mac.lbl + "</div>";
+            var inp = document.createElement("input");
+            inp.className = "macro-inp";
+            inp.type = "text";
+            inp.placeholder = mac.ph + "g";
+            inp.value = md[mac.key] || "";
+            inp.onchange = (function(m, k) { return function() { getDay(cw,cd).meals[m][k] = this.value; guardar(); updateSummary(); }; })(meal, mac.key);
+            box.appendChild(inp);
+            box.innerHTML += "<div class='macro-unit'>" + mac.unit + "</div>";
+            box.insertBefore(inp, box.lastElementChild);
+            macroGrid.appendChild(box);
+        });
+        macroDiv.appendChild(macroGrid);
+        body.appendChild(macroDiv);
+
+        // Foto link
+        var fotoDiv = document.createElement("div");
+        fotoDiv.style.marginTop = "10px";
+        fotoDiv.innerHTML = "<div class='inp-label'>Link foto (opcional)</div>";
+        var fotoInp = document.createElement("input");
+        fotoInp.className = "inp-single";
+        fotoInp.style.width = "100%";
+        fotoInp.type = "text";
+        fotoInp.placeholder = "https://drive.google.com/...";
+        fotoInp.value = md.foto || "";
+        fotoInp.onchange = (function(m) { return function() { getDay(cw,cd).meals[m].foto = this.value; guardar(); }; })(meal);
+        fotoDiv.appendChild(fotoInp);
+        body.appendChild(fotoDiv);
+
+        // Notas comida
+        var notaMealDiv = document.createElement("div");
+        notaMealDiv.style.marginTop = "10px";
+        notaMealDiv.innerHTML = "<div class='inp-label'>Notas de esta comida</div>";
+        var notaMealTa = document.createElement("textarea");
+        notaMealTa.className = "inp-text";
+        notaMealTa.style.minHeight = "45px";
+        notaMealTa.placeholder = "Hambre, saciedad, antojos, como te sentiste...";
+        notaMealTa.value = md.notas || "";
+        notaMealTa.onchange = (function(m) { return function() { getDay(cw,cd).meals[m].notas = this.value; guardar(); }; })(meal);
+        notaMealDiv.appendChild(notaMealTa);
+        body.appendChild(notaMealDiv);
+
+        sec.appendChild(body);
+        c.appendChild(sec);
+    });
+
+    // HIDRATACION
+    var waterSec = document.createElement("div");
+    waterSec.className = "sec";
+    waterSec.innerHTML =
+        "<div class='sec-hd' onclick='toggleSec(\"water\")'>" +
+            "<div class='sec-dot" + (dd.water > 0 ? " dn" : "") + "' id='dot-water'></div>" +
+            "<div><div class='sec-title'>Hidratacion</div><div class='sec-sub'>" + (dd.water > 0 ? dd.water + " vasos registrados" : "Sin registrar") + "</div></div>" +
+            "<div class='sec-arrow' id='arr-water'>v</div>" +
+        "</div>" +
+        "<div class='sec-body' id='body-water'>" +
+            "<div class='water-row'><span class='water-lbl'>Vasos de agua (250ml)</span><div class='water-btns' id='waterBtns'></div></div>" +
+        "</div>";
+    c.appendChild(waterSec);
+    renderWaterBtns(dd.water);
+
+    // BIENESTAR
+    var bienSec = document.createElement("div");
+    bienSec.className = "sec";
+    var hasAdh = dd.adherencia !== null;
+    var hasFeel = dd.feeling !== null;
+    bienSec.innerHTML =
+        "<div class='sec-hd' onclick='toggleSec(\"bien\")'>" +
+            "<div class='sec-dot" + (hasAdh || hasFeel ? " dn" : "") + "' id='dot-bien'></div>" +
+            "<div><div class='sec-title'>Bienestar y Adherencia</div><div class='sec-sub'>" + (hasAdh || hasFeel ? "Registrado" : "Sin registrar") + "</div></div>" +
+            "<div class='sec-arrow' id='arr-bien'>v</div>" +
+        "</div>";
+    var bienBody = document.createElement("div");
+    bienBody.className = "sec-body";
+    bienBody.id = "body-bien";
+
+    // Adherencia
+    var adhDiv = document.createElement("div");
+    adhDiv.className = "feel-row";
+    adhDiv.innerHTML = "<span class='feel-lbl'>Adherencia a tu plan (1-10)</span><div class='feel-btns' id='adhBtns'></div>";
+    bienBody.appendChild(adhDiv);
+
+    // Feeling
+    var feelDiv = document.createElement("div");
+    feelDiv.className = "feel-row";
+    feelDiv.innerHTML = "<span class='feel-lbl'>Como te sentiste con tu alimentacion (1-10)</span><div class='feel-btns' id='feelBtns'></div>";
+    bienBody.appendChild(feelDiv);
+
+    // Notas generales
+    var notaDiv = document.createElement("div");
+    notaDiv.style.marginTop = "10px";
+    notaDiv.innerHTML = "<div class='inp-label'>Notas generales del dia</div>";
+    var notaTa = document.createElement("textarea");
+    notaTa.className = "inp-text";
+    notaTa.placeholder = "Antojos, como fue el dia, dificultades, logros...";
+    notaTa.value = dd.notas || "";
+    notaTa.onchange = function() { getDay(cw,cd).notas = this.value; guardar(); };
+    notaDiv.appendChild(notaTa);
+    bienBody.appendChild(notaDiv);
+
+    bienSec.appendChild(bienBody);
+    c.appendChild(bienSec);
+
+    renderAdhBtns(dd.adherencia);
+    renderFeelBtns(dd.feeling);
+    updateSummary();
+}
+
+function toggleSec(id) {
+    var body = document.getElementById("body-" + id);
+    var arr = document.getElementById("arr-" + id);
+    if (body) body.classList.toggle("op");
+    if (arr) arr.classList.toggle("op");
+}
+
+function renderWaterBtns(current) {
+    var c = document.getElementById("waterBtns");
+    if (!c) return;
+    c.innerHTML = "";
+    for (var i = 1; i <= 12; i++) {
+        (function(val) {
+            var btn = document.createElement("button");
+            btn.className = "wb" + (val <= current ? " sl" : "");
+            btn.textContent = val;
+            btn.onclick = function() { getDay(cw,cd).water = val; guardar(); renderWaterBtns(val); updateDotWater(val); };
+            c.appendChild(btn);
+        })(i);
+    }
+}
+
+function updateDotWater(val) {
+    var dot = document.getElementById("dot-water");
+    if (dot) { if (val > 0) dot.classList.add("dn"); else dot.classList.remove("dn"); }
+}
+
+function renderAdhBtns(current) {
+    var c = document.getElementById("adhBtns");
+    if (!c) return;
+    c.innerHTML = "";
+    for (var i = 1; i <= 10; i++) {
+        (function(val) {
+            var btn = document.createElement("button");
+            btn.className = "fb" + (val === current ? " sl" : "");
+            btn.textContent = val;
+            btn.onclick = function() { getDay(cw,cd).adherencia = val; guardar(); renderAdhBtns(val); updateDotBien(); };
+            c.appendChild(btn);
+        })(i);
+    }
+}
+
+function renderFeelBtns(current) {
+    var c = document.getElementById("feelBtns");
+    if (!c) return;
+    c.innerHTML = "";
+    for (var i = 1; i <= 10; i++) {
+        (function(val) {
+            var btn = document.createElement("button");
+            btn.className = "fb" + (val === current ? " sl" : "");
+            btn.textContent = val;
+            btn.onclick = function() { getDay(cw,cd).feeling = val; guardar(); renderFeelBtns(val); updateDotBien(); };
+            c.appendChild(btn);
+        })(i);
+    }
+}
+
+function updateDotBien() {
+    var dd = getDay(cw, cd);
+    var dot = document.getElementById("dot-bien");
+    if (dot) { if (dd.adherencia !== null || dd.feeling !== null) dot.classList.add("dn"); else dot.classList.remove("dn"); }
+}
+
+function updateSummary() {
+    var dd = getDay(cw, cd);
+    var totalCal = 0, totalProt = 0, totalCarb = 0, totalGras = 0;
+    MEALS.forEach(function(m) {
+        var md = dd.meals[m];
+        totalCal += parseFloat(md.calorias) || 0;
+        totalProt += parseFloat(md.proteina) || 0;
+        totalCarb += parseFloat(md.carbos) || 0;
+        totalGras += parseFloat(md.grasas) || 0;
+    });
+    document.getElementById("sumCal").textContent = Math.round(totalCal);
+    document.getElementById("sumProt").textContent = Math.round(totalProt) + "g";
+    document.getElementById("sumCarb").textContent = Math.round(totalCarb) + "g";
+    document.getElementById("sumGras").textContent = Math.round(totalGras) + "g";
+}
+
+async function enviar() {
+    var btn = document.getElementById("sb");
+    btn.disabled = true; btn.textContent = "Enviando...";
+    var dd = getDay(cw, cd);
+    var days = ["Lunes","Martes","Miercoles","Jueves","Viernes","Sabado","Domingo"];
+
+    var res = "REGISTRO DE ALIMENTACION — " + days[cd] + ", Semana " + cw + "\n\n";
+    res += "Adherencia al plan: " + (dd.adherencia || "No registrado") + "/10\n";
+    res += "Sensacion general: " + (dd.feeling || "No registrado") + "/10\n";
+    res += "Hidratacion: " + dd.water + " vasos\n\n";
+
+    var totalCal = 0, totalProt = 0, totalCarb = 0, totalGras = 0;
+    MEALS.forEach(function(m) {
+        var md = dd.meals[m];
+        if (md.descripcion || md.calorias) {
+            res += "--- " + m + " ---\n";
+            if (md.descripcion) res += "Comida: " + md.descripcion + "\n";
+            if (md.calorias) res += "Calorias: " + md.calorias + " kcal\n";
+            if (md.proteina) res += "Proteina: " + md.proteina + "g\n";
+            if (md.carbos) res += "Carbos: " + md.carbos + "g\n";
+            if (md.grasas) res += "Grasas: " + md.grasas + "g\n";
+            if (md.foto) res += "Foto: " + md.foto + "\n";
+            if (md.notas) res += "Notas: " + md.notas + "\n";
+            res += "\n";
+            totalCal += parseFloat(md.calorias) || 0;
+            totalProt += parseFloat(md.proteina) || 0;
+            totalCarb += parseFloat(md.carbos) || 0;
+            totalGras += parseFloat(md.grasas) || 0;
+        }
+    });
+
+    res += "--- TOTALES DEL DIA ---\n";
+    res += "Calorias: " + Math.round(totalCal) + " kcal\n";
+    res += "Proteina: " + Math.round(totalProt) + "g\n";
+    res += "Carbos: " + Math.round(totalCarb) + "g\n";
+    res += "Grasas: " + Math.round(totalGras) + "g\n";
+    if (dd.notas) res += "\nNotas del dia: " + dd.notas;
+
+    var ep = {
+        tipo: "Tracker Alimentacion",
+        nombre: PLAN.cliente,
+        semana: cw,
+        metodo: days[cd],
+        resumen_semana: res,
+        fecha_envio: new Date().toLocaleString("es-ES")
+    };
+
+    var ps = [emailjs.send("service_oih7v4a", "template_1t0lfe9", ep).catch(function(e) { console.warn(e); })];
+    if (PLAN.webhook) {
+        ps.push(fetch(PLAN.webhook, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                cliente: PLAN.cliente,
+                semana: cw,
+                dia: days[cd],
+                fecha: new Date().toLocaleDateString("es-ES"),
+                adherencia: dd.adherencia || "",
+                sensacion: dd.feeling || "",
+                agua: dd.water,
+                cal_total: Math.round(totalCal),
+                prot_total: Math.round(totalProt),
+                carb_total: Math.round(totalCarb),
+                gras_total: Math.round(totalGras),
+                notas: dd.notas || "",
+                resumen: res
+            })
+        }).catch(function(e) { console.warn(e); }));
+    }
+
+    await Promise.all(ps);
+    document.getElementById("sc").classList.add("on");
+    btn.textContent = "ENVIADO";
+    renderDayTabs();
+    renderWeekTabs();
+    setTimeout(function() { btn.disabled = false; btn.textContent = "ENVIAR DIA AL COACH"; }, 4000);
+}
+
+init();
+</script>
+</body>
+</html>
