@@ -178,10 +178,11 @@ function getDay(w,d){
     if(!D[w][d]){
         D[w][d]={feeling:null,water:0,adherencia:null,notas:"",meals:{}};
         getMeals().forEach(function(m){
-            var md={calorias:"",notas:""};
+            var md={calorias:m.calorias||"",notas:""};
             MACROS.forEach(function(mac){
-                md[mac]="";
-                // pre-fill suggestions as editable arrays
+                // pre-fill registered value with coach suggestion so it shows immediately
+                md[mac]=m[mac]||"";
+                // pre-fill suggestion items as editable arrays
                 md["items_"+mac]=(m["sug_"+mac]||[]).slice();
             });
             D[w][d].meals[m.nombre]=md;
