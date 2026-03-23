@@ -103,6 +103,10 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--wh);min-h
       <div class="field"><label>Nombre del cliente *</label><input type="text" id="clienteNombre" placeholder="Maria Garcia"></div>
       <div class="field"><label>Semanas del plan *</label><input type="number" id="clienteSemanas" value="8" min="1" max="52"></div>
     </div>
+    <div class="two-col">
+      <div class="field"><label>Email del cliente *</label><input type="email" id="clienteEmail" placeholder="maria@email.com"></div>
+      <div class="field"><label>WhatsApp del cliente</label><input type="text" id="clienteWhatsapp" placeholder="+57 300 000 0000"></div>
+    </div>
     <div class="field">
       <label>Webhook Make.com (opcional)</label>
       <input type="text" id="webhookUrl" placeholder="https://hook.eu1.make.com/..." value="https://hook.eu1.make.com/e03f5qc1eo71n4ogx58qpja2lx7ng8yn">
@@ -468,6 +472,8 @@ function addDay() {
 
 async function generateLink() {
     var nombre = document.getElementById("clienteNombre").value.trim();
+    var email = document.getElementById("clienteEmail").value.trim();
+    var whatsapp = document.getElementById("clienteWhatsapp").value.trim();
     var semanas = parseInt(document.getElementById("clienteSemanas").value) || 8;
     var webhook = document.getElementById("webhookUrl").value.trim() || "";
 
@@ -476,8 +482,13 @@ async function generateLink() {
         document.getElementById("clienteNombre").focus();
         return;
     }
+    if (!email) {
+        alert("Por favor escribe el email del cliente.");
+        document.getElementById("clienteEmail").focus();
+        return;
+    }
 
-    var plan = { cliente: nombre, metodo: selMetodo.nombre, semanas: semanas, webhook: webhook, dias: curDays };
+    var plan = { cliente: nombre, email: email, whatsapp: whatsapp, metodo: selMetodo.nombre, semanas: semanas, webhook: webhook, dias: curDays };
     var json = JSON.stringify(plan);
     var encoded = encodeURIComponent(btoa(unescape(encodeURIComponent(json))));
     var base = "https://soyroafit.github.io/Herramientas-Gratuitas/tracker-plan.html";
