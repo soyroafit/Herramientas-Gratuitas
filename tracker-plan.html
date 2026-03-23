@@ -376,6 +376,8 @@ async function enviar() {
     var ep = {
         tipo: "Tracker Entrenamiento",
         nombre: PLAN.cliente,
+        email: PLAN.email || "",
+        whatsapp: PLAN.whatsapp || "",
         semana: cw,
         metodo: PLAN.metodo || "Personalizado",
         resumen_semana: res,
@@ -392,6 +394,8 @@ async function enviar() {
             var s = function(i, campo) { return ed.series[i] ? (ed.series[i][campo] || "") : ""; };
             filas.push({
                 Cliente:    PLAN.cliente,
+                Email:      PLAN.email || "",
+                WhatsApp:   PLAN.whatsapp || "",
                 Fecha:      fecha,
                 Semana:     cw,
                 Dia:        day.titulo + " - " + day.subtitulo,
