@@ -535,10 +535,8 @@ async function submitCommunity(e) {
 
     if (WEBHOOK_COMUNIDAD) {
         try {
-            await fetch(WEBHOOK_COMUNIDAD + "?nombre=" + encodeURIComponent(nombre) + "&email=" + encodeURIComponent(email) + "&whatsapp=" + encodeURIComponent(whatsapp) + "&mensaje=" + encodeURIComponent(mensaje) + "&fecha=" + encodeURIComponent(fecha), {
-                method: "GET",
-                mode: "no-cors"
-            });
+            var _img = new Image();
+            _img.src = WEBHOOK_COMUNIDAD + "?nombre=" + encodeURIComponent(nombre) + "&email=" + encodeURIComponent(email) + "&whatsapp=" + encodeURIComponent(whatsapp) + "&mensaje=" + encodeURIComponent(mensaje) + "&fecha=" + encodeURIComponent(fecha);
         } catch(err) { console.warn("Webhook error:", err); }
     }
 
