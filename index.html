@@ -7,7 +7,7 @@
 <title>ROAFIT — Del Deseo a la Acción</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
 <style>
-:root{--am:#F2CB05;--bg:#080808;--g1:#111;--g2:#181818;--g3:#222;--gb:#2a2a2a;--wh:#f0f0f0;--dim:#555;--gr:#10b981;--rd:#ef4444;--or:#f97316;--az:#3b82f6;}
+:root{--am:#F2CB05;--bg:#0e1117;--g1:#161b22;--g2:#1c2128;--g3:#21262d;--gb:#30363d;--wh:#f0f0f0;--dim:#555;--gr:#10b981;--rd:#ef4444;--or:#f97316;--az:#3b82f6;}
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
 body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--wh);min-height:100vh;overflow-x:hidden;}
@@ -29,11 +29,11 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--wh);min-h
 .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 24px 80px;text-align:center;position:relative;overflow:hidden;}
 .hero-glow{position:absolute;width:700px;height:700px;background:radial-gradient(circle,rgba(242,203,5,.05) 0%,transparent 65%);border-radius:50%;top:50%;left:50%;transform:translate(-50%,-55%);pointer-events:none;}
 .hero-line{position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--am),transparent);}
-.hero-tagline{font-family:"DM Sans",sans-serif;font-size:clamp(.75rem,2vw,.85rem);font-weight:300;letter-spacing:5px;color:var(--dim);text-transform:uppercase;animation:fadeUp .9s ease both;margin-bottom:20px;}
+.hero-tagline{font-family:"DM Sans",sans-serif;font-size:clamp(.75rem,2vw,.85rem);font-weight:400;letter-spacing:5px;color:#888;text-transform:uppercase;animation:fadeUp .9s ease both;margin-bottom:20px;}
 .hero-logo-wrap{animation:fadeUp .9s .1s ease both;margin-bottom:28px;}
 .hero-logo-wrap img{max-width:500px;width:80%;height:auto;}
 .hero-desc{max-width:540px;margin:0 auto;animation:fadeUp .9s .2s ease both;}
-.hero-desc p{font-size:clamp(.88rem,2.5vw,1rem);color:var(--dim);line-height:1.8;font-weight:300;}
+.hero-desc p{font-size:clamp(.88rem,2.5vw,1rem);color:var(--wh);line-height:1.8;font-weight:300;}
 .hero-desc p strong{color:var(--wh);font-weight:500;}
 .hero-desc p+p{margin-top:6px;}
 .hero-cta{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:32px;animation:fadeUp .9s .3s ease both;}
@@ -134,7 +134,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--wh);min-h
 .reveal.visible{opacity:1;transform:translateY(0);}
 
 @media(max-width:600px){
-  .nav-links .nav-btn.ghost{display:none;}
+  .nav-links .nav-btn{font-size:.72rem;padding:6px 10px;}
   .card-grid{grid-template-columns:1fr;}
   .form-row{grid-template-columns:1fr;}
   .gate-row{flex-direction:column;}
@@ -169,8 +169,8 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--wh);min-h
       <img src="logo-roafit.png" alt="ROAFIT">
     </div>
     <div class="hero-desc">
-      <p>Accede a lo que necesitas para iniciar tu <strong>CAMBIO</strong> y mantener tus <strong>RESULTADOS</strong> de forma sostenible y 100% <strong>REAL</strong>.</p>
-      <p>Herramientas 100% gratuitas, sin registro, con guardado automatico en tu dispositivo.</p>
+      <p>Accede a lo que necesitas para iniciar tu <span style="color:var(--am);font-weight:600;">CAMBIO</span> y mantener tus <span style="color:var(--am);font-weight:600;">RESULTADOS</span> de forma sostenible y 100% <span style="color:var(--am);font-weight:600;">REAL</span>.</p>
+      <p style="color:#888;font-size:.9rem;">Herramientas 100% gratuitas, sin registro, con guardado automatico en tu dispositivo.</p>
     </div>
     <div class="hero-cta">
       <a href="#herramientas" class="btn-am" onclick="document.getElementById('herramientas').scrollIntoView({behavior:'smooth'});return false;">Ver Herramientas</a>
