@@ -397,7 +397,32 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--wh);min-h
           <textarea id="cfMensaje" placeholder="Cuentanos algo sobre ti, tu objetivo, o lo que quieras decirnos..."></textarea>
         </div>
         <button type="submit" class="btn-submit">UNIRME A LA COMUNIDAD</button>
-        <div class="form-success" id="cfSuccess">¡Bienvenido/a a la Comunidad ROAFIT! Revisa tu bandeja de entrada pronto.</div>
+        <div class="form-success" id="cfSuccess" style="text-align:left;padding:24px;">
+  <div style="text-align:center;margin-bottom:20px;">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:2px;color:var(--am);">¡Ya eres parte de la Comunidad ROAFIT!</div>
+    <div style="font-size:.85rem;color:#888;margin-top:6px;">Bienvenido/a. Tienes ventaja sobre el resto.</div>
+  </div>
+  <div style="background:rgba(242,203,5,.06);border:1px solid rgba(242,203,5,.15);border-radius:10px;padding:16px 18px;margin-bottom:14px;font-size:.85rem;color:#ccc;line-height:1.8;">
+    <p>🎁 <strong style="color:var(--wh);">Al registrarte tienes acceso a todas mis herramientas gratuitas</strong> — Trackers, Calculadoras y Guias. Guarda este enlace, lo iré actualizando con nuevas funciones.</p>
+  </div>
+  <div style="background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.2);border-radius:10px;padding:16px 18px;margin-bottom:14px;font-size:.85rem;color:#ccc;line-height:1.8;">
+    <p>💎 <strong style="color:var(--gr);">ACCESO PRIORITARIO:</strong> Cuando abra nuevas plazas para Entrenamiento Online Personalizado, recibirás el aviso <strong style="color:var(--wh);">24 horas antes</strong> de que lo anuncie en Instagram. Las plazas son limitadas. Aqui tienes ventaja.</p>
+  </div>
+  <div style="background:var(--g3);border:1px solid var(--gb);border-radius:10px;padding:16px 18px;margin-bottom:14px;">
+    <div style="font-size:.75rem;color:#555;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;font-weight:700;">Tus herramientas gratuitas</div>
+    <a href="https://soyroafit.github.io/Herramientas-Gratuitas/" style="display:block;background:var(--am);color:var(--bg);border-radius:8px;padding:11px 16px;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:2px;text-decoration:none;margin-bottom:10px;">ACCEDER A LAS HERRAMIENTAS →</a>
+    <div style="font-size:.75rem;color:#444;text-align:center;">Guarda este link — lo ire actualizando con nuevas funciones</div>
+  </div>
+  <div style="background:var(--g3);border:1px solid var(--gb);border-radius:10px;padding:16px 18px;">
+    <div style="font-size:.75rem;color:#555;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;font-weight:700;">Sigueme para no perderte nada</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <a href="https://www.youtube.com/@Soyroafit" target="_blank" style="display:flex;align-items:center;gap:8px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);border-radius:7px;padding:9px 12px;text-decoration:none;color:var(--wh);font-size:.78rem;font-weight:500;">▶ YouTube</a>
+      <a href="https://www.instagram.com/soyroafit/" target="_blank" style="display:flex;align-items:center;gap:8px;background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.2);border-radius:7px;padding:9px 12px;text-decoration:none;color:var(--wh);font-size:.78rem;font-weight:500;">◈ Instagram</a>
+      <a href="https://www.tiktok.com/@soyroafit" target="_blank" style="display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:7px;padding:9px 12px;text-decoration:none;color:var(--wh);font-size:.78rem;font-weight:500;">♪ TikTok</a>
+      <a href="https://roafit.com" target="_blank" style="display:flex;align-items:center;gap:8px;background:rgba(242,203,5,.08);border:1px solid rgba(242,203,5,.15);border-radius:7px;padding:9px 12px;text-decoration:none;color:var(--am);font-size:.78rem;font-weight:500;">🌐 ROAFIT.COM</a>
+    </div>
+  </div>
+</div>
         <p class="form-note">Tus datos son privados y no se comparten con terceros.</p>
       </form>
     </div>
@@ -542,7 +567,7 @@ async function submitCommunity(e) {
 
     document.getElementById("cfSuccess").style.display = "block";
     document.getElementById("communityForm").reset();
-    setTimeout(function(){ document.getElementById("cfSuccess").style.display = "none"; }, 6000);
+    // Keep success visible — don't hide it
 }
 
 // SCROLL REVEAL
