@@ -463,7 +463,7 @@ var SHEET_PROSPECTOS    = "https://docs.google.com/spreadsheets"; // reemplaza c
 var SHEET_ENTRENAMIENTOS = "https://docs.google.com/spreadsheets"; // reemplaza con tu link real
 
 // Webhook para formulario Comunidad ROAFIT — pega la URL de Make aqui
-var WEBHOOK_COMUNIDAD = ""; // reemplaza con tu webhook de Make
+var WEBHOOK_COMUNIDAD = "https://hook.eu1.make.com/cspj4lgw2w6x82yiip8w54twrkbns5iv";
 // ══════════════════════════════════════════════════════
 
 document.getElementById("sheetProspectos").href = SHEET_PROSPECTOS;
@@ -537,6 +537,7 @@ async function submitCommunity(e) {
         try {
             await fetch(WEBHOOK_COMUNIDAD, {
                 method: "POST",
+                mode: "no-cors",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload)
             });
