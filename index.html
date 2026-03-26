@@ -351,9 +351,33 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--wh);min-h
 
         <a href="#" class="card" style="--c:var(--am)" id="sheetEntrenamientos">
           <div class="card-icon">🏋️</div>
-          <div class="card-title">Base de Datos — Clientes</div>
-          <div class="card-desc">Registro de entrenamientos y seguimiento nutricional de clientes activos.</div>
-          <ul class="card-feats"><li>Registro de entrenamientos</li><li>Seguimiento nutricional diario</li><li>Registro por comida</li></ul>
+          <div class="card-title">Base de Datos — Entrenamientos</div>
+          <div class="card-desc">Registro de entrenamientos de clientes activos.</div>
+          <ul class="card-feats"><li>Registro por ejercicio</li><li>Series, reps, RPE, descanso</li><li>Email y WhatsApp del cliente</li></ul>
+          <div class="card-cta">Abrir Sheets →</div>
+        </a>
+
+        <a href="https://docs.google.com/spreadsheets/d/1TYpxRUurDHmZOmC_oL0MweFPbafSaE4PF5M6Smkrx5U/edit" target="_blank" class="card" style="--c:var(--gr)">
+          <div class="card-icon">🥗</div>
+          <div class="card-title">Base de Datos — Nutricion</div>
+          <div class="card-desc">Seguimiento nutricional diario y registro de comidas por cliente.</div>
+          <ul class="card-feats"><li>Seguimiento Diario Nutricional</li><li>Registro por comida</li><li>Macros real vs objetivo</li></ul>
+          <div class="card-cta">Abrir Sheets →</div>
+        </a>
+
+        <a href="https://docs.google.com/spreadsheets/d/1oEpPTx3np2NaJamuXE_NdPZ4uWu-HDrlblP2yFpeW1s/edit" target="_blank" class="card" style="--c:var(--or)">
+          <div class="card-icon">👥</div>
+          <div class="card-title">Comunidad ROAFIT</div>
+          <div class="card-desc">Base de datos de la comunidad — registros del formulario de contacto.</div>
+          <ul class="card-feats"><li>Nombre y email</li><li>WhatsApp opcional</li><li>Mensaje / nota</li></ul>
+          <div class="card-cta">Abrir Sheets →</div>
+        </a>
+
+        <a href="https://docs.google.com/spreadsheets/d/1Pqnf5pWZEg64os4OeL-1icS2WSzOhpG1U0snWIL4AYE/edit" target="_blank" class="card" style="--c:var(--az)">
+          <div class="card-icon">📊</div>
+          <div class="card-title">Seguimiento Semanal</div>
+          <div class="card-desc">Registros del formulario de seguimiento semanal de todos los clientes.</div>
+          <ul class="card-feats"><li>Peso y medidas</li><li>Energia y sueno</li><li>Adherencia y notas</li></ul>
           <div class="card-cta">Abrir Sheets →</div>
         </a>
 
@@ -480,12 +504,12 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--wh);min-h
 // ══════════════════════════════════════════════════════
 // CONFIGURACION — CAMBIA ESTOS VALORES
 // ══════════════════════════════════════════════════════
-var CLIENT_CODE = "roafit2024";   // Codigo para clientes activos
-var COACH_CODE  = "coach_roafit"; // Codigo para el coach
+var CLIENT_CODE = "Roa.2026FIT";
+var COACH_CODE  = "Aj475UEw3672Ka";
 
 // Google Sheets links — pega tus links reales aqui
-var SHEET_PROSPECTOS    = "https://docs.google.com/spreadsheets"; // reemplaza con tu link real
-var SHEET_ENTRENAMIENTOS = "https://docs.google.com/spreadsheets"; // reemplaza con tu link real
+var SHEET_PROSPECTOS    = "https://docs.google.com/spreadsheets/d/1D_t8KKyeb6zoFsy4C6g5c0YSlLY8t5V_iROhcBHPzwE/edit";
+var SHEET_ENTRENAMIENTOS = "https://docs.google.com/spreadsheets/d/1Wz93m2mUhAFUp3AsNOrtQhxJgkhhUDLHzvvJ__XftYU/edit";
 
 // Webhook para formulario Comunidad ROAFIT — pega la URL de Make aqui
 var WEBHOOK_COMUNIDAD = "https://hook.eu1.make.com/cspj4lgw2w6x82yiip8w54twrkbns5iv";
