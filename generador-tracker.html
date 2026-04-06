@@ -134,6 +134,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--wh);min-h
           <button class="btn-copy" id="btnCopy">COPIAR LINK</button>
           <button class="btn-open" id="btnOpen">ABRIR Y PROBAR</button>
         </div>
+        <button onclick="imprimirPlan()" style="width:100%;background:transparent;border:1px solid #30363d;border-radius:8px;padding:11px;color:#f0f0f0;font-family:Bebas Neue,sans-serif;font-size:.92rem;letter-spacing:1.5px;cursor:pointer;margin-bottom:12px;transition:all .2s;" onmouseover="this.style.borderColor='#F2CB05';this.style.color='#F2CB05'" onmouseout="this.style.borderColor='#30363d';this.style.color='#f0f0f0'">IMPRIMIR / GUARDAR PDF</button>
         <div class="wa-box">
           <h5>Mensaje listo para WhatsApp</h5>
           <div class="wa-text" id="waText"></div>
@@ -543,6 +544,76 @@ function fallback(text) {
     document.execCommand("copy");
     document.body.removeChild(ta);
     alert("Copiado.");
+}
+
+
+function imprimirPlan(){
+    var nombre = document.getElementById("clienteNombre").value.trim() || "Cliente";
+    var semanas = parseInt(document.getElementById("clienteSemanas").value) || 8;
+    if(!curDays || curDays.length === 0){ alert("Primero configura el plan antes de imprimir."); return; }
+
+    var html = '<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">';
+    html += '<title>Plan ROAFIT - ' + nombre + '</title>';
+    html += '<style>body{font-family:Arial,sans-serif;background:#fff;color:#111;padding:20px;max-width:800px;margin:0 auto;}';
+    html += 'h1{font-size:1.8rem;margin-bottom:4px;}.subtitle{color:#555;font-size:.9rem;margin-bottom:20px;}';
+    html += '.meta{display:flex;gap:20px;margin-bottom:20px;font-size:.85rem;color:#444;flex-wrap:wrap;}';
+    html += '.bloque{margin-bottom:24px;border:1px solid #ddd;border-radius:8px;overflow:hidden;page-break-inside:avoid;}';
+    html += '.bloque-title{background:#0a0a0a;color:#F2CB05;padding:10px 14px;font-weight:bold;font-size:.95rem;}';
+    html += 'table{width:100%;border-collapse:collapse;font-size:.8rem;}';
+    html += 'th{background:#F2CB05;color:#0a0a0a;padding:6px 8px;text-align:left;font-size:.75rem;}';
+    html += 'td{padding:7px 8px;border-bottom:1px solid #eee;vertical-align:top;}';
+    html += '.sug{color:#1a56db;font-size:.76rem;}.blank{color:#ccc;font-size:.72rem;font-style:italic;}';
+    html += '.logo{text-align:center;margin-bottom:16px;font-family:Arial;font-size:2rem;font-weight:900;letter-spacing:4px;}';
+    html += '.logo span{color:#F2CB05;}.footer{margin-top:24px;text-align:center;color:#aaa;font-size:.72rem;border-top:1px solid #eee;padding-top:12px;}';
+    html += '@media print{body{padding:6px;}}</style></head><body>';
+    html += '<div class="logo">ROA<span>FIT</span></div>';
+    html += '<h1>Plan de Entrenamiento</h1>';
+    html += '<div class="subtitle">Del Deseo a la Accion &nbsp;|&nbsp; roafit.com</div>';
+    html += '<div class="meta">';
+    html += '<span><strong>Cliente:</strong> ' + nombre + '</span>';
+    html += '<span><strong>Metodo:</strong> ' + (selMetodo ? selMetodo.nombre : "Personalizado") + '</span>';
+    html += '<span><strong>Semanas:</strong> ' + semanas + '</span>';
+    html += '<span><strong>Fecha:</strong> ' + new Date().toLocaleDateString("es-ES") + '</span>';
+    html += '</div>';
+
+    curDays.forEach(function(day) {
+        html += '<div class="bloque"><div class="bloque-title">' + day.titulo + (day.subtitulo ? ' &mdash; ' + day.subtitulo : '') + '</div>';
+        html += '<table><tr><th style="width:32%">Ejercicio</th><th style="width:12%">Series</th><th style="width:14%">Reps</th><th style="width:14%">Peso</th><th style="width:12%">RPE</th><th style="width:16%">Descanso</th></tr>';
+        day.ejercicios.forEach(function(ex) {
+            var s0 = ex.series && ex.series[0] ? ex.series[0] : {};
+            html += '<tr><td><strong>' + ex.nombre + '</strong></td>';
+            html += '<td>' + (ex.series ? ex.series.length : 1) + '</td>';
+            html += '<td><span class="sug">' + (s0.r||'—') + '</span><br><span class="blank">___</span></td>';
+            html += '<td><span class="sug">' + (s0.w||'—') + 'kg</span><br><span class="blank">___</span></td>';
+            html += '<td><span class="sug">' + (s0.rpe||'—') + '</span><br><span class="blank">___</span></td>';
+            html += '<td><span class="sug">' + (s0.rest||'—') + '</span></td></tr>';
+            if(ex.series && ex.series.length > 1){
+                for(var si=1;si<ex.series.length;si++){
+                    var s=ex.series[si];
+                    html += '<tr><td style="color:#aaa;font-size:.72rem;padding-left:16px;">Serie '+(si+1)+'</td><td></td>';
+                    html += '<td><span class="sug">'+(s.r||'—')+'</span><br><span class="blank">___</span></td>';
+                    html += '<td><span class="sug">'+(s.w||'—')+'kg</span><br><span class="blank">___</span></td>';
+                    html += '<td><span class="sug">'+(s.rpe||'—')+'</span><br><span class="blank">___</span></td>';
+                    html += '<td><span class="sug">'+(s.rest||'—')+'</span></td></tr>';
+                }
+            }
+        });
+        html += '</table></div>';
+    });
+
+    html += '<div style="margin-top:16px;border:1px solid #ddd;border-radius:8px;padding:12px;">';
+    html += '<strong style="font-size:.82rem;">Notas de la semana:</strong>';
+    html += '<div style="margin-top:8px;border-bottom:1px solid #eee;height:22px;"></div>';
+    html += '<div style="margin-top:6px;border-bottom:1px solid #eee;height:22px;"></div></div>';
+    html += '<div class="footer">ROAFIT &nbsp;&bull;&nbsp; roafit.com &nbsp;&bull;&nbsp; @soyroafit<br>';
+    html += '<span style="color:#1a56db;">Azul = sugerencia del coach</span> &nbsp;|&nbsp; ___ = registra lo que hiciste</div>';
+    html += '</body></html>';
+
+    var win = window.open('', '_blank');
+    win.document.write(html);
+    win.document.close();
+    win.focus();
+    setTimeout(function(){ win.print(); }, 600);
 }
 
 init();
