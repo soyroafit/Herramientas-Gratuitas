@@ -1,0 +1,39 @@
+{
+  "name": "ROAFIT — Del Deseo a la Accion",
+  "short_name": "ROAFIT",
+  "description": "Herramientas de entrenamiento y nutricion personalizadas",
+  "start_url": "/Herramientas-Gratuitas/",
+  "scope": "/Herramientas-Gratuitas/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0e1117",
+  "theme_color": "#F2CB05",
+  "lang": "es",
+  "icons": [
+    {
+      "src": "logo-roafit.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "logo-roafit.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["health", "fitness"],
+  "shortcuts": [
+    {
+      "name": "Valoracion Inicial",
+      "url": "/Herramientas-Gratuitas/valoracion-inicial.html",
+      "description": "Comienza tu proceso personalizado"
+    },
+    {
+      "name": "Seguimiento Semanal",
+      "url": "/Herramientas-Gratuitas/seguimiento-semanal.html",
+      "description": "Registra tu progreso semanal"
+    }
+  ]
+}
