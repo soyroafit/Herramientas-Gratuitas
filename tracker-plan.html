@@ -137,14 +137,23 @@ function guardar() {
 
 function getWeekData(w) {
     if (!D[w]) {
-        D[w] = { days: PLAN.dias.map(function(day) {
+        // Try to pre-fill from previous week if it exists
+        var prev = w > 1 ? D[w-1] : null;
+        D[w] = { days: PLAN.dias.map(function(day, di) {
+            var prevDay = prev && prev.days[di] ? prev.days[di] : null;
             return {
                 feeling: null,
                 notes: "",
-                exercises: day.ejercicios.map(function(ex) {
+                exercises: day.ejercicios.map(function(ex, ei) {
+                    var prevEx = prevDay && prevDay.exercises[ei] ? prevDay.exercises[ei] : null;
                     return {
                         notes: "",
-                        series: ex.series.map(function(sg) {
+                        series: ex.series.map(function(sg, si) {
+                            // If previous week has data for this series, use it as starting point
+                            var prevSerie = prevEx && prevEx.series[si] ? prevEx.series[si] : null;
+                            if (prevSerie && (prevSerie.r || prevSerie.w)) {
+                                return { r: prevSerie.r || "", w: prevSerie.w || "", rpe: prevSerie.rpe || "", rest: prevSerie.rest || "", edited: false, fromPrev: true };
+                            }
                             return { r: sg.r || "", w: sg.w || "", rpe: sg.rpe || "", rest: sg.rest || "", edited: false };
                         })
                     };
@@ -247,7 +256,7 @@ function dias() {
             if (hasSuggestion) {
                 var hint = document.createElement("div");
                 hint.className = "coach-hint";
-                hint.innerHTML = "<strong>Tu plan personalizado</strong> — Los valores ya vienen cargados con la sugerencia de tu coach. Puedes dejarlos igual si lo hiciste como se indica, o editarlos con lo que realmente hiciste. Al terminar pulsa <em>Enviar al coach</em>.";
+                hint.innerHTML = "<strong>Tu plan personalizado</strong> — Los valores en <span style='color:#aac4ff;'>azul</span> son sugerencias de tu coach. Los valores en <span style='color:#6ee7b7;'>verde</span> son los datos que registraste la semana anterior. Puedes dejarlos igual o editarlos con lo que realmente hiciste esta semana. Al terminar pulsa <em>Enviar al coach</em>.";
                 exBlock.appendChild(hint);
             }
 
@@ -277,7 +286,7 @@ function dias() {
 
                 fields.forEach(function(f) {
                     var inp = document.createElement("input");
-                    inp.className = "si2" + (f.val && !sd.edited ? " sug" : "");
+                    inp.className = "si2" + (sd.fromPrev && !sd.edited ? " fromprev" : (f.val && !sd.edited ? " sug" : ""));
                     inp.type = f.type;
                     if (f.type === "number") {  }
                     inp.placeholder = f.ph;
@@ -286,6 +295,12 @@ function dias() {
                         inp.onchange = function() {
                             updateSeries(di, ei, sIdx, fld, this.value);
                             this.classList.remove("sug");
+                            this.classList.remove("fromprev");
+                            var wd = getWeekData(cw);
+                            if(wd.days[di] && wd.days[di].exercises[ei] && wd.days[di].exercises[ei].series[sIdx]) {
+                                wd.days[di].exercises[ei].series[sIdx].fromPrev = false;
+                                wd.days[di].exercises[ei].series[sIdx].edited = true;
+                            }
                         };
                     })(f.field, si);
                     row.appendChild(inp);
