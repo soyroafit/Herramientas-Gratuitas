@@ -1,16 +1,17 @@
-const CACHE = "roafit-v1";
+const CACHE = "roafit-v2";
 const ASSETS = [
-  "/Herramientas-Gratuitas/",
-  "/Herramientas-Gratuitas/index.html",
-  "/Herramientas-Gratuitas/valoracion-inicial.html",
-  "/Herramientas-Gratuitas/seguimiento-semanal.html",
-  "/Herramientas-Gratuitas/tracker-plan.html",
-  "/Herramientas-Gratuitas/tracker-alimentacion.html",
-  "/Herramientas-Gratuitas/entrenamiento.html",
-  "/Herramientas-Gratuitas/calculadora-calorias.html",
-  "/Herramientas-Gratuitas/objetivos-nutricionales.html",
-  "/Herramientas-Gratuitas/Tracker-Nuevos-Habitos.html",
-  "/Herramientas-Gratuitas/logo-roafit.png"
+  "/",
+  "/index.html",
+  "/valoracion-inicial.html",
+  "/seguimiento-semanal.html",
+  "/tracker-plan.html",
+  "/tracker-alimentacion.html",
+  "/entrenamiento.html",
+  "/calculadora-calorias.html",
+  "/objetivos-nutricionales.html",
+  "/Tracker-Nuevos-Habitos.html",
+  "/logo-roafit.png",
+  "/manifest.json"
 ];
 
 self.addEventListener("install", function(e) {
@@ -35,14 +36,9 @@ self.addEventListener("activate", function(e) {
 });
 
 self.addEventListener("fetch", function(e) {
-  // Only handle GET requests
   if (e.request.method !== "GET") return;
-  // Don't cache external requests (EmailJS, Make, Google)
-  if (!e.request.url.includes("soyroafit.github.io") && !e.request.url.includes("roafit.com")) return;
-
   e.respondWith(
     caches.match(e.request).then(function(cached) {
-      // Network first, fall back to cache
       return fetch(e.request).then(function(response) {
         if (response && response.status === 200) {
           var clone = response.clone();
