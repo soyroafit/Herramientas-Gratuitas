@@ -92,6 +92,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--wh);min-h
     <h3>Actualizar y enviar al coach</h3>
     <p>Pulsa cuando termines la semana o quieras actualizar tu progreso.</p>
     <button class="sb" id="sb" onclick="enviar()">ACTUALIZAR Y ENVIAR AL COACH</button>
+    <button onclick="imprimirPlanCliente()" style="background:transparent;border:1px solid #2e2e2e;border-radius:10px;padding:12px 28px;color:#888;font-family:Bebas Neue,sans-serif;font-size:.9rem;letter-spacing:2px;cursor:pointer;margin-top:10px;width:100%;max-width:340px;display:block;margin-left:auto;margin-right:auto;">IMPRIMIR PLAN EN PDF</button>
     <div class="sc" id="sc">Registro enviado. Tu coach lo revisara pronto.</div>
   </div>
   <div class="ft"><p><span>Del Deseo a la Accion</span> - ROAFIT</p></div>
@@ -439,6 +440,67 @@ async function enviar() {
     document.getElementById("sc").classList.add("on");
     btn.textContent = "ENVIADO";
     setTimeout(function() { btn.disabled = false; btn.textContent = "ACTUALIZAR Y ENVIAR AL COACH"; }, 4000);
+}
+
+function imprimirPlanCliente(){
+    var html = '<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">';
+    html += '<title>Plan ROAFIT - ' + PLAN.cliente + '</title>';
+    html += '<style>body{font-family:Arial,sans-serif;background:#fff;color:#111;padding:20px;max-width:800px;margin:0 auto;}';
+    html += '.logo{text-align:center;margin-bottom:12px;font-family:Arial;font-size:2rem;font-weight:900;letter-spacing:4px;}';
+    html += '.logo span{color:#F2CB05;}.meta{font-size:.82rem;color:#555;margin-bottom:18px;display:flex;gap:16px;flex-wrap:wrap;}';
+    html += '.bloque{margin-bottom:22px;border:1px solid #ddd;border-radius:8px;overflow:hidden;page-break-inside:avoid;}';
+    html += '.bloque-title{background:#0a0a0a;color:#F2CB05;padding:9px 13px;font-weight:bold;font-size:.9rem;}';
+    html += 'table{width:100%;border-collapse:collapse;font-size:.78rem;}';
+    html += 'th{background:#F2CB05;color:#0a0a0a;padding:6px 8px;text-align:left;font-size:.72rem;}';
+    html += 'td{padding:7px 8px;border-bottom:1px solid #eee;vertical-align:top;}';
+    html += '.sug{color:#1a56db;font-size:.74rem;}.blank{color:#ccc;font-size:.7rem;font-style:italic;}';
+    html += '.footer{margin-top:20px;text-align:center;color:#aaa;font-size:.7rem;border-top:1px solid #eee;padding-top:10px;}';
+    html += '@media print{body{padding:6px;}}</style></head><body>';
+    html += '<div class="logo">ROA<span>FIT</span></div>';
+    html += '<div class="meta">';
+    html += '<span><strong>Cliente:</strong> ' + PLAN.cliente + '</span>';
+    html += '<span><strong>Metodo:</strong> ' + (PLAN.metodo||"Personalizado") + '</span>';
+    html += '<span><strong>Semanas:</strong> ' + PLAN.semanas + '</span>';
+    html += '</div>';
+
+    PLAN.dias.forEach(function(day){
+        html += '<div class="bloque"><div class="bloque-title">' + day.titulo + (day.subtitulo ? ' &mdash; ' + day.subtitulo : '') + '</div>';
+        html += '<table><tr><th style="width:32%">Ejercicio</th><th style="width:12%">Series</th><th style="width:14%">Reps</th><th style="width:14%">Peso</th><th style="width:12%">RPE</th><th style="width:16%">Descanso</th></tr>';
+        day.ejercicios.forEach(function(ex){
+            var s0 = ex.series && ex.series[0] ? ex.series[0] : {};
+            html += '<tr><td><strong>' + ex.nombre + '</strong></td>';
+            html += '<td>' + (ex.series ? ex.series.length : 1) + '</td>';
+            html += '<td><span class="sug">'+(s0.r||'—')+'</span><br><span class="blank">___</span></td>';
+            html += '<td><span class="sug">'+(s0.w||'—')+'kg</span><br><span class="blank">___</span></td>';
+            html += '<td><span class="sug">'+(s0.rpe||'—')+'</span><br><span class="blank">___</span></td>';
+            html += '<td><span class="sug">'+(s0.rest||'—')+'</span></td></tr>';
+            if(ex.series && ex.series.length > 1){
+                for(var si=1;si<ex.series.length;si++){
+                    var s=ex.series[si];
+                    html += '<tr><td style="color:#aaa;font-size:.7rem;padding-left:14px;">Serie '+(si+1)+'</td><td></td>';
+                    html += '<td><span class="sug">'+(s.r||'—')+'</span><br><span class="blank">___</span></td>';
+                    html += '<td><span class="sug">'+(s.w||'—')+'kg</span><br><span class="blank">___</span></td>';
+                    html += '<td><span class="sug">'+(s.rpe||'—')+'</span><br><span class="blank">___</span></td>';
+                    html += '<td><span class="sug">'+(s.rest||'—')+'</span></td></tr>';
+                }
+            }
+        });
+        html += '</table></div>';
+    });
+
+    html += '<div style="margin-top:14px;border:1px solid #ddd;border-radius:8px;padding:12px;">';
+    html += '<strong style="font-size:.8rem;">Notas de la semana:</strong>';
+    html += '<div style="margin-top:8px;border-bottom:1px solid #eee;height:22px;"></div>';
+    html += '<div style="margin-top:6px;border-bottom:1px solid #eee;height:22px;"></div></div>';
+    html += '<div class="footer">ROAFIT &nbsp;&bull;&nbsp; roafit.com &nbsp;&bull;&nbsp; @soyroafit<br>';
+    html += '<span style="color:#1a56db;">Azul = sugerencia del coach</span> &nbsp;|&nbsp; ___ = registra lo que hiciste</div>';
+    html += '</body></html>';
+
+    var win = window.open('', '_blank');
+    win.document.write(html);
+    win.document.close();
+    win.focus();
+    setTimeout(function(){ win.print(); }, 600);
 }
 
 init();
