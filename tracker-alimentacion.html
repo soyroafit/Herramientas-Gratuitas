@@ -140,6 +140,7 @@ body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--wh);min-h
     <h3>Enviar dia al coach</h3>
     <p>Pulsa cuando termines de registrar el dia.</p>
     <button class="sb" id="sb" onclick="enviar()">ENVIAR DIA AL COACH</button>
+    <button onclick="imprimirGuiaNutricional()" style="background:transparent;border:1px solid #2e2e2e;border-radius:10px;padding:12px 28px;color:#888;font-family:'Bebas Neue',sans-serif;font-size:.9rem;letter-spacing:2px;cursor:pointer;margin-top:10px;width:100%;max-width:340px;display:block;margin-left:auto;margin-right:auto;">IMPRIMIR GUIA EN PDF</button>
     <div class="sc" id="sc">Registro enviado. Tu coach lo revisara pronto.</div>
   </div>
   <div class="ft"><p><span>Del Deseo a la Accion</span> - ROAFIT</p></div>
@@ -384,6 +385,87 @@ async function enviar(){
     renderDTabs();renderWTabs();
     setTimeout(function(){btn.disabled=false;btn.textContent="ENVIAR DIA AL COACH";},4000);
 }
+function imprimirGuiaNutricional(){
+    if(!PLAN){ alert("No hay plan cargado."); return; }
+    var meals = getMeals();
+    var html = '<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">';
+    html += '<title>Guia Nutricional ROAFIT - ' + PLAN.cliente + '</title>';
+    html += '<style>body{font-family:Arial,sans-serif;background:#fff;color:#111;padding:20px;max-width:800px;margin:0 auto;}';
+    html += '.logo{text-align:center;margin-bottom:14px;font-family:Arial;font-size:2rem;font-weight:900;letter-spacing:4px;}';
+    html += '.logo span{color:#F2CB05;}.meta{font-size:.82rem;color:#555;margin-bottom:14px;display:flex;gap:16px;flex-wrap:wrap;}';
+    html += '.macros-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px;}';
+    html += '.macro-box{border:1px solid #ddd;border-radius:8px;padding:10px;text-align:center;}';
+    html += '.macro-box h4{font-size:.7rem;color:#999;text-transform:uppercase;margin-bottom:4px;}';
+    html += '.macro-box p{font-size:1.1rem;font-weight:bold;color:#0a0a0a;}';
+    html += '.bloque{margin-bottom:14px;border:1px solid #ddd;border-radius:8px;overflow:hidden;page-break-inside:avoid;}';
+    html += '.bloque-title{background:#0a0a0a;color:#f97316;padding:9px 13px;font-weight:bold;font-size:.9rem;display:flex;justify-content:space-between;}';
+    html += '.bloque-title span{color:#888;font-size:.75rem;font-weight:normal;}';
+    html += 'table{width:100%;border-collapse:collapse;font-size:.78rem;}';
+    html += 'th{background:#f97316;color:#fff;padding:6px 8px;text-align:left;font-size:.72rem;}';
+    html += 'td{padding:7px 8px;border-bottom:1px solid #eee;vertical-align:top;}';
+    html += '.sug{color:#1a56db;font-size:.74rem;}.blank{color:#ccc;font-size:.7rem;font-style:italic;}';
+    html += '.footer{margin-top:20px;text-align:center;color:#aaa;font-size:.7rem;border-top:1px solid #eee;padding-top:12px;}';
+    html += '@media print{body{padding:6px;}}</style></head><body>';
+
+    html += '<div class="logo">ROA<span>FIT</span></div>';
+    html += '<div class="meta">';
+    html += '<span><strong>Cliente:</strong> ' + PLAN.cliente + '</span>';
+    html += '<span><strong>Semanas:</strong> ' + PLAN.semanas + '</span>';
+    if(PLAN.objetivo) html += '<span><strong>Objetivo:</strong> ' + PLAN.objetivo + '</span>';
+    html += '</div>';
+
+    // Macros objetivo
+    html += '<div class="macros-bar">';
+    html += '<div class="macro-box"><h4>Calorias</h4><p>' + (PLAN.cal_objetivo||'—') + ' kcal</p></div>';
+    html += '<div class="macro-box"><h4>Proteina</h4><p>' + (PLAN.prot_objetivo||'—') + ' g</p></div>';
+    html += '<div class="macro-box"><h4>Carbos</h4><p>' + (PLAN.carb_objetivo||'—') + ' g</p></div>';
+    html += '<div class="macro-box"><h4>Grasas</h4><p>' + (PLAN.gras_objetivo||'—') + ' g</p></div>';
+    html += '</div>';
+
+    // Meals
+    var MACROS2=["calorias","proteina","carbos","grasas"];
+    var MLABELS2=["Calorias","Proteina","Carbos","Grasas"];
+    var MUNITS2=["kcal","g","g","g"];
+    meals.forEach(function(meal){
+        html += '<div class="bloque"><div class="bloque-title">' + meal.nombre;
+        if(meal.horario) html += ' <span>' + meal.horario + '</span>';
+        html += '</div>';
+        html += '<table><tr><th style="width:20%">Macro</th><th style="width:15%">Objetivo</th><th style="width:65%">Ejemplos sugeridos</th></tr>';
+        MACROS2.forEach(function(mac,mi){
+            var val = meal[mac] || '—';
+            var items = (meal['sug_'+mac]||[]).filter(function(x){return x;});
+            html += '<tr><td><strong>' + MLABELS2[mi] + '</strong></td>';
+            html += '<td><span class="sug">' + val + ' ' + MUNITS2[mi] + '</span><br><span class="blank">___</span></td>';
+            html += '<td>';
+            if(items.length > 0) html += '<span class="sug">' + items.join(' | ') + '</span>';
+            else html += '<span class="blank">—</span>';
+            html += '</td></tr>';
+        });
+        html += '</table></div>';
+    });
+
+    if(PLAN.suplementos){
+        html += '<div style="margin-top:12px;border:1px solid #ddd;border-radius:8px;padding:12px;">';
+        html += '<strong style="font-size:.82rem;">Suplementacion:</strong>';
+        html += '<p style="font-size:.8rem;color:#555;margin-top:6px;line-height:1.6;">' + PLAN.suplementos + '</p></div>';
+    }
+
+    html += '<div style="margin-top:12px;border:1px solid #ddd;border-radius:8px;padding:12px;">';
+    html += '<strong style="font-size:.82rem;">Notas:</strong>';
+    html += '<div style="margin-top:8px;border-bottom:1px solid #eee;height:22px;"></div>';
+    html += '<div style="margin-top:6px;border-bottom:1px solid #eee;height:22px;"></div></div>';
+
+    html += '<div class="footer">ROAFIT &nbsp;&bull;&nbsp; roafit.com &nbsp;&bull;&nbsp; @soyroafit<br>';
+    html += '<span style="color:#1a56db;">Azul = sugerencia del coach</span> &nbsp;|&nbsp; ___ = lo que consumiste</div>';
+    html += '</body></html>';
+
+    var win = window.open('', '_blank');
+    win.document.write(html);
+    win.document.close();
+    win.focus();
+    setTimeout(function(){ win.print(); }, 600);
+}
+
 init();
 </script>
 </body>
